@@ -1,0 +1,4 @@
+{
+  "wall-top": ["wall-top", "wall-left", "wall-right", "wall-top-left", "wall-top-right"],
+  "demon-wall-top": ["demon-wall-top", "demon-wall-left", "demon-wall-right", "demon-wall-top-left", "demon-wall-top-right"]
+}

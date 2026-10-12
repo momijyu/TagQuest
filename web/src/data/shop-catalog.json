@@ -1,0 +1,5 @@
+[
+  { "merchant": "weapon-merchant", "name": "武器屋", "items": [3, 4] },
+  { "merchant": "armor-merchant", "name": "防具屋", "items": [5, 6, 7, 8] },
+  { "merchant": "item-merchant", "name": "道具屋", "items": [0, 1, 2] }
+]

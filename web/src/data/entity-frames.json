@@ -1,0 +1,182 @@
+{
+  "throne": {
+    "x": -12,
+    "y": 0,
+    "width": 48,
+    "height": 32
+  },
+  "pillar": {
+    "x": 0,
+    "y": -8,
+    "width": 16,
+    "height": 32
+  },
+  "king": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "castle": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 64
+  },
+  "well": {
+    "x": 0,
+    "y": -8,
+    "width": 32,
+    "height": 48
+  },
+  "weapon-shop": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 80
+  },
+  "armor-shop": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 80
+  },
+  "item-shop": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 80
+  },
+  "house-red": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 64
+  },
+  "house-slate": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 64
+  },
+  "weapon-merchant": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "armor-merchant": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "item-merchant": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "traveler": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "resident": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "elder": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "loot": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "tree": {
+    "x": 0,
+    "y": 0,
+    "width": 48,
+    "height": 48
+  },
+  "world-mountain": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "world-forest": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "world-town": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "world-forest-entrance": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "world-cave": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "world-demon-castle": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "demon-throne": {
+    "x": -12,
+    "y": 0,
+    "width": 48,
+    "height": 32
+  },
+  "demon-pillar": {
+    "x": 0,
+    "y": -8,
+    "width": 16,
+    "height": 32
+  },
+  "treasure-chest": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "cave-witch": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "forest-fairy": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "demon-lord": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  }
+}

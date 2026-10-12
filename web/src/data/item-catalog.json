@@ -1,0 +1,172 @@
+[
+  {
+    "id": 0,
+    "name": "やくそう",
+    "description": "HPを20回復",
+    "price": 8,
+    "sellPrice": 4,
+    "effect": {
+      "type": "heal-hp",
+      "amount": 20
+    }
+  },
+  {
+    "id": 1,
+    "name": "どくけしそう",
+    "description": "毒を治す",
+    "price": 10,
+    "sellPrice": 5,
+    "effect": {
+      "type": "cure-poison"
+    }
+  },
+  {
+    "id": 2,
+    "name": "まほうの水",
+    "description": "MPを10回復",
+    "price": 20,
+    "sellPrice": 10,
+    "effect": {
+      "type": "heal-mp",
+      "amount": 10
+    }
+  },
+  {
+    "id": 3,
+    "name": "木の剣",
+    "description": "攻撃力＋3",
+    "price": 20,
+    "sellPrice": 10,
+    "equipment": {
+      "requiredLevel": 1,
+      "slot": "weapon",
+      "attack": 3,
+      "defense": 0
+    }
+  },
+  {
+    "id": 4,
+    "name": "銅の剣",
+    "description": "攻撃力＋7",
+    "price": 80,
+    "sellPrice": 40,
+    "equipment": {
+      "requiredLevel": 1,
+      "slot": "weapon",
+      "attack": 7,
+      "defense": 0
+    }
+  },
+  {
+    "id": 5,
+    "name": "布の服",
+    "description": "防御力＋2",
+    "price": 20,
+    "sellPrice": 10,
+    "equipment": {
+      "requiredLevel": 1,
+      "slot": "armor",
+      "attack": 0,
+      "defense": 2
+    }
+  },
+  {
+    "id": 6,
+    "name": "革の鎧",
+    "description": "防御力＋5",
+    "price": 60,
+    "sellPrice": 30,
+    "equipment": {
+      "requiredLevel": 1,
+      "slot": "armor",
+      "attack": 0,
+      "defense": 5
+    }
+  },
+  {
+    "id": 7,
+    "name": "木の盾",
+    "description": "防御力＋2",
+    "price": 35,
+    "sellPrice": 17,
+    "equipment": {
+      "requiredLevel": 1,
+      "slot": "shield",
+      "attack": 0,
+      "defense": 2
+    }
+  },
+  {
+    "id": 8,
+    "name": "力のお守り",
+    "description": "攻撃力＋1・防御力＋1",
+    "price": 50,
+    "sellPrice": 25,
+    "equipment": {
+      "requiredLevel": 1,
+      "slot": "accessory",
+      "attack": 1,
+      "defense": 1
+    }
+  },
+  {
+    "id": 9,
+    "name": "王の王冠",
+    "description": "最大HP＋100・最大MP＋100・攻撃力＋50・防御力＋50",
+    "price": 10000,
+    "sellPrice": 500,
+    "equipment": {
+      "requiredLevel": 1,
+      "slot": "head",
+      "hp": 100,
+      "mp": 100,
+      "attack": 50,
+      "defense": 50
+    }
+  },
+  {
+    "id": 10,
+    "name": "王のローブ",
+    "description": "最大HP＋200・最大MP＋50・攻撃力＋50・防御力＋150",
+    "price": 10000,
+    "sellPrice": 500,
+    "equipment": {
+      "requiredLevel": 1,
+      "slot": "armor",
+      "hp": 200,
+      "mp": 50,
+      "attack": 50,
+      "defense": 150
+    }
+  },
+  {
+    "id": 11,
+    "name": "王の杖",
+    "description": "最大HP＋100・最大MP＋200・攻撃力＋150・防御力＋50",
+    "price": 10000,
+    "sellPrice": 500,
+    "equipment": {
+      "requiredLevel": 1,
+      "slot": "weapon",
+      "hp": 100,
+      "mp": 200,
+      "attack": 150,
+      "defense": 50
+    }
+  },
+  {
+    "id": 12,
+    "name": "王の剣",
+    "description": "最大HP＋150・最大MP＋50・攻撃力＋200・防御力＋50",
+    "price": 10000,
+    "sellPrice": 500,
+    "equipment": {
+      "requiredLevel": 1,
+      "slot": "weapon",
+      "hp": 150,
+      "mp": 50,
+      "attack": 200,
+      "defense": 50
+    }
+  }
+]

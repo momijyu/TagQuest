@@ -1,0 +1,10 @@
+{
+  "name": "ゆうしゃ",
+  "stats": { "hp": 40, "attack": 10, "defense": 0 },
+  "guardMultiplier": 0.5,
+  "maxMp": 10,
+  "initialGold": 100,
+  "initialItems": [],
+  "skills": [0, 1, 2],
+  "initialExperience": 0
+}

@@ -1,0 +1,50 @@
+{
+  "id": 4,
+  "name": "魔王",
+  "characterId": "demon-lord",
+  "battleImage": "demon-lord",
+  "background": "castle",
+  "stats": {
+    "hp": 120,
+    "attack": 12,
+    "defense": 4
+  },
+  "reward": {
+    "gold": 0,
+    "experience": 0,
+    "items": []
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "attack",
+        "text": "魔王は黒い剣を振り下ろした！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "魔王は闇の炎を放った！",
+        "power": 1.4
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "attack",
+        "text": "魔王は黒い剣を振り下ろした！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "魔王は闇の炎を放った！",
+        "power": 1.4
+      }
+    ]
+  },
+  "royalEquipmentPlayerAttackMultiplier": 0,
+  "royalEquipmentAttack": {
+    "multiplier": 100,
+    "match": "any"
+  },
+  "royalEquipmentWarning": "王の装備を1点でも身につけていると、魔王の攻撃力が100倍になる！ 戦う前に装備を外そう。王の装備の攻撃ボーナスも、この戦いでは封じられる。",
+  "canEscape": false
+}

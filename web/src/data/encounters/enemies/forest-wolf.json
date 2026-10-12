@@ -1,0 +1,43 @@
+{
+  "id": 3,
+  "name": "森オオカミ",
+  "characterId": "forest-wolf",
+  "battleImage": "forest-wolf",
+  "background": "forest",
+  "stats": {
+    "hp": 38,
+    "attack": 8,
+    "defense": 2
+  },
+  "reward": {
+    "gold": 12,
+    "experience": 22,
+    "items": []
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "attack",
+        "text": "森オオカミがかみついた！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "森オオカミが鋭い爪で切りかかった！",
+        "power": 1.5
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "attack",
+        "text": "森オオカミがかみついた！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "森オオカミが鋭い爪で切りかかった！",
+        "power": 1.5
+      }
+    ]
+  }
+}

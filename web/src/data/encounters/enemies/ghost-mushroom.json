@@ -1,0 +1,45 @@
+{
+  "id": 2,
+  "name": "おばけキノコ",
+  "characterId": "ghost-mushroom",
+  "battleImage": "ghost-mushroom",
+  "background": "forest",
+  "stats": {
+    "hp": 28,
+    "attack": 6,
+    "defense": 1
+  },
+  "reward": {
+    "gold": 8,
+    "experience": 14,
+    "items": []
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "attack",
+        "text": "おばけキノコが根っこでひっかいた！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "おばけキノコが大きなかさを振り回した！",
+        "power": 1.3,
+        "inflictPoison": true
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "attack",
+        "text": "おばけキノコが根っこでひっかいた！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "おばけキノコが大きなかさを振り回した！",
+        "power": 1.3,
+        "inflictPoison": true
+      }
+    ]
+  }
+}

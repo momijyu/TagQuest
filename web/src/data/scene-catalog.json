@@ -1,0 +1,161 @@
+{
+  "tiles": [
+    "marble",
+    "carpet",
+    "wall-top",
+    "wall-left",
+    "wall-right",
+    "wall-top-left",
+    "wall-top-right",
+    "grass",
+    "dirt",
+    "brick",
+    "water",
+    "bridge",
+    "empty",
+    "forest-ground",
+    "sea",
+    "sand",
+    "cave-floor",
+    "cave-wall",
+    "demon-floor",
+    "demon-carpet",
+    "demon-wall-top",
+    "demon-wall-left",
+    "demon-wall-right",
+    "demon-wall-top-left",
+    "demon-wall-top-right",
+    "world-mountain",
+    "world-forest"
+  ],
+  "entities": [
+    {
+      "name": "throne",
+      "parameters": 0
+    },
+    {
+      "name": "pillar",
+      "parameters": 0
+    },
+    {
+      "name": "king",
+      "parameters": 1
+    },
+    {
+      "name": "castle",
+      "parameters": 0
+    },
+    {
+      "name": "well",
+      "parameters": 0
+    },
+    {
+      "name": "weapon-shop",
+      "parameters": 0
+    },
+    {
+      "name": "armor-shop",
+      "parameters": 0
+    },
+    {
+      "name": "item-shop",
+      "parameters": 0
+    },
+    {
+      "name": "house-red",
+      "parameters": 0
+    },
+    {
+      "name": "house-slate",
+      "parameters": 0
+    },
+    {
+      "name": "weapon-merchant",
+      "parameters": 0
+    },
+    {
+      "name": "armor-merchant",
+      "parameters": 0
+    },
+    {
+      "name": "item-merchant",
+      "parameters": 0
+    },
+    {
+      "name": "traveler",
+      "parameters": 0
+    },
+    {
+      "name": "resident",
+      "parameters": 0
+    },
+    {
+      "name": "elder",
+      "parameters": 0
+    },
+    {
+      "name": "loot",
+      "parameters": 1
+    },
+    {
+      "name": "moat-outer-bank",
+      "parameters": 2
+    },
+    {
+      "name": "moat-inner-bank",
+      "parameters": 2
+    },
+    {
+      "name": "tree",
+      "parameters": 0
+    },
+    {
+      "name": "world-mountain",
+      "parameters": 0
+    },
+    {
+      "name": "world-forest",
+      "parameters": 0
+    },
+    {
+      "name": "world-town",
+      "parameters": 0
+    },
+    {
+      "name": "world-forest-entrance",
+      "parameters": 0
+    },
+    {
+      "name": "world-cave",
+      "parameters": 0
+    },
+    {
+      "name": "world-demon-castle",
+      "parameters": 0
+    },
+    {
+      "name": "demon-throne",
+      "parameters": 0
+    },
+    {
+      "name": "demon-pillar",
+      "parameters": 0
+    },
+    {
+      "name": "treasure-chest",
+      "parameters": 0
+    },
+    {
+      "name": "cave-witch",
+      "parameters": 0
+    },
+    {
+      "name": "forest-fairy",
+      "parameters": 0
+    },
+    {
+      "name": "demon-lord",
+      "parameters": 0
+    }
+  ]
+}

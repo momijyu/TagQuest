@@ -1,0 +1,59 @@
+{
+  "id": 0,
+  "name": "王様",
+  "characterId": "king",
+  "stats": {
+    "hp": 30,
+    "attack": 6,
+    "defense": 0
+  },
+  "firstAttackedMessage": "何をするんじゃ！！！",
+  "reward": {
+    "gold": 1500,
+    "experience": 900,
+    "items": [
+      {
+        "itemId": 9,
+        "quantity": 1
+      },
+      {
+        "itemId": 10,
+        "quantity": 1
+      },
+      {
+        "itemId": 11,
+        "quantity": 1
+      },
+      {
+        "itemId": 12,
+        "quantity": 1
+      }
+    ]
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "say",
+        "text": "よく来たのう、勇者よ。"
+      },
+      {
+        "type": "say",
+        "text": "この城をゆっくり見ていくがよい。"
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "attack",
+        "text": "王様は杖を振り下ろした！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "王様は杖から光を放った！",
+        "speech": "無礼者め！",
+        "power": 1.5
+      }
+    ]
+  },
+  "canEscape": false
+}

@@ -1,0 +1,4 @@
+{
+  "levelThresholds": [0, 20, 60, 120, 200, 300, 420, 560, 720, 900],
+  "growthPerLevel": { "hp": 5, "mp": 2, "attack": 2, "defense": 1 }
+}

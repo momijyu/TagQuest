@@ -1,0 +1,358 @@
+@import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: night --default, retro;
+  include: card, button, join, theme-controller, alert, navbar;
+  logs: false;
+}
+
+@font-face {
+  font-family: "PixelMplus12";
+  src: url("./assets/fonts/PixelMplus12-Regular.woff") format("woff"),
+    url("./assets/fonts/PixelMplus12-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--color-base-content);
+  background: var(--color-base-100);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 280px;
+  min-height: 100svh;
+  padding: 32px 16px;
+}
+
+body[data-page="game"] {
+  padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right))
+    max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+}
+.route-status { width: min(100%, 960px); margin: 0 auto 12px; overflow-wrap: anywhere; }
+.route-status[hidden] { display: none; }
+
+.app {
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.theme-switch {
+  margin-left: auto;
+}
+
+.gallery-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.game-ui {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  font-family: "PixelMplus12", monospace;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 36px;
+  letter-spacing: 0;
+  text-rendering: auto;
+}
+
+.game-window {
+  margin: 0;
+  padding: 12px;
+  border: 2px solid #f8f8f0;
+  border-radius: 4px;
+  background: #101820;
+  color: #f8f8f0;
+}
+
+.game-status {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 24px;
+}
+
+.game-status span {
+  white-space: nowrap;
+}
+
+.game-commands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 24px;
+  list-style: none;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(32px, 8vw, 48px);
+  line-height: 1.2;
+}
+
+.tile-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 24px;
+  padding: 24px;
+  min-width: 0;
+}
+
+h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.app > .card + .card {
+  margin-top: 24px;
+}
+
+.app .card figure {
+  display: block;
+  margin: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+
+figcaption {
+  margin-top: 12px;
+  color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+  font-size: 12px;
+  text-align: center;
+}
+
+.single-preview,
+.repeat-preview {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: 100%;
+  max-width: 384px;
+}
+
+.object-preview {
+  justify-self: center;
+  width: 128px;
+}
+
+.repeat-preview {
+  max-width: 448px;
+  min-width: 0;
+}
+
+.scene-viewport {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.scene-viewport canvas {
+  width: 448px;
+  max-width: none;
+}
+
+.scene-viewport:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+.object-preview canvas {
+  background: var(--color-base-300);
+}
+
+.floor-views {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: 320px;
+  justify-self: center;
+}
+
+.floor-views figure {
+  width: 100%;
+  max-width: 80px;
+  justify-self: center;
+}
+
+.town-preview {
+  width: 100%;
+  max-width: 352px;
+  justify-self: center;
+}
+
+.forest-materials {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+}
+.forest-materials figure { margin: 0; width: 80px; }
+.forest-materials figure:last-child { width: 144px; }
+.forest-preview { width: 100%; max-width: 528px; justify-self: center; }
+.forest-stage-preview { width: 100%; max-width: 608px; justify-self: center; }
+.world-preview { width: 100%; max-width: 512px; justify-self: center; }
+.world-materials { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 400px; }
+.world-locations { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; width: 100%; max-width: 320px; justify-self: center; }
+.world-locations figure { margin: 0; width: 128px; max-width: 100%; justify-self: center; }
+
+.castle-exterior-preview {
+  width: 100%;
+  max-width: 416px;
+  justify-self: center;
+}
+
+.town-scene {
+  position: relative;
+}
+
+#town-loot-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.decoration-views {
+  align-items: end;
+}
+
+.castle-parts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  width: 184px;
+  max-width: 100%;
+  justify-self: center;
+}
+
+.shop-views {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 344px;
+  justify-self: center;
+}
+
+.shop-views figure {
+  width: 100%;
+  max-width: 160px;
+  justify-self: center;
+}
+
+.shop-views figure:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.npc-views {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: 320px;
+  justify-self: center;
+}
+
+.npc-views figure {
+  width: 100%;
+  max-width: 96px;
+  justify-self: center;
+}
+
+.house-views {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 280px;
+  justify-self: center;
+}
+
+.house-views figure {
+  width: 100%;
+  max-width: 128px;
+  justify-self: center;
+}
+
+.character-views {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 320px;
+  justify-self: center;
+}
+
+.character-views figure {
+  width: 100%;
+  max-width: 128px;
+  justify-self: center;
+}
+
+.character-views canvas {
+  background: var(--color-base-300);
+}
+
+.character-views .coarse-king-preview {
+  max-width: 144px;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.status {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.status-panel {
+  margin-top: 24px;
+}
+
+.status[hidden] {
+  display: none;
+}
+
+.enemy-catalog { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; width: 100%; }
+.enemy-catalog figure { display: flex; flex-direction: column; gap: 8px; align-items: center; margin: 0; }
+.enemy-catalog img { width: 100%; max-width: 220px; height: 200px; object-fit: contain; image-rendering: auto; }
+.enemy-catalog canvas { display: block; width: 192px; max-width: 100%; height: auto; image-rendering: pixelated; }
+.enemy-catalog details { width: 100%; text-align: center; font-size: 14px; }
+.enemy-catalog summary { cursor: pointer; }
+.enemy-catalog figcaption { text-align: center; }
+
+@media (max-width: 440px) {
+  .tile-card {
+    padding: 20px;
+  }
+
+  .character-views {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.cave-stage-preview { width: 100%; max-width: 608px; justify-self: center; }
+
+.demon-castle-stage-preview { width: 100%; max-width: 544px; justify-self: center; }

@@ -1,0 +1,5 @@
+[
+  { "id": 0, "name": "強打", "kind": "technique", "description": "攻撃力の1.5倍で攻撃", "mpCost": 2, "learnLevel": 1, "effect": { "type": "physical-damage", "power": 1.5 } },
+  { "id": 1, "name": "火の玉", "kind": "spell", "description": "敵に12ダメージ", "mpCost": 3, "learnLevel": 1, "effect": { "type": "magic-damage", "amount": 12 } },
+  { "id": 2, "name": "癒し", "kind": "spell", "description": "自分のHPを20回復", "mpCost": 3, "learnLevel": 1, "effect": { "type": "heal-hp", "amount": 20 } }
+]

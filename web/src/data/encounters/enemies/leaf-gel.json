@@ -1,0 +1,43 @@
+{
+  "id": 1,
+  "name": "リーフジェル",
+  "characterId": "leaf-gel",
+  "battleImage": "leaf-gel",
+  "background": "grassland",
+  "stats": {
+    "hp": 18,
+    "attack": 4,
+    "defense": 0
+  },
+  "reward": {
+    "gold": 4,
+    "experience": 8,
+    "items": []
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "attack",
+        "text": "リーフジェルが体当たりしてきた！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "リーフジェルが葉っぱを飛ばした！",
+        "power": 1.25
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "attack",
+        "text": "リーフジェルが体当たりしてきた！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "リーフジェルが葉っぱを飛ばした！",
+        "power": 1.25
+      }
+    ]
+  }
+}
