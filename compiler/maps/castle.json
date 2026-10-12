@@ -1,0 +1,90 @@
+{
+  "id": 0,
+  "name": "castle",
+  "width": 7,
+  "height": 6,
+  "spawn": {
+    "x": 48,
+    "y": 64
+  },
+  "spawnAnchor": "frame",
+  "floor": {
+    "default": "marble",
+    "rectangles": [
+      {
+        "tile": "wall-top",
+        "x": 0,
+        "y": 0,
+        "width": 7,
+        "height": 1
+      },
+      {
+        "tile": "wall-top",
+        "x": 0,
+        "y": 1,
+        "width": 1,
+        "height": 5
+      },
+      {
+        "tile": "wall-top",
+        "x": 6,
+        "y": 1,
+        "width": 1,
+        "height": 5
+      },
+      {
+        "tile": "carpet",
+        "x": 2,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      }
+    ]
+  },
+  "entities": [
+    {
+      "kind": "throne",
+      "x": 44,
+      "y": 16
+    },
+    {
+      "kind": "king",
+      "x": 48,
+      "y": 32,
+      "parameters": [
+        1
+      ],
+      "dialogue": {
+        "type": "template",
+        "id": 1
+      }
+    },
+    {
+      "kind": "pillar",
+      "x": 16,
+      "y": 40
+    },
+    {
+      "kind": "pillar",
+      "x": 80,
+      "y": 40
+    }
+  ],
+  "residentAnchor": "frame",
+  "npcAnchor": "frame",
+  "exits": [
+    {
+      "x": 3,
+      "y": 5,
+      "targetStageId": 1,
+      "targetX": 6,
+      "targetY": 7,
+      "direction": "front"
+    }
+  ],
+  "encounter": {
+    "enabled": true,
+    "enemyId": 0,
+    "rate": 10
+  }
+}

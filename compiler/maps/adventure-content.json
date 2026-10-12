@@ -1,0 +1,155 @@
+[
+  {
+    "stageId": 0,
+    "entities": [
+      {
+        "kind": "treasure-chest",
+        "x": 32,
+        "y": 128,
+        "parameters": [],
+        "itemId": 0
+      }
+    ],
+    "updates": []
+  },
+  {
+    "stageId": 1,
+    "entities": [],
+    "updates": [
+      {
+        "kind": "traveler",
+        "dialogue": {
+          "type": "template",
+          "id": 40
+        }
+      },
+      {
+        "kind": "resident",
+        "dialogue": {
+          "type": "template",
+          "id": 20
+        }
+      },
+      {
+        "kind": "elder",
+        "dialogue": {
+          "type": "template",
+          "id": 18
+        }
+      },
+      {
+        "kind": "well",
+        "dialogue": {
+          "type": "template",
+          "id": 43
+        },
+        "itemId": 2
+      },
+      {
+        "kind": "house-red",
+        "dialogue": {
+          "type": "template",
+          "id": 44
+        },
+        "itemId": 8
+      }
+    ]
+  },
+  {
+    "stageId": 3,
+    "entities": [
+      {
+        "kind": "forest-fairy",
+        "x": 112,
+        "y": 64,
+        "parameters": [],
+        "dialogue": {
+          "type": "template",
+          "id": 41
+        }
+      },
+      {
+        "kind": "treasure-chest",
+        "x": 192,
+        "y": 96,
+        "parameters": [],
+        "itemId": 7
+      },
+      {
+        "kind": "treasure-chest",
+        "x": 224,
+        "y": 128,
+        "parameters": [],
+        "itemId": 2
+      }
+    ],
+    "updates": []
+  },
+  {
+    "stageId": 4,
+    "entities": [
+      {
+        "kind": "cave-witch",
+        "x": 48,
+        "y": 48,
+        "parameters": [],
+        "dialogue": {
+          "type": "template",
+          "id": 42
+        }
+      },
+      {
+        "kind": "treasure-chest",
+        "x": 32,
+        "y": 80,
+        "parameters": [],
+        "itemId": 6
+      },
+      {
+        "kind": "treasure-chest",
+        "x": 224,
+        "y": 112,
+        "parameters": [],
+        "itemId": 4
+      },
+      {
+        "kind": "treasure-chest",
+        "x": 192,
+        "y": 128,
+        "parameters": [],
+        "itemId": 1
+      }
+    ],
+    "updates": []
+  },
+  {
+    "stageId": 5,
+    "entities": [
+      {
+        "kind": "elder",
+        "x": 64,
+        "y": 160,
+        "parameters": [],
+        "dialogue": {
+          "type": "template",
+          "id": 45
+        }
+      },
+      {
+        "kind": "treasure-chest",
+        "x": 64,
+        "y": 96,
+        "parameters": [],
+        "itemId": 0
+      },
+      {
+        "kind": "treasure-chest",
+        "x": 192,
+        "y": 96,
+        "parameters": [],
+        "itemId": 2
+      }
+    ],
+    "updates": []
+  }
+]

@@ -1,0 +1,70 @@
+{
+  "format": "TQ v14 experimental",
+  "binary_bytes": 195,
+  "base64url_chars": 260,
+  "base_url": "https://tag-quest-kappa.vercel.app/",
+  "final_url_bytes": 296,
+  "binary_target_bytes": 300,
+  "remaining_to_binary_target_bytes": 105,
+  "includes_ndef_overhead": true,
+  "ndef_tlv_bytes": 301,
+  "ntag215_ndef_capacity_bytes": 496,
+  "remaining_ntag215_bytes": 195,
+  "stages": [
+    {
+      "id": 0,
+      "name": "castle",
+      "width": 7,
+      "height": 6,
+      "floor_bytes": {
+        "RAW": 21,
+        "RLE": 21,
+        "RECT": 11
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 4,
+      "entity_bytes": 9,
+      "interaction_bytes": 6,
+      "exit_bytes": 4,
+      "encounter_bytes": 3,
+      "stage_bytes": 42,
+      "tile_counts": {
+        "marble": 10,
+        "carpet": 15,
+        "wall-top": 17
+      }
+    },
+    {
+      "id": 1,
+      "name": "town",
+      "width": 13,
+      "height": 31,
+      "floor_bytes": {
+        "RAW": 202,
+        "RLE": 122,
+        "RECT": 50
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 17,
+      "entity_bytes": 57,
+      "interaction_bytes": 27,
+      "exit_bytes": 4,
+      "encounter_bytes": 2,
+      "stage_bytes": 149,
+      "tile_counts": {
+        "grass": 219,
+        "dirt": 58,
+        "brick": 98,
+        "water": 27,
+        "bridge": 1
+      }
+    }
+  ],
+  "binary_bytes_by_floor_codec": {
+    "RAW": 357,
+    "RLE": 277,
+    "RECT": 195
+  }
+}

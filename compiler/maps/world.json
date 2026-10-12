@@ -1,0 +1,1228 @@
+{
+  "id": 2,
+  "name": "全体マップ",
+  "width": 32,
+  "height": 24,
+  "spawn": {
+    "x": 128,
+    "y": 240
+  },
+  "spawnAnchor": "frame",
+  "residentAnchor": "frame",
+  "npcAnchor": "frame",
+  "floor": {
+    "default": "sea",
+    "rectangles": [
+      {
+        "tile": "sand",
+        "x": 16,
+        "y": 2,
+        "width": 5,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 22,
+        "y": 2,
+        "width": 3,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 28,
+        "y": 2,
+        "width": 2,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 14,
+        "y": 3,
+        "width": 2,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 16,
+        "y": 3,
+        "width": 4,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 20,
+        "y": 3,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 22,
+        "y": 3,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "tile": "grass",
+        "x": 23,
+        "y": 3,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "tile": "sand",
+        "x": 24,
+        "y": 3,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "tile": "sand",
+        "x": 28,
+        "y": 3,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "tile": "grass",
+        "x": 29,
+        "y": 3,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "tile": "sand",
+        "x": 30,
+        "y": 3,
+        "width": 1,
+        "height": 16
+      },
+      {
+        "tile": "sand",
+        "x": 13,
+        "y": 4,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 14,
+        "y": 4,
+        "width": 5,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 19,
+        "y": 4,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 11,
+        "y": 5,
+        "width": 2,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 13,
+        "y": 5,
+        "width": 4,
+        "height": 1
+      },
+      {
+        "tile": "forest-ground",
+        "x": 17,
+        "y": 5,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 18,
+        "y": 5,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "tile": "sand",
+        "x": 21,
+        "y": 5,
+        "width": 3,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 27,
+        "y": 5,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "tile": "grass",
+        "x": 28,
+        "y": 5,
+        "width": 2,
+        "height": 2
+      },
+      {
+        "tile": "sand",
+        "x": 9,
+        "y": 6,
+        "width": 2,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 11,
+        "y": 6,
+        "width": 4,
+        "height": 1
+      },
+      {
+        "tile": "forest-ground",
+        "x": 15,
+        "y": 6,
+        "width": 3,
+        "height": 1
+      },
+      {
+        "tile": "bridge",
+        "x": 19,
+        "y": 6,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 20,
+        "y": 6,
+        "width": 2,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 7,
+        "y": 7,
+        "width": 2,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 9,
+        "y": 7,
+        "width": 6,
+        "height": 1
+      },
+      {
+        "tile": "forest-ground",
+        "x": 15,
+        "y": 7,
+        "width": 2,
+        "height": 2
+      },
+      {
+        "tile": "sand",
+        "x": 17,
+        "y": 7,
+        "width": 1,
+        "height": 3
+      },
+      {
+        "tile": "sand",
+        "x": 20,
+        "y": 7,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 26,
+        "y": 7,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "tile": "grass",
+        "x": 27,
+        "y": 7,
+        "width": 3,
+        "height": 2
+      },
+      {
+        "tile": "sand",
+        "x": 5,
+        "y": 8,
+        "width": 2,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 7,
+        "y": 8,
+        "width": 8,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 19,
+        "y": 8,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 3,
+        "y": 9,
+        "width": 2,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 5,
+        "y": 9,
+        "width": 11,
+        "height": 1
+      },
+      {
+        "tile": "forest-ground",
+        "x": 16,
+        "y": 9,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 19,
+        "y": 9,
+        "width": 2,
+        "height": 2
+      },
+      {
+        "tile": "sand",
+        "x": 25,
+        "y": 9,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "forest-ground",
+        "x": 26,
+        "y": 9,
+        "width": 3,
+        "height": 7
+      },
+      {
+        "tile": "grass",
+        "x": 29,
+        "y": 9,
+        "width": 1,
+        "height": 7
+      },
+      {
+        "tile": "sand",
+        "x": 2,
+        "y": 10,
+        "width": 1,
+        "height": 5
+      },
+      {
+        "tile": "grass",
+        "x": 3,
+        "y": 10,
+        "width": 13,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 16,
+        "y": 10,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "tile": "sand",
+        "x": 24,
+        "y": 10,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "tile": "grass",
+        "x": 25,
+        "y": 10,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "tile": "grass",
+        "x": 3,
+        "y": 11,
+        "width": 3,
+        "height": 1
+      },
+      {
+        "tile": "forest-ground",
+        "x": 6,
+        "y": 11,
+        "width": 4,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 10,
+        "y": 11,
+        "width": 6,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 3,
+        "y": 12,
+        "width": 2,
+        "height": 2
+      },
+      {
+        "tile": "forest-ground",
+        "x": 5,
+        "y": 12,
+        "width": 5,
+        "height": 2
+      },
+      {
+        "tile": "grass",
+        "x": 10,
+        "y": 12,
+        "width": 7,
+        "height": 2
+      },
+      {
+        "tile": "sand",
+        "x": 17,
+        "y": 12,
+        "width": 1,
+        "height": 3
+      },
+      {
+        "tile": "sand",
+        "x": 23,
+        "y": 12,
+        "width": 1,
+        "height": 4
+      },
+      {
+        "tile": "grass",
+        "x": 24,
+        "y": 12,
+        "width": 2,
+        "height": 4
+      },
+      {
+        "tile": "grass",
+        "x": 3,
+        "y": 14,
+        "width": 3,
+        "height": 1
+      },
+      {
+        "tile": "forest-ground",
+        "x": 6,
+        "y": 14,
+        "width": 3,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 9,
+        "y": 14,
+        "width": 8,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 1,
+        "y": 15,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 2,
+        "y": 15,
+        "width": 14,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 16,
+        "y": 15,
+        "width": 1,
+        "height": 3
+      },
+      {
+        "tile": "sand",
+        "x": 2,
+        "y": 16,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 3,
+        "y": 16,
+        "width": 13,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 24,
+        "y": 16,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "tile": "grass",
+        "x": 25,
+        "y": 16,
+        "width": 5,
+        "height": 2
+      },
+      {
+        "tile": "sand",
+        "x": 3,
+        "y": 17,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "tile": "grass",
+        "x": 4,
+        "y": 17,
+        "width": 12,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 4,
+        "y": 18,
+        "width": 11,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 15,
+        "y": 18,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 25,
+        "y": 18,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 26,
+        "y": 18,
+        "width": 4,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 4,
+        "y": 19,
+        "width": 2,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 6,
+        "y": 19,
+        "width": 7,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 13,
+        "y": 19,
+        "width": 2,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 26,
+        "y": 19,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "grass",
+        "x": 27,
+        "y": 19,
+        "width": 2,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 29,
+        "y": 19,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 6,
+        "y": 20,
+        "width": 7,
+        "height": 1
+      },
+      {
+        "tile": "sand",
+        "x": 27,
+        "y": 20,
+        "width": 3,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 16,
+        "y": 3,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 17,
+        "y": 3,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 18,
+        "y": 3,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 19,
+        "y": 3,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 15,
+        "y": 4,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 16,
+        "y": 4,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 17,
+        "y": 4,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 18,
+        "y": 4,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 14,
+        "y": 5,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 15,
+        "y": 5,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 16,
+        "y": 5,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 13,
+        "y": 6,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 14,
+        "y": 6,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 12,
+        "y": 7,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 13,
+        "y": 7,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 13,
+        "y": 8,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 14,
+        "y": 8,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 14,
+        "y": 9,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 15,
+        "y": 9,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 14,
+        "y": 10,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 15,
+        "y": 10,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 13,
+        "y": 11,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 14,
+        "y": 11,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 15,
+        "y": 11,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 13,
+        "y": 12,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 14,
+        "y": 12,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 15,
+        "y": 12,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 13,
+        "y": 13,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 14,
+        "y": 13,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 12,
+        "y": 14,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 13,
+        "y": 14,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 14,
+        "y": 14,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 11,
+        "y": 15,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 12,
+        "y": 15,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 13,
+        "y": 15,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 10,
+        "y": 16,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 11,
+        "y": 16,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 12,
+        "y": 16,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 9,
+        "y": 17,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 10,
+        "y": 17,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-mountain",
+        "x": 11,
+        "y": 17,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 17,
+        "y": 5,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 15,
+        "y": 6,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 16,
+        "y": 6,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 17,
+        "y": 6,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 15,
+        "y": 7,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 16,
+        "y": 7,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 15,
+        "y": 8,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 16,
+        "y": 8,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 16,
+        "y": 9,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 26,
+        "y": 9,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 27,
+        "y": 9,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 28,
+        "y": 9,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 26,
+        "y": 10,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 27,
+        "y": 10,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 28,
+        "y": 10,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 6,
+        "y": 11,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 7,
+        "y": 11,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 8,
+        "y": 11,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 9,
+        "y": 11,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 26,
+        "y": 11,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 27,
+        "y": 11,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 28,
+        "y": 11,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 5,
+        "y": 12,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 6,
+        "y": 12,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 7,
+        "y": 12,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 8,
+        "y": 12,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 9,
+        "y": 12,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 26,
+        "y": 12,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 27,
+        "y": 12,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 28,
+        "y": 12,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 5,
+        "y": 13,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 6,
+        "y": 13,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 8,
+        "y": 13,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 9,
+        "y": 13,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 26,
+        "y": 13,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 27,
+        "y": 13,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 28,
+        "y": 13,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 6,
+        "y": 14,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 7,
+        "y": 14,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 8,
+        "y": 14,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 26,
+        "y": 14,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 27,
+        "y": 14,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 28,
+        "y": 14,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 26,
+        "y": 15,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 27,
+        "y": 15,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "world-forest",
+        "x": 28,
+        "y": 15,
+        "width": 1,
+        "height": 1
+      }
+    ]
+  },
+  "entities": [
+    {
+      "kind": "world-town",
+      "x": 128,
+      "y": 240,
+      "parameters": []
+    },
+    {
+      "kind": "world-forest-entrance",
+      "x": 112,
+      "y": 208,
+      "parameters": []
+    },
+    {
+      "kind": "world-cave",
+      "x": 192,
+      "y": 192,
+      "parameters": []
+    },
+    {
+      "kind": "world-demon-castle",
+      "x": 368,
+      "y": 64,
+      "parameters": []
+    }
+  ],
+  "exits": []
+}

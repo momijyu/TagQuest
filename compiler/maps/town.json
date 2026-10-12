@@ -1,0 +1,264 @@
+{
+  "id": 1,
+  "name": "town",
+  "width": 13,
+  "height": 31,
+  "spawn": null,
+  "spawnAnchor": "frame",
+  "floor": {
+    "default": "grass",
+    "rectangles": [
+      {
+        "tile": "water",
+        "x": 2,
+        "y": 1,
+        "width": 9,
+        "height": 7
+      },
+      {
+        "tile": "grass",
+        "x": 3,
+        "y": 2,
+        "width": 7,
+        "height": 5
+      },
+      {
+        "tile": "dirt",
+        "x": 5,
+        "y": 8,
+        "width": 1,
+        "height": 23
+      },
+      {
+        "tile": "dirt",
+        "x": 7,
+        "y": 8,
+        "width": 1,
+        "height": 23
+      },
+      {
+        "tile": "dirt",
+        "x": 0,
+        "y": 17,
+        "width": 13,
+        "height": 1
+      },
+      {
+        "tile": "dirt",
+        "x": 0,
+        "y": 23,
+        "width": 13,
+        "height": 1
+      },
+      {
+        "tile": "brick",
+        "x": 6,
+        "y": 8,
+        "width": 1,
+        "height": 23
+      },
+      {
+        "tile": "brick",
+        "x": 0,
+        "y": 16,
+        "width": 13,
+        "height": 1
+      },
+      {
+        "tile": "brick",
+        "x": 0,
+        "y": 22,
+        "width": 13,
+        "height": 1
+      },
+      {
+        "tile": "brick",
+        "x": 0,
+        "y": 30,
+        "width": 13,
+        "height": 1
+      },
+      {
+        "tile": "brick",
+        "x": 2,
+        "y": 15,
+        "width": 9,
+        "height": 1
+      },
+      {
+        "tile": "brick",
+        "x": 1,
+        "y": 13,
+        "width": 3,
+        "height": 3
+      },
+      {
+        "tile": "brick",
+        "x": 9,
+        "y": 13,
+        "width": 3,
+        "height": 3
+      },
+      {
+        "tile": "brick",
+        "x": 8,
+        "y": 26,
+        "width": 4,
+        "height": 4
+      },
+      {
+        "tile": "brick",
+        "x": 6,
+        "y": 6,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "bridge",
+        "x": 6,
+        "y": 7,
+        "width": 1,
+        "height": 1
+      }
+    ]
+  },
+  "entities": [
+    {
+      "kind": "moat-outer-bank",
+      "x": 32,
+      "y": 16,
+      "parameters": [
+        72,
+        56
+      ]
+    },
+    {
+      "kind": "moat-inner-bank",
+      "x": 46,
+      "y": 30,
+      "parameters": [
+        58,
+        42
+      ]
+    },
+    {
+      "kind": "castle",
+      "x": 64,
+      "y": 32
+    },
+    {
+      "kind": "well",
+      "x": 0,
+      "y": 232
+    },
+    {
+      "kind": "weapon-shop",
+      "x": 0,
+      "y": 144
+    },
+    {
+      "kind": "weapon-merchant",
+      "x": 32,
+      "y": 174,
+      "dialogue": {
+        "type": "template",
+        "id": 2
+      }
+    },
+    {
+      "kind": "armor-shop",
+      "x": 128,
+      "y": 144
+    },
+    {
+      "kind": "armor-merchant",
+      "x": 160,
+      "y": 174,
+      "dialogue": {
+        "type": "template",
+        "id": 3
+      }
+    },
+    {
+      "kind": "house-red",
+      "x": 8,
+      "y": 288
+    },
+    {
+      "kind": "house-slate",
+      "x": 136,
+      "y": 288
+    },
+    {
+      "kind": "item-shop",
+      "x": 0,
+      "y": 400
+    },
+    {
+      "kind": "item-merchant",
+      "x": 32,
+      "y": 430,
+      "dialogue": {
+        "type": "template",
+        "id": 4
+      }
+    },
+    {
+      "kind": "traveler",
+      "x": 96,
+      "y": 248,
+      "dialogue": {
+        "type": "template",
+        "id": 5
+      }
+    },
+    {
+      "kind": "resident",
+      "x": 152,
+      "y": 352,
+      "dialogue": {
+        "type": "template",
+        "id": 0
+      }
+    },
+    {
+      "kind": "elder",
+      "x": 152,
+      "y": 432,
+      "dialogue": {
+        "type": "template",
+        "id": 6
+      }
+    },
+    {
+      "kind": "loot",
+      "x": 64,
+      "y": 264,
+      "parameters": [
+        0
+      ],
+      "itemId": 0
+    },
+    {
+      "kind": "loot",
+      "x": 176,
+      "y": 272,
+      "parameters": [
+        4
+      ],
+      "itemId": 1
+    }
+  ],
+  "residentAnchor": "frame",
+  "npcAnchor": "frame",
+  "exits": [
+    {
+      "x": 6,
+      "y": 6,
+      "targetStageId": 0,
+      "targetX": 3,
+      "targetY": 5,
+      "direction": "back"
+    }
+  ]
+}

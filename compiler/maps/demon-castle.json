@@ -1,0 +1,162 @@
+{
+  "id": 5,
+  "name": "demon-castle",
+  "width": 17,
+  "height": 19,
+  "spawn": {
+    "x": 128,
+    "y": 256
+  },
+  "spawnAnchor": "frame",
+  "residentAnchor": "frame",
+  "npcAnchor": "frame",
+  "floor": {
+    "default": "empty",
+    "rectangles": [
+      {
+        "tile": "demon-floor",
+        "x": 2,
+        "y": 2,
+        "width": 13,
+        "height": 11
+      },
+      {
+        "tile": "demon-wall-top",
+        "x": 1,
+        "y": 1,
+        "width": 15,
+        "height": 1
+      },
+      {
+        "tile": "demon-wall-top",
+        "x": 1,
+        "y": 2,
+        "width": 1,
+        "height": 12
+      },
+      {
+        "tile": "demon-wall-top",
+        "x": 15,
+        "y": 2,
+        "width": 1,
+        "height": 12
+      },
+      {
+        "tile": "demon-wall-top",
+        "x": 1,
+        "y": 13,
+        "width": 5,
+        "height": 1
+      },
+      {
+        "tile": "demon-wall-top",
+        "x": 11,
+        "y": 13,
+        "width": 5,
+        "height": 1
+      },
+      {
+        "tile": "demon-floor",
+        "x": 6,
+        "y": 13,
+        "width": 5,
+        "height": 5
+      },
+      {
+        "tile": "demon-wall-top",
+        "x": 5,
+        "y": 14,
+        "width": 1,
+        "height": 4
+      },
+      {
+        "tile": "demon-wall-top",
+        "x": 11,
+        "y": 14,
+        "width": 1,
+        "height": 4
+      },
+      {
+        "tile": "demon-wall-top",
+        "x": 5,
+        "y": 18,
+        "width": 3,
+        "height": 1
+      },
+      {
+        "tile": "demon-wall-top",
+        "x": 9,
+        "y": 18,
+        "width": 3,
+        "height": 1
+      },
+      {
+        "tile": "demon-carpet",
+        "x": 7,
+        "y": 3,
+        "width": 3,
+        "height": 15
+      },
+      {
+        "tile": "demon-carpet",
+        "x": 8,
+        "y": 18,
+        "width": 1,
+        "height": 1
+      }
+    ]
+  },
+  "entities": [
+    {
+      "kind": "demon-throne",
+      "x": 124,
+      "y": 48,
+      "parameters": []
+    },
+    {
+      "kind": "demon-lord",
+      "x": 128,
+      "y": 64,
+      "parameters": [],
+      "dialogue": { "type": "template", "id": 9 },
+      "battleEvent": { "enemyId": 4, "once": true, "clear": true }
+    },
+    {
+      "kind": "demon-pillar",
+      "x": 48,
+      "y": 72,
+      "parameters": []
+    },
+    {
+      "kind": "demon-pillar",
+      "x": 208,
+      "y": 72,
+      "parameters": []
+    },
+    {
+      "kind": "demon-pillar",
+      "x": 48,
+      "y": 136,
+      "parameters": []
+    },
+    {
+      "kind": "demon-pillar",
+      "x": 208,
+      "y": 136,
+      "parameters": []
+    },
+    {
+      "kind": "demon-pillar",
+      "x": 48,
+      "y": 184,
+      "parameters": []
+    },
+    {
+      "kind": "demon-pillar",
+      "x": 208,
+      "y": 184,
+      "parameters": []
+    }
+  ],
+  "exits": []
+}

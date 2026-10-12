@@ -1,0 +1,425 @@
+{
+  "scope": "offline comparison only; no production decoder support",
+  "source_sha256": "18f601286ca086038f88e544536e4ea5414335c7adb5a6245a8bc4ca827d4efd",
+  "base_url": "https://example.com/g",
+  "capacity_bytes": 496,
+  "profiles": {
+    "castle": [
+      "marble",
+      "carpet",
+      "wall-top",
+      "empty"
+    ],
+    "town": [
+      "grass",
+      "dirt",
+      "brick",
+      "water",
+      "bridge",
+      "empty"
+    ],
+    "world": [
+      "sea",
+      "sand",
+      "grass",
+      "bridge",
+      "forest-ground",
+      "world-mountain",
+      "world-forest",
+      "empty"
+    ],
+    "forest": [
+      "grass",
+      "dirt",
+      "forest-ground",
+      "sea",
+      "empty"
+    ],
+    "cave": [
+      "cave-floor",
+      "cave-wall",
+      "empty"
+    ],
+    "demon-castle": [
+      "demon-floor",
+      "demon-carpet",
+      "demon-wall-top",
+      "empty"
+    ]
+  },
+  "baseline": {
+    "binary_bytes": 708,
+    "url_bytes": 966,
+    "ndef_tlv_bytes": 971,
+    "over_capacity_bytes": 475
+  },
+  "variants": {
+    "theme_id_only": {
+      "binary_bytes": 698,
+      "url_bytes": 953,
+      "ndef_tlv_bytes": 958,
+      "over_capacity_bytes": 462,
+      "saved_binary_bytes": 10
+    },
+    "custom_variable_bits": {
+      "binary_bytes": 687,
+      "url_bytes": 938,
+      "ndef_tlv_bytes": 943,
+      "over_capacity_bytes": 447,
+      "saved_binary_bytes": 21
+    },
+    "theme_variable_bits": {
+      "binary_bytes": 658,
+      "url_bytes": 900,
+      "ndef_tlv_bytes": 905,
+      "over_capacity_bytes": 409,
+      "saved_binary_bytes": 50
+    },
+    "hybrid": {
+      "binary_bytes": 658,
+      "url_bytes": 900,
+      "ndef_tlv_bytes": 905,
+      "over_capacity_bytes": 409,
+      "saved_binary_bytes": 50
+    }
+  },
+  "stages": [
+    {
+      "name": "castle",
+      "dimensions": [
+        7,
+        6
+      ],
+      "actual_types": 3,
+      "profile_types": 4,
+      "theme_bits": 2,
+      "baseline_floor_bytes": 14,
+      "baseline_stage_bytes": 48,
+      "variants": {
+        "theme_id_only": {
+          "floor_bytes": 15,
+          "stage_bytes": 49,
+          "codec": "RECT",
+          "codec_bytes": {
+            "RAW": 22,
+            "RLE": 22,
+            "RECT": 15
+          }
+        },
+        "custom_variable_bits": {
+          "floor_bytes": 16,
+          "stage_bytes": 50,
+          "codec": "RAW",
+          "codec_bytes": {
+            "RAW": 16,
+            "RLE": 21,
+            "RECT": 18
+          }
+        },
+        "theme_variable_bits": {
+          "floor_bytes": 12,
+          "stage_bytes": 46,
+          "codec": "RAW",
+          "codec_bytes": {
+            "RAW": 12,
+            "RLE": 17,
+            "RECT": 14
+          }
+        },
+        "hybrid": {
+          "floor_bytes": 12,
+          "stage_bytes": 46,
+          "source_mode": "theme_variable_bits"
+        }
+      }
+    },
+    {
+      "name": "town",
+      "dimensions": [
+        13,
+        31
+      ],
+      "actual_types": 5,
+      "profile_types": 6,
+      "theme_bits": 3,
+      "baseline_floor_bytes": 50,
+      "baseline_stage_bytes": 158,
+      "variants": {
+        "theme_id_only": {
+          "floor_bytes": 51,
+          "stage_bytes": 159,
+          "codec": "RECT",
+          "codec_bytes": {
+            "RAW": 203,
+            "RLE": 123,
+            "RECT": 51
+          }
+        },
+        "custom_variable_bits": {
+          "floor_bytes": 55,
+          "stage_bytes": 163,
+          "codec": "RECT",
+          "codec_bytes": {
+            "RAW": 159,
+            "RLE": 114,
+            "RECT": 55
+          }
+        },
+        "theme_variable_bits": {
+          "floor_bytes": 49,
+          "stage_bytes": 157,
+          "codec": "RECT",
+          "codec_bytes": {
+            "RAW": 153,
+            "RLE": 108,
+            "RECT": 49
+          }
+        },
+        "hybrid": {
+          "floor_bytes": 49,
+          "stage_bytes": 157,
+          "source_mode": "theme_variable_bits"
+        }
+      }
+    },
+    {
+      "name": "全体マップ",
+      "dimensions": [
+        32,
+        24
+      ],
+      "actual_types": 7,
+      "profile_types": 8,
+      "theme_bits": 3,
+      "baseline_floor_bytes": 234,
+      "baseline_stage_bytes": 280,
+      "variants": {
+        "theme_id_only": {
+          "floor_bytes": 227,
+          "stage_bytes": 273,
+          "codec": "RLE",
+          "codec_bytes": {
+            "RAW": 385,
+            "RLE": 227,
+            "RECT": 510
+          }
+        },
+        "custom_variable_bits": {
+          "floor_bytes": 207,
+          "stage_bytes": 253,
+          "codec": "RLE",
+          "codec_bytes": {
+            "RAW": 297,
+            "RLE": 207,
+            "RECT": 497
+          }
+        },
+        "theme_variable_bits": {
+          "floor_bytes": 199,
+          "stage_bytes": 245,
+          "codec": "RLE",
+          "codec_bytes": {
+            "RAW": 289,
+            "RLE": 199,
+            "RECT": 489
+          }
+        },
+        "hybrid": {
+          "floor_bytes": 199,
+          "stage_bytes": 245,
+          "source_mode": "theme_variable_bits"
+        }
+      }
+    },
+    {
+      "name": "forest",
+      "dimensions": [
+        19,
+        17
+      ],
+      "actual_types": 4,
+      "profile_types": 5,
+      "theme_bits": 3,
+      "baseline_floor_bytes": 23,
+      "baseline_stage_bytes": 80,
+      "variants": {
+        "theme_id_only": {
+          "floor_bytes": 24,
+          "stage_bytes": 81,
+          "codec": "RECT",
+          "codec_bytes": {
+            "RAW": 163,
+            "RLE": 49,
+            "RECT": 24
+          }
+        },
+        "custom_variable_bits": {
+          "floor_bytes": 27,
+          "stage_bytes": 84,
+          "codec": "RECT",
+          "codec_bytes": {
+            "RAW": 87,
+            "RLE": 42,
+            "RECT": 27
+          }
+        },
+        "theme_variable_bits": {
+          "floor_bytes": 23,
+          "stage_bytes": 80,
+          "codec": "RECT",
+          "codec_bytes": {
+            "RAW": 123,
+            "RLE": 43,
+            "RECT": 23
+          }
+        },
+        "hybrid": {
+          "floor_bytes": 23,
+          "stage_bytes": 80,
+          "source_mode": "baseline"
+        }
+      }
+    },
+    {
+      "name": "cave",
+      "dimensions": [
+        19,
+        17
+      ],
+      "actual_types": 2,
+      "profile_types": 3,
+      "theme_bits": 2,
+      "baseline_floor_bytes": 29,
+      "baseline_stage_bytes": 49,
+      "variants": {
+        "theme_id_only": {
+          "floor_bytes": 27,
+          "stage_bytes": 47,
+          "codec": "RECT",
+          "codec_bytes": {
+            "RAW": 163,
+            "RLE": 42,
+            "RECT": 27
+          }
+        },
+        "custom_variable_bits": {
+          "floor_bytes": 27,
+          "stage_bytes": 47,
+          "codec": "RECT",
+          "codec_bytes": {
+            "RAW": 45,
+            "RLE": 30,
+            "RECT": 27
+          }
+        },
+        "theme_variable_bits": {
+          "floor_bytes": 25,
+          "stage_bytes": 45,
+          "codec": "RECT",
+          "codec_bytes": {
+            "RAW": 82,
+            "RLE": 32,
+            "RECT": 25
+          }
+        },
+        "hybrid": {
+          "floor_bytes": 25,
+          "stage_bytes": 45,
+          "source_mode": "theme_variable_bits"
+        }
+      }
+    },
+    {
+      "name": "demon-castle",
+      "dimensions": [
+        17,
+        19
+      ],
+      "actual_types": 4,
+      "profile_types": 4,
+      "theme_bits": 2,
+      "baseline_floor_bytes": 46,
+      "baseline_stage_bytes": 89,
+      "variants": {
+        "theme_id_only": {
+          "floor_bytes": 42,
+          "stage_bytes": 85,
+          "codec": "RECT",
+          "codec_bytes": {
+            "RAW": 163,
+            "RLE": 103,
+            "RECT": 42
+          }
+        },
+        "custom_variable_bits": {
+          "floor_bytes": 43,
+          "stage_bytes": 86,
+          "codec": "RECT",
+          "codec_bytes": {
+            "RAW": 87,
+            "RLE": 83,
+            "RECT": 43
+          }
+        },
+        "theme_variable_bits": {
+          "floor_bytes": 38,
+          "stage_bytes": 81,
+          "codec": "RECT",
+          "codec_bytes": {
+            "RAW": 82,
+            "RLE": 78,
+            "RECT": 38
+          }
+        },
+        "hybrid": {
+          "floor_bytes": 38,
+          "stage_bytes": 81,
+          "source_mode": "theme_variable_bits"
+        }
+      }
+    }
+  ],
+  "compression_runtime": {
+    "zlib_build": "1.2.11",
+    "zlib_runtime": "1.2.12"
+  },
+  "optional_deflate_with_4byte_envelope": {
+    "baseline": {
+      "binary_bytes": 603,
+      "url_bytes": 826,
+      "ndef_tlv_bytes": 831,
+      "over_capacity_bytes": 335
+    },
+    "theme_id_only": {
+      "binary_bytes": 580,
+      "url_bytes": 796,
+      "ndef_tlv_bytes": 801,
+      "over_capacity_bytes": 305
+    },
+    "custom_variable_bits": {
+      "binary_bytes": 640,
+      "url_bytes": 876,
+      "ndef_tlv_bytes": 881,
+      "over_capacity_bytes": 385
+    },
+    "theme_variable_bits": {
+      "binary_bytes": 607,
+      "url_bytes": 832,
+      "ndef_tlv_bytes": 837,
+      "over_capacity_bytes": 341
+    },
+    "hybrid": {
+      "binary_bytes": 609,
+      "url_bytes": 834,
+      "ndef_tlv_bytes": 839,
+      "over_capacity_bytes": 343
+    }
+  },
+  "checks": {
+    "extra_codec_roundtrips": 152,
+    "sample_codec_roundtrips": 54,
+    "all_decoded_floor_cells_equal": true,
+    "all_nonfloor_stage_bytes_unchanged": true,
+    "baseline_matches_current_generated_binary": true
+  }
+}

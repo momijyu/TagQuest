@@ -1,0 +1,169 @@
+{
+  "id": 3,
+  "name": "forest",
+  "width": 19,
+  "height": 17,
+  "spawn": {
+    "x": 144,
+    "y": 224
+  },
+  "spawnAnchor": "frame",
+  "residentAnchor": "frame",
+  "npcAnchor": "frame",
+  "floor": {
+    "default": "forest-ground",
+    "rectangles": [
+      {
+        "tile": "grass",
+        "x": 7,
+        "y": 3,
+        "width": 6,
+        "height": 4
+      },
+      {
+        "tile": "dirt",
+        "x": 9,
+        "y": 11,
+        "width": 1,
+        "height": 6
+      },
+      {
+        "tile": "dirt",
+        "x": 9,
+        "y": 10,
+        "width": 3,
+        "height": 1
+      },
+      {
+        "tile": "dirt",
+        "x": 11,
+        "y": 7,
+        "width": 1,
+        "height": 4
+      },
+      {
+        "tile": "dirt",
+        "x": 9,
+        "y": 6,
+        "width": 3,
+        "height": 1
+      },
+      {
+        "tile": "dirt",
+        "x": 9,
+        "y": 4,
+        "width": 1,
+        "height": 3
+      },
+      {
+        "tile": "sea",
+        "x": 13,
+        "y": 4,
+        "width": 3,
+        "height": 2
+      }
+    ]
+  },
+  "entities": [
+    {
+      "kind": "tree",
+      "x": 0,
+      "y": 0,
+      "parameters": []
+    },
+    {
+      "kind": "tree",
+      "x": 0,
+      "y": 64,
+      "parameters": []
+    },
+    {
+      "kind": "tree",
+      "x": 0,
+      "y": 128,
+      "parameters": []
+    },
+    {
+      "kind": "tree",
+      "x": 0,
+      "y": 192,
+      "parameters": []
+    },
+    {
+      "kind": "tree",
+      "x": 240,
+      "y": 0,
+      "parameters": []
+    },
+    {
+      "kind": "tree",
+      "x": 240,
+      "y": 112,
+      "parameters": []
+    },
+    {
+      "kind": "tree",
+      "x": 240,
+      "y": 192,
+      "parameters": []
+    },
+    {
+      "kind": "tree",
+      "x": 48,
+      "y": 16,
+      "parameters": []
+    },
+    {
+      "kind": "tree",
+      "x": 80,
+      "y": 96,
+      "parameters": []
+    },
+    {
+      "kind": "tree",
+      "x": 48,
+      "y": 160,
+      "parameters": []
+    },
+    {
+      "kind": "tree",
+      "x": 64,
+      "y": 208,
+      "parameters": []
+    },
+    {
+      "kind": "tree",
+      "x": 96,
+      "y": 0,
+      "parameters": []
+    },
+    {
+      "kind": "tree",
+      "x": 160,
+      "y": 0,
+      "parameters": []
+    },
+    {
+      "kind": "tree",
+      "x": 176,
+      "y": 144,
+      "parameters": []
+    },
+    {
+      "kind": "tree",
+      "x": 192,
+      "y": 208,
+      "parameters": []
+    },
+    {
+      "kind": "loot",
+      "x": 128,
+      "y": 64,
+      "parameters": [
+        0
+      ],
+      "itemId": 0
+    }
+  ],
+  "exits": []
+}

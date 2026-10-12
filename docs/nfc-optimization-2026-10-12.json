@@ -1,0 +1,174 @@
+{
+  "base_url": "https://tagquest.vercel.app/",
+  "ntag215_default_ndef_bytes": 496,
+  "source_sha256": "09bc558c7f2a904322a564073e104d3a71f28ee35926da6bbc5705f3ef88d286",
+  "format_version": 13,
+  "current": {
+    "binary_bytes": 678,
+    "url_bytes": 933,
+    "ndef_tlv_bytes": 938,
+    "remaining_ntag215_bytes": -442
+  },
+  "stages": [
+    {
+      "id": 0,
+      "name": "castle",
+      "width": 7,
+      "height": 6,
+      "floor_bytes": {
+        "RAW": 21,
+        "RLE": 21,
+        "RECT": 11
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 4,
+      "entity_bytes": 9,
+      "interaction_bytes": 6,
+      "exit_bytes": 5,
+      "encounter_bytes": 3,
+      "stage_bytes": 43,
+      "tile_counts": {
+        "marble": 10,
+        "carpet": 15,
+        "wall-top": 17
+      }
+    },
+    {
+      "id": 1,
+      "name": "town",
+      "width": 13,
+      "height": 31,
+      "floor_bytes": {
+        "RAW": 202,
+        "RLE": 122,
+        "RECT": 50
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 17,
+      "entity_bytes": 57,
+      "interaction_bytes": 27,
+      "exit_bytes": 8,
+      "encounter_bytes": 2,
+      "stage_bytes": 153,
+      "tile_counts": {
+        "grass": 219,
+        "dirt": 58,
+        "brick": 98,
+        "water": 27,
+        "bridge": 1
+      }
+    },
+    {
+      "id": 2,
+      "name": "全体マップ",
+      "width": 32,
+      "height": 24,
+      "floor_bytes": {
+        "RAW": 392,
+        "RLE": 234,
+        "RECT": 301
+      },
+      "selected_codec": "RLE",
+      "header_bytes": 9,
+      "entity_count": 4,
+      "entity_bytes": 8,
+      "interaction_bytes": 2,
+      "exit_bytes": 14,
+      "encounter_bytes": 2,
+      "stage_bytes": 269,
+      "tile_counts": {
+        "grass": 156,
+        "bridge": 1,
+        "forest-ground": 1,
+        "sea": 412,
+        "sand": 111,
+        "world-mountain": 41,
+        "world-forest": 46
+      }
+    },
+    {
+      "id": 3,
+      "name": "forest",
+      "width": 19,
+      "height": 17,
+      "floor_bytes": {
+        "RAW": 162,
+        "RLE": 48,
+        "RECT": 23
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 16,
+      "entity_bytes": 33,
+      "interaction_bytes": 6,
+      "exit_bytes": 5,
+      "encounter_bytes": 2,
+      "stage_bytes": 78,
+      "tile_counts": {
+        "grass": 19,
+        "dirt": 17,
+        "forest-ground": 281,
+        "sea": 6
+      }
+    },
+    {
+      "id": 4,
+      "name": "cave",
+      "width": 19,
+      "height": 17,
+      "floor_bytes": {
+        "RAW": 165,
+        "RLE": 44,
+        "RECT": 29
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 0,
+      "entity_bytes": 0,
+      "interaction_bytes": 2,
+      "exit_bytes": 5,
+      "encounter_bytes": 2,
+      "stage_bytes": 47,
+      "tile_counts": {
+        "cave-floor": 103,
+        "cave-wall": 220
+      }
+    },
+    {
+      "id": 5,
+      "name": "demon-castle",
+      "width": 17,
+      "height": 19,
+      "floor_bytes": {
+        "RAW": 167,
+        "RLE": 107,
+        "RECT": 43
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 8,
+      "entity_bytes": 16,
+      "interaction_bytes": 6,
+      "exit_bytes": 5,
+      "encounter_bytes": 5,
+      "stage_bytes": 84,
+      "tile_counts": {
+        "empty": 93,
+        "demon-floor": 123,
+        "demon-carpet": 46,
+        "demon-wall-top": 61
+      }
+    }
+  ],
+  "deflate_trial_only": {
+    "binary_bytes": 589,
+    "url_bytes": 815,
+    "ndef_tlv_bytes": 820,
+    "remaining_ntag215_bytes": -324,
+    "envelope_bytes": 4,
+    "zlib_runtime": "1.2.12"
+  },
+  "max_binary_for_this_url_and_capacity": 346
+}

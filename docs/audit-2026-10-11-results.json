@@ -1,0 +1,79 @@
+[
+  {
+    "case": "17-floor-import",
+    "parse": "accepts",
+    "encode": "rejects"
+  },
+  {
+    "case": "64-max-dialogues",
+    "parse": "accepts",
+    "encode": "rejects"
+  },
+  {
+    "case": "import-offmap-tree",
+    "parse": "accepts",
+    "encode": "accepts",
+    "mapSize": [
+      16,
+      16
+    ],
+    "treeFrame": [
+      48,
+      48
+    ],
+    "binarySize": 21
+  },
+  {
+    "case": "blocked-spawn-after-transfer",
+    "error": "到着位置が歩けない場所です。",
+    "hpAfter": 40,
+    "battleCleared": true,
+    "position": {
+      "x": 32,
+      "y": 16
+    }
+  },
+  {
+    "case": "royal-vs-demon-lord",
+    "level": 10,
+    "attack": 328,
+    "bossHp": 120,
+    "phaseAfterOneAttack": "victory"
+  },
+  {
+    "case": "new-random-enemy-inherits-provocation",
+    "firstEnemyAttacked": true,
+    "secondEnemyWasAttacked": true,
+    "secondIntro": "怒っている"
+  },
+  {
+    "case": "render-call-count",
+    "map": "castle",
+    "fillRectCalls": 11374,
+    "canvasBytes": 688128
+  },
+  {
+    "case": "render-call-count",
+    "map": "town",
+    "fillRectCalls": 135974,
+    "canvasBytes": 6602752
+  },
+  {
+    "case": "render-call-count",
+    "map": "world",
+    "fillRectCalls": 209273,
+    "canvasBytes": 12582912
+  },
+  {
+    "case": "render-call-count",
+    "map": "forest",
+    "fillRectCalls": 100838,
+    "canvasBytes": 5292032
+  },
+  {
+    "case": "render-call-count",
+    "map": "demon-castle",
+    "fillRectCalls": 60484,
+    "canvasBytes": 5292032
+  }
+]

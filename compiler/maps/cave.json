@@ -1,0 +1,76 @@
+{
+  "id": 4,
+  "name": "cave",
+  "width": 19,
+  "height": 17,
+  "spawn": {
+    "x": 144,
+    "y": 224
+  },
+  "spawnAnchor": "frame",
+  "residentAnchor": "frame",
+  "npcAnchor": "frame",
+  "floor": {
+    "default": "cave-wall",
+    "rectangles": [
+      {
+        "tile": "cave-floor",
+        "x": 7,
+        "y": 12,
+        "width": 5,
+        "height": 4
+      },
+      {
+        "tile": "cave-floor",
+        "x": 8,
+        "y": 8,
+        "width": 3,
+        "height": 5
+      },
+      {
+        "tile": "cave-floor",
+        "x": 5,
+        "y": 8,
+        "width": 6,
+        "height": 2
+      },
+      {
+        "tile": "cave-floor",
+        "x": 5,
+        "y": 6,
+        "width": 2,
+        "height": 4
+      },
+      {
+        "tile": "cave-floor",
+        "x": 2,
+        "y": 2,
+        "width": 6,
+        "height": 5
+      },
+      {
+        "tile": "cave-floor",
+        "x": 6,
+        "y": 4,
+        "width": 7,
+        "height": 2
+      },
+      {
+        "tile": "cave-floor",
+        "x": 12,
+        "y": 3,
+        "width": 4,
+        "height": 6
+      },
+      {
+        "tile": "cave-floor",
+        "x": 9,
+        "y": 16,
+        "width": 1,
+        "height": 1
+      }
+    ]
+  },
+  "entities": [],
+  "exits": []
+}

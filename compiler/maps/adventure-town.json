@@ -1,0 +1,274 @@
+{
+  "id": 1,
+  "name": "town",
+  "width": 25,
+  "height": 21,
+  "spawn": {
+    "x": 192,
+    "y": 288
+  },
+  "spawnAnchor": "frame",
+  "floor": {
+    "default": "empty",
+    "rectangles": [
+      {
+        "tile": "grass",
+        "x": 0,
+        "y": 0,
+        "width": 25,
+        "height": 20
+      },
+      {
+        "tile": "water",
+        "x": 9,
+        "y": 1,
+        "width": 7,
+        "height": 7
+      },
+      {
+        "tile": "grass",
+        "x": 10,
+        "y": 2,
+        "width": 5,
+        "height": 5
+      },
+      {
+        "tile": "dirt",
+        "x": 11,
+        "y": 8,
+        "width": 3,
+        "height": 12
+      },
+      {
+        "tile": "brick",
+        "x": 12,
+        "y": 6,
+        "width": 1,
+        "height": 15
+      },
+      {
+        "tile": "bridge",
+        "x": 12,
+        "y": 7,
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tile": "brick",
+        "x": 9,
+        "y": 10,
+        "width": 7,
+        "height": 6
+      },
+      {
+        "tile": "brick",
+        "x": 2,
+        "y": 6,
+        "width": 6,
+        "height": 1
+      },
+      {
+        "tile": "brick",
+        "x": 17,
+        "y": 6,
+        "width": 6,
+        "height": 1
+      },
+      {
+        "tile": "brick",
+        "x": 4,
+        "y": 6,
+        "width": 1,
+        "height": 3
+      },
+      {
+        "tile": "brick",
+        "x": 21,
+        "y": 6,
+        "width": 1,
+        "height": 4
+      },
+      {
+        "tile": "brick",
+        "x": 4,
+        "y": 8,
+        "width": 18,
+        "height": 1
+      },
+      {
+        "tile": "brick",
+        "x": 4,
+        "y": 13,
+        "width": 6,
+        "height": 1
+      },
+      {
+        "tile": "brick",
+        "x": 15,
+        "y": 15,
+        "width": 7,
+        "height": 1
+      },
+      {
+        "tile": "brick",
+        "x": 4,
+        "y": 19,
+        "width": 9,
+        "height": 1
+      }
+    ]
+  },
+  "entities": [
+    {
+      "kind": "moat-outer-bank",
+      "x": 144,
+      "y": 16,
+      "parameters": [
+        56,
+        56
+      ]
+    },
+    {
+      "kind": "moat-inner-bank",
+      "x": 158,
+      "y": 30,
+      "parameters": [
+        42,
+        42
+      ]
+    },
+    {
+      "kind": "castle",
+      "x": 184,
+      "y": 32,
+      "parameters": []
+    },
+    {
+      "kind": "house-red",
+      "x": 48,
+      "y": 32,
+      "parameters": []
+    },
+    {
+      "kind": "house-slate",
+      "x": 320,
+      "y": 32,
+      "parameters": []
+    },
+    {
+      "kind": "item-shop",
+      "x": 56,
+      "y": 128,
+      "parameters": []
+    },
+    {
+      "kind": "item-merchant",
+      "x": 64,
+      "y": 158,
+      "parameters": [],
+      "dialogue": {
+        "type": "template",
+        "id": 4
+      }
+    },
+    {
+      "kind": "weapon-shop",
+      "x": 56,
+      "y": 224,
+      "parameters": []
+    },
+    {
+      "kind": "weapon-merchant",
+      "x": 64,
+      "y": 254,
+      "parameters": [],
+      "dialogue": {
+        "type": "template",
+        "id": 2
+      }
+    },
+    {
+      "kind": "armor-shop",
+      "x": 312,
+      "y": 160,
+      "parameters": []
+    },
+    {
+      "kind": "armor-merchant",
+      "x": 320,
+      "y": 190,
+      "parameters": [],
+      "dialogue": {
+        "type": "template",
+        "id": 3
+      }
+    },
+    {
+      "kind": "well",
+      "x": 272,
+      "y": 248,
+      "parameters": []
+    },
+    {
+      "kind": "resident",
+      "x": 112,
+      "y": 64,
+      "parameters": [],
+      "dialogue": {
+        "type": "template",
+        "id": 0
+      }
+    },
+    {
+      "kind": "traveler",
+      "x": 272,
+      "y": 144,
+      "parameters": [],
+      "dialogue": {
+        "type": "template",
+        "id": 5
+      }
+    },
+    {
+      "kind": "elder",
+      "x": 320,
+      "y": 272,
+      "parameters": [],
+      "dialogue": {
+        "type": "template",
+        "id": 6
+      }
+    },
+    {
+      "kind": "loot",
+      "x": 128,
+      "y": 96,
+      "parameters": [
+        0
+      ],
+      "itemId": 0
+    },
+    {
+      "kind": "loot",
+      "x": 352,
+      "y": 272,
+      "parameters": [
+        4
+      ],
+      "itemId": 1
+    }
+  ],
+  "residentAnchor": "frame",
+  "npcAnchor": "frame",
+  "exits": [
+    {
+      "x": 12,
+      "y": 6,
+      "targetStageId": 0,
+      "targetX": 6,
+      "targetY": 9,
+      "direction": "back"
+    }
+  ],
+  "buildingAnchor": "frame"
+}
