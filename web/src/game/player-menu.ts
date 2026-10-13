@@ -32,16 +32,17 @@ export function mountPlayerMenus(inventoryRoot: HTMLElement, shopRoot: HTMLEleme
         if (store !== lastShop) { lastShop = store; page = 'buy'; feedback = ''; focus = true; }
       }
       const items = game.inventory, status = game.status, discovered = game.discoveredItems;
-      const key = JSON.stringify({ items, status, discovered, story: game.story, page, store, feedback });
+      const key = JSON.stringify({ items, status, discovered, story: game.story, page, store, feedback, saveStatus: game.saveStatus });
       if (key === snapshot && !focus) return;
       snapshot = key;
       get('[data-menu-title]').textContent = shop ? store!.name : page === 'collection' ? 'アイテムずかん' : page === 'equipment' ? 'そうび' : page === 'status' ? 'つよさ' : page === 'spells' ? 'まほう' : 'どうぐ';
-      get('[data-player-stats]').textContent = `${status.name}　Lv ${status.level}　${status.gold}G\n攻撃力 ${status.attack}　防御力 ${status.defense}\n経験値 ${status.experience}　${status.nextLevelExperience === null ? '最高レベル' : `次まで ${status.nextLevelExperience - status.experience}`}`;
+      get('[data-player-stats]').textContent = `${status.name}　Lv ${status.level}　${status.gold}G\n攻撃力 ${status.attack}　防御力 ${status.defense}　魔力 ${status.magic}\n経験値 ${status.experience}　${status.nextLevelExperience === null ? '最高レベル' : `次まで ${status.nextLevelExperience - status.experience}`}`;
       get('[data-menu-hp]').textContent = `HP ${status.hp} / ${status.maxHp}${status.poisoned ? '　毒' : ''}`;
       get('[data-menu-mp]').textContent = `MP ${status.mp} / ${status.maxMp}`;
       updateResourceBar(get('[data-menu-hp-bar]') as HTMLProgressElement, status.hp, status.maxHp, `${status.name}のHP`);
       updateResourceBar(get('[data-menu-mp-bar]') as HTMLProgressElement, status.mp, status.maxMp, `${status.name}のMP`);
-      const tabs = shop ? [['buy', '買う'], ['sell', '売る'], ...(store!.recipes?.length ? [['exchange', '素材交換']] : [])] : [['items', 'どうぐ'], ['spells', 'まほう'], ['equipment', 'そうび'], ['status', 'つよさ'], ['collection', 'ずかん']];
+      get(closeSelector).textContent = shop && store!.merchant === 'innkeeper' ? 'いいえ' : 'とじる';
+      const tabs = shop && store!.merchant === 'innkeeper' ? [['buy', '宿泊']] : shop ? [['buy', '買う'], ['sell', '売る'], ...(store!.recipes?.length ? [['exchange', '素材交換']] : [])] : [['items', 'どうぐ'], ['spells', 'まほう'], ['equipment', 'そうび'], ['status', 'つよさ'], ['collection', 'ずかん']];
       get('[data-player-tabs]').innerHTML = tabs.map(([id, name]) => `<button data-player-tab="${id}" aria-pressed="${id === page}">${name}</button>`).join('');
       root.querySelectorAll<HTMLButtonElement>('[data-player-tab]').forEach(tab => tab.addEventListener('click', () => {
         if (!active()) return;
@@ -55,16 +56,17 @@ export function mountPlayerMenus(inventoryRoot: HTMLElement, shopRoot: HTMLEleme
         if (!item?.equipment) return '';
         const gear = item.equipment;
 
-        return ['hp', 'mp', 'attack', 'defense'].map((key, i) => {
-          const k = key as 'hp' | 'mp' | 'attack' | 'defense';
+        return ['hp', 'mp', 'attack', 'defense', 'magic'].map((key, i) => {
+          const k = key as 'hp' | 'mp' | 'attack' | 'defense' | 'magic';
           const base = status.baseStats[k], total = Math.min(9999, base + Object.values(status.equipment).reduce<number>((sum, id) => sum + (id === null ? 0 : findItem(id)?.equipment?.[k] ?? 0), 0));
           const after = Math.min(9999, base + Object.entries(status.equipment).reduce((sum, [slot, id]) => sum + (slot === gear.slot ? gear[k] ?? 0 : id === null ? 0 : findItem(id)?.equipment?.[k] ?? 0), 0));
           const delta = after - total;
-          return `${['最大HP', '最大MP', '攻撃', '防御'][i]} ${delta >= 0 ? '+' : ''}${delta}`;
+          return `${['最大HP', '最大MP', '攻撃', '防御', '魔力'][i]} ${delta >= 0 ? '+' : ''}${delta}`;
         }).join(' / ');
       };
       let rows: string[] = [];
-      if (shop && page === 'buy') rows = store!.items.map(id => {
+      if (shop && store!.merchant === 'innkeeper') rows = ['<p>一泊 15G ですが、お泊まりになりますか？</p>', button('rest', 'はい（15G）')];
+      else if (shop && page === 'buy') rows = store!.items.map(id => {
         const item = findItem(id)!;
         const count = items.find(entry => entry.itemId === id)?.count ?? 0;
         const equipped = Object.values(status.equipment).includes(id);
@@ -94,7 +96,7 @@ export function mountPlayerMenus(inventoryRoot: HTMLElement, shopRoot: HTMLEleme
         rows = status.skills.flatMap(id => {
           const skill = findSkill(id)!;
           if (skill.kind !== 'spell' || skill.effect.type !== 'heal-hp') return [];
-          return [`<div class="player-item-row"><span>${html(skill.name)}　MP ${skill.mpCost}<small>HPを${skill.effect.amount}回復</small></span>${button('spell', '使う', id)}</div>`];
+          return [`<div class="player-item-row"><span>${html(skill.name)}　MP ${skill.mpCost}<small>HPを最大${skill.effect.amount + Math.floor(status.magic * 0.8)}回復</small></span>${button('spell', '使う', id)}</div>`];
         });
       } else if (page === 'equipment') {
         rows = equipmentSlots.map(slot => {
@@ -106,7 +108,7 @@ export function mountPlayerMenus(inventoryRoot: HTMLElement, shopRoot: HTMLEleme
           const equipped = Object.values(status.equipment).includes(itemId);
           return `<div class="player-item-row"><span>${html(item.name)}${equipped ? '（装備中）' : ''}<small>${html(item.description)} ${comparison(item)}　装備Lv ${item.equipment!.requiredLevel ?? 1}</small></span>${button('equip', equipped ? '装備中' : '装備する', itemId, undefined, equipped)}</div>`;
         }));
-      } else rows = [`<p>基礎最大HP ${status.baseStats.hp} ＋ 装備 ${status.maxHp - status.baseStats.hp}<br>基礎最大MP ${status.baseStats.mp} ＋ 装備 ${status.maxMp - status.baseStats.mp}<br>基礎攻撃力 ${status.baseStats.attack} ＋ 装備 ${status.attack - status.baseStats.attack}<br>基礎防御力 ${status.baseStats.defense} ＋ 装備 ${status.defense - status.baseStats.defense}</p>`,
+      } else rows = [`<p>基礎最大HP ${status.baseStats.hp} ＋ 装備 ${status.maxHp - status.baseStats.hp}<br>基礎最大MP ${status.baseStats.mp} ＋ 装備 ${status.maxMp - status.baseStats.mp}<br>基礎攻撃力 ${status.baseStats.attack} ＋ 装備 ${status.attack - status.baseStats.attack}<br>基礎防御力 ${status.baseStats.defense} ＋ 装備 ${status.defense - status.baseStats.defense}<br>基礎魔力 ${status.baseStats.magic} ＋ 装備 ${status.magic - status.baseStats.magic}</p>`,
         ...status.skillSchedule.map(({ id, learned }) => {
           const skill = findSkill(id)!, kind = skill.kind === 'technique' ? '特技' : '魔法';
           return learned ? `<p>${kind}：${html(skill.name)}　MP ${skill.mpCost}　習得済み<small>${html(skill.description)}</small></p>`
@@ -114,15 +116,25 @@ export function mountPlayerMenus(inventoryRoot: HTMLElement, shopRoot: HTMLEleme
         }),
         ...(game.story ? [`<p data-story-objective>冒険：${html(game.story.title)}<br>${html(game.story.objective)}</p>`] : [])];
       get('[data-player-list]').innerHTML = rows.join('') || '<p>なし</p>';
+      if (!shop && page === 'status') get('[data-player-list]').innerHTML += `<p>主人公：${html(status.name)} ${button('rename', '名前変更')}</p><p>${html(game.saveStatus)}</p>${button('reset-save', 'はじめから（セーブ初期化）')}`;
       get('[data-player-feedback]').textContent = feedback;
       root.querySelectorAll<HTMLButtonElement>('[data-menu-action]').forEach(action => action.addEventListener('click', () => {
         if (!active() || action.disabled) return;
         const game = getGame()!;
         if (shop && !game.shop || !shop && (game.encounter || game.shop || game.message)) return;
         selected = navigationButtons().indexOf(action);
+        if (action.dataset.menuAction === 'rename') {
+          const name = window.prompt('主人公の名前（1〜20文字）', game.status.name);
+          if (name !== null) feedback = game.rename(name).message;
+          render(true); changed(); return;
+        }
+        if (action.dataset.menuAction === 'reset-save') {
+          if (!window.confirm('保存した主人公と全世界の進行を消して、最初から始めますか？')) return;
+          game.reset(); closeInventory(); feedback = ''; changed(); return;
+        }
         const id = Number(action.dataset.menuItem);
         const result = action.dataset.menuAction === 'buy' ? game.buy(id) : action.dataset.menuAction === 'sell' ? game.sell(id) : action.dataset.menuAction === 'exchange' ? game.exchange(id)
-          : action.dataset.menuAction === 'equip' ? game.equip(id) : action.dataset.menuAction === 'unequip' ? game.unequip(action.dataset.menuSlot as EquipmentSlot) : action.dataset.menuAction === 'spell' ? game.useFieldSkill(id) : game.useItem(id);
+          : action.dataset.menuAction === 'rest' ? game.rest() : action.dataset.menuAction === 'equip' ? game.equip(id) : action.dataset.menuAction === 'unequip' ? game.unequip(action.dataset.menuSlot as EquipmentSlot) : action.dataset.menuAction === 'spell' ? game.useFieldSkill(id) : game.useItem(id);
         feedback = result.message; render(true); changed();
       }));
       const buttons = navigationButtons();

@@ -5,7 +5,7 @@ import inspectableObjects from './inspectable-objects.json';
 
 export type Dialogue = { readonly type: 'template'; readonly id: number } | { readonly type: 'custom'; readonly text: string };
 export interface InteractionData { readonly dialogue?: Dialogue; readonly itemId?: number }
-export interface DialogueTemplate { readonly name: string; readonly text: string; readonly speaker?: string; readonly afterClear?: string; readonly storyRole?: string }
+export interface DialogueTemplate { readonly name: string; readonly text: string; readonly speaker?: string; readonly afterClear?: string; readonly storyRole?: string; readonly locationName?: string }
 export const dialogueTemplates: readonly DialogueTemplate[] = templates;
 export const customDialogueLimit = 1024;
 export const dialogueByteLength = (text: string): number => new TextEncoder().encode(text).length;
@@ -35,7 +35,7 @@ export const canHaveItem = (kind: string) => kind === 'loot' || isInspectableObj
 export const npcNames: Record<string, string> = {
   king: '王様', traveler: '若者', resident: '女性', elder: 'おじいさん',
   'weapon-merchant': '武器屋の店員', 'armor-merchant': '防具屋の店員', 'item-merchant': '道具屋の店員',
-  'cave-witch': '洞窟の魔女', 'forest-fairy': '森の妖精', 'demon-lord': '魔王',
+  'cave-witch': '洞窟の魔女', 'forest-fairy': '森の妖精', 'demon-lord': '魔王', 'demon-guard': '魔王の子分', innkeeper: '宿屋の主人',
 };
 
 export function validateCustomDialogue(text: unknown): string {

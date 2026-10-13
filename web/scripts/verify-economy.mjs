@@ -13,7 +13,9 @@ try {
   }, formats: ['es'], fileName: (_, name) => `${name}.mjs` }, outDir: out, emptyOutDir: false } });
   const module = async name => import(pathToFileURL(join(out, `${name}.mjs`)));
   const { createPlayerState, recoverItem } = await module('state');
-  const { createWorldGame } = await module('world');
+  const { createWorldGame: createWorldGameBase } = await module('world');
+  // The grace-period contract is exercised with defaults in verify-gameplay; these fixtures isolate repeated battles.
+  const createWorldGame = (scenes, initial, random, options = {}) => createWorldGameBase(scenes, initial, random, { ...options, encounterGraceSteps: 0 });
   const { createBattle } = await module('battle');
   const { playerConfig, enemyCatalog, parsePlayerDefinition, parseEnemyDefinitions } = await module('config');
   const { itemCatalog, findItem, parseItemCatalog } = await module('items');
@@ -90,7 +92,7 @@ try {
   assert.equal(royal.level, 10); assert.equal(royal.experience, 900); assert.equal(royal.gold, 1600);
   for (const itemId of royalIds) {
     const gear = findItem(itemId).equipment;
-    for (const stat of ['hp', 'mp', 'attack', 'defense']) assert.ok(gear[stat] >= 50, `${itemId} boosts ${stat}`);
+    for (const stat of ['hp', 'mp', 'attack', 'defense']) assert.ok(gear[stat] >= (itemId === 11 && stat === 'attack' ? 30 : 50), `${itemId} boosts ${stat}`);
     assert.equal(royal.equip(itemId).ok, true);
     assert.equal(royal.appearance, 'hero', 'one royal item alone does not change appearance');
     assert.equal(royal.definition.stats.hp, 85 + gear.hp);
@@ -102,12 +104,12 @@ try {
   royal.equip(9); royal.equip(10); royal.equip(11);
   assert.equal(royal.appearance, 'king');
   assert.equal(royal.equipment.head, 9); assert.equal(royal.equipment.armor, 10); assert.equal(royal.equipment.weapon, 11);
-  assert.deepEqual(royal.definition.stats, { hp: 485, attack: 278, defense: 259 });
+  assert.deepEqual(royal.definition.stats, { hp: 485, attack: 158, defense: 229, magic: 248 });
   assert.equal(royal.definition.maxMp, 378);
   const beforeRoyalSwap = royal.inventory;
   royal.equip(12); assert.equal(royal.equipment.weapon, 12);
   assert.equal(royal.appearance, 'king', 'either royal weapon completes the set');
-  assert.deepEqual(royal.definition.stats, { hp: 535, attack: 328, defense: 259 });
+  assert.deepEqual(royal.definition.stats, { hp: 535, attack: 328, defense: 229, magic: 68 });
   assert.equal(royal.definition.maxMp, 228); assert.deepEqual(royal.inventory, beforeRoyalSwap);
   assert.deepEqual(royal.vitals, { hp: 85, mp: 28, poisoned: false }, 'equipping does not heal for free');
   for (const [slot, id] of [['head', 9], ['armor', 10], ['weapon', 12]]) {
@@ -142,11 +144,11 @@ try {
   assert.deepEqual(royal.vitals, { hp: 10, mp: 4, poisoned: false }, 'repeated equipment changes preserve damage');
   const whileGrowing = createPlayerState(); whileGrowing.addItem(9, 1); whileGrowing.equip(9);
   whileGrowing.setVitals({ hp: 120, mp: 100, poisoned: false }); whileGrowing.gainExperience(900);
-  assert.equal(whileGrowing.vitals.hp, 165); assert.equal(whileGrowing.vitals.mp, 118);
+  assert.equal(whileGrowing.vitals.hp, 185); assert.equal(whileGrowing.vitals.mp, 128);
   assert.equal(whileGrowing.definition.stats.hp, 185); assert.equal(whileGrowing.definition.maxMp, 128);
-  const cappedRoyal = createPlayerState({ ...playerConfig, stats: { hp: 9998, attack: 9998, defense: 9998 }, maxMp: 9998 });
+  const cappedRoyal = createPlayerState({ ...playerConfig, stats: { hp: 9998, attack: 9998, defense: 9998, magic: 9998 }, maxMp: 9998 });
   cappedRoyal.addItem(9, 1); cappedRoyal.equip(9); cappedRoyal.gainExperience(900);
-  assert.deepEqual(cappedRoyal.definition.stats, { hp: 9999, attack: 9999, defense: 9999 });
+  assert.deepEqual(cappedRoyal.definition.stats, { hp: 9999, attack: 9999, defense: 9999, magic: 9999 });
   assert.equal(cappedRoyal.definition.maxMp, 9999); assert.ok(cappedRoyal.vitals.hp <= 9999 && cappedRoyal.vitals.mp <= 9999);
   const royalScene = { ...rewardWorld, entities: [{ kind: 'king', x: 16, y: 32, parameters: [1] }], exits: [
     { x: 3, y: 4, targetStageId: 1, targetX: 1, targetY: 2, direction: 'front' },
@@ -191,14 +193,14 @@ try {
   assert.equal(royalDefeat.battle.phase, 'defeat'); royalDefeat.finishEncounter('defeat');
   assert.equal(royalDefeat.status.experience, 0); assert.equal(royalDefeat.status.gold, 50); assert.deepEqual(royalDefeat.inventory, []);
   assert.equal(royalDefeat.status.appearance, 'hero'); assert.equal(royalDefeat.status.equipment.head, null);
-  // Ordinary victories preserve chosen gear and damage, even when all royal items are owned.
+  // Ordinary victories preserve chosen gear and recover on level-up, even when all royal items are owned.
   const ordinaryWin = createWorldGame([{ ...rewardWorld, encounter: { enabled: true, rate: 100, enemyId: 1 } }], 0, () => 0,
     { player: { ...playerConfig, initialItems: royalIds.map(itemId => ({ itemId, quantity: 1 })) } });
   ordinaryWin.equip(9); ordinaryWin.equip(10); ordinaryWin.equip(11); ordinaryWin.move('right');
   ordinaryWin.battle.guard(); ordinaryWin.battle.advance(); ordinaryWin.battle.advance(); ordinaryWin.battle.attack();
   ordinaryWin.finishEncounter('victory');
   assert.equal(ordinaryWin.status.equipment.weapon, 11); assert.equal(ordinaryWin.status.appearance, 'king');
-  assert.equal(ordinaryWin.status.hp, 39); assert.equal(ordinaryWin.status.mp, 10);
+  assert.equal(ordinaryWin.status.hp, ordinaryWin.status.maxHp); assert.equal(ordinaryWin.status.mp, ordinaryWin.status.maxMp);
   for (const stat of ['hp', 'mp']) for (const value of [-1, 1.5, 10000]) {
     assert.throws(() => parseItemCatalog([{ ...findItem(9), equipment: { ...findItem(9).equipment, [stat]: value } }]));
   }

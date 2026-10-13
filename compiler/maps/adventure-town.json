@@ -1,7 +1,7 @@
 {
   "id": 1,
   "name": "town",
-  "width": 25,
+  "width": 29,
   "height": 21,
   "spawn": {
     "x": 192,
@@ -15,7 +15,7 @@
         "tile": "grass",
         "x": 0,
         "y": 0,
-        "width": 25,
+        "width": 29,
         "height": 20
       },
       {
@@ -115,6 +115,34 @@
         "y": 19,
         "width": 9,
         "height": 1
+      },
+      {
+        "tile": "brick",
+        "x": 21,
+        "y": 8,
+        "width": 7,
+        "height": 1
+      },
+      {
+        "tile": "brick",
+        "x": 27,
+        "y": 7,
+        "width": 1,
+        "height": 2
+      },
+      {
+        "tile": "brick",
+        "x": 12,
+        "y": 19,
+        "width": 16,
+        "height": 1
+      },
+      {
+        "tile": "brick",
+        "x": 27,
+        "y": 18,
+        "width": 1,
+        "height": 2
       }
     ]
   },

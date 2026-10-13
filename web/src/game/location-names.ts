@@ -4,6 +4,9 @@ import { dialogueTemplates } from '../data/interactions';
 
 /** 場所名はWeb側で推定する。マップIDの変更やNFCの名前データに依存しない。 */
 export function inferLocationName(scene: SceneData): string {
+  const namedTemplate = scene.entities.flatMap(entity => entity.dialogue?.type === 'template'
+    ? [dialogueTemplates[entity.dialogue.id]?.locationName] : []).find(Boolean);
+  if (namedTemplate) return namedTemplate;
   const kinds = new Set(scene.entities.map(entity => entity.kind));
   const tiles = new Set(Array.from(scene.tiles, id => catalog.tiles[id]));
   const roles = new Set(scene.entities.flatMap(entity => entity.dialogue?.type === 'template'

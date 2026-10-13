@@ -119,7 +119,7 @@ Path(sys.argv[2]).write_bytes(binary)`, source, output, codec], { cwd: root });
   assert.equal(game.scene.id, 2);
   assert.deepEqual(game.position, { x: 192, y: 192 });
   assert.equal(game.move('back'), true); assert.equal(game.scene.id, 4);
-  assert.deepEqual(world.stages.find(stage => stage.id === 4).encounter.enemies.map(entry => entry.enemyId), [5, 6, 7]);
+  assert.deepEqual(world.stages.find(stage => stage.id === 4).encounter.enemies.map(entry => entry.enemyId), [5, 6, 7, 10]);
   assert.equal(game.move('front'), true); assert.equal(game.scene.id, 2);
   walkTo(368, 64); // in front of the demon castle, across the river bridge
   assert.equal(game.move('back'), true); assert.equal(game.scene.id, 5);

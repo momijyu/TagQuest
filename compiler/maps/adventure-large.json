@@ -139,13 +139,13 @@
       "encounter": {
         "enabled": true,
         "enemyId": 0,
-        "rate": 0.1
+        "rate": 0.01
       }
     },
     {
       "id": 1,
       "name": "town",
-      "width": 25,
+      "width": 29,
       "height": 21,
       "spawn": {
         "x": 192,
@@ -162,7 +162,7 @@
             "tile": "grass",
             "x": 0,
             "y": 0,
-            "width": 25,
+            "width": 29,
             "height": 20
           },
           {
@@ -262,6 +262,34 @@
             "y": 19,
             "width": 9,
             "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 21,
+            "y": 8,
+            "width": 7,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 27,
+            "y": 7,
+            "width": 1,
+            "height": 2
+          },
+          {
+            "tile": "brick",
+            "x": 12,
+            "y": 19,
+            "width": 16,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 27,
+            "y": 18,
+            "width": 1,
+            "height": 2
           }
         ]
       },
@@ -413,6 +441,47 @@
             4
           ],
           "itemId": 1
+        },
+        {
+          "kind": "house-red",
+          "x": 416,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 72
+          }
+        },
+        {
+          "kind": "house-slate",
+          "x": 416,
+          "y": 224,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 73
+          },
+          "itemId": 19
+        },
+        {
+          "kind": "innkeeper",
+          "x": 384,
+          "y": 160,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 85
+          }
+        },
+        {
+          "kind": "signpost",
+          "x": 208,
+          "y": 288,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 87
+          }
         }
       ],
       "exits": [
@@ -1463,6 +1532,34 @@
             "y": 4,
             "width": 3,
             "height": 2
+          },
+          {
+            "tile": "grass",
+            "x": 3,
+            "y": 6,
+            "width": 3,
+            "height": 4
+          },
+          {
+            "tile": "grass",
+            "x": 14,
+            "y": 10,
+            "width": 4,
+            "height": 2
+          },
+          {
+            "tile": "dirt",
+            "x": 4,
+            "y": 9,
+            "width": 8,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 11,
+            "y": 10,
+            "width": 4,
+            "height": 1
           }
         ]
       },
@@ -1581,7 +1678,7 @@
           "x": 192,
           "y": 96,
           "parameters": [],
-          "itemId": 7
+          "itemId": 21
         },
         {
           "kind": "treasure-chest",
@@ -1589,6 +1686,30 @@
           "y": 128,
           "parameters": [],
           "itemId": 2
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 64,
+          "y": 112,
+          "parameters": [],
+          "itemId": 19
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 256,
+          "y": 176,
+          "parameters": [],
+          "itemId": 20
+        },
+        {
+          "kind": "signpost",
+          "x": 128,
+          "y": 128,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 74
+          }
         }
       ],
       "exits": [
@@ -1604,7 +1725,7 @@
       "encounter": {
         "enabled": true,
         "enemyId": 1,
-        "rate": 12,
+        "rate": 6,
         "enemies": [
           {
             "enemyId": 1,
@@ -1699,6 +1820,34 @@
             "y": 16,
             "width": 1,
             "height": 1
+          },
+          {
+            "tile": "cave-floor",
+            "x": 1,
+            "y": 11,
+            "width": 4,
+            "height": 4
+          },
+          {
+            "tile": "cave-floor",
+            "x": 4,
+            "y": 12,
+            "width": 4,
+            "height": 2
+          },
+          {
+            "tile": "cave-floor",
+            "x": 14,
+            "y": 11,
+            "width": 3,
+            "height": 4
+          },
+          {
+            "tile": "cave-floor",
+            "x": 11,
+            "y": 12,
+            "width": 4,
+            "height": 2
           }
         ]
       },
@@ -1718,14 +1867,14 @@
           "x": 32,
           "y": 80,
           "parameters": [],
-          "itemId": 6
+          "itemId": 22
         },
         {
           "kind": "treasure-chest",
           "x": 224,
           "y": 112,
           "parameters": [],
-          "itemId": 4
+          "itemId": 23
         },
         {
           "kind": "treasure-chest",
@@ -1733,6 +1882,42 @@
           "y": 128,
           "parameters": [],
           "itemId": 1
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 32,
+          "y": 192,
+          "parameters": [],
+          "itemId": 2
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 240,
+          "y": 192,
+          "parameters": [],
+          "itemId": 8
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 16,
+          "y": 176,
+          "parameters": []
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 256,
+          "y": 176,
+          "parameters": []
+        },
+        {
+          "kind": "signpost",
+          "x": 128,
+          "y": 208,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 75
+          }
         }
       ],
       "exits": [
@@ -1748,19 +1933,23 @@
       "encounter": {
         "enabled": true,
         "enemyId": 5,
-        "rate": 14,
+        "rate": 8,
         "enemies": [
           {
             "enemyId": 5,
-            "weight": 5
+            "weight": 50
           },
           {
             "enemyId": 6,
-            "weight": 3
+            "weight": 30
           },
           {
             "enemyId": 7,
-            "weight": 2
+            "weight": 20
+          },
+          {
+            "enemyId": 10,
+            "weight": 5
           }
         ]
       }
@@ -2074,6 +2263,13 @@
             "y": 16,
             "width": 3,
             "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 7,
+            "y": 0,
+            "width": 1,
+            "height": 5
           }
         ]
       },
@@ -2096,6 +2292,16 @@
           "y": 336,
           "parameters": [],
           "itemId": 22
+        },
+        {
+          "kind": "signpost",
+          "x": 128,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 84
+          }
         }
       ],
       "exits": [
@@ -2130,13 +2336,21 @@
           "targetX": 1,
           "targetY": 16,
           "direction": "back"
+        },
+        {
+          "x": 7,
+          "y": 0,
+          "targetStageId": 15,
+          "targetX": 15,
+          "targetY": 30,
+          "direction": "back"
         }
       ]
     },
     {
       "id": 7,
       "name": "北の市場",
-      "width": 25,
+      "width": 29,
       "height": 21,
       "spawn": {
         "x": 192,
@@ -2153,7 +2367,7 @@
             "tile": "grass",
             "x": 0,
             "y": 0,
-            "width": 25,
+            "width": 29,
             "height": 20
           },
           {
@@ -2267,6 +2481,34 @@
             "y": 2,
             "width": 2,
             "height": 3
+          },
+          {
+            "tile": "brick",
+            "x": 21,
+            "y": 8,
+            "width": 7,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 27,
+            "y": 7,
+            "width": 1,
+            "height": 2
+          },
+          {
+            "tile": "brick",
+            "x": 12,
+            "y": 19,
+            "width": 16,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 27,
+            "y": 18,
+            "width": 1,
+            "height": 2
           }
         ]
       },
@@ -2418,6 +2660,37 @@
             4
           ],
           "itemId": 1
+        },
+        {
+          "kind": "house-red",
+          "x": 416,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 72
+          }
+        },
+        {
+          "kind": "house-slate",
+          "x": 416,
+          "y": 224,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 73
+          },
+          "itemId": 19
+        },
+        {
+          "kind": "innkeeper",
+          "x": 384,
+          "y": 160,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 85
+          }
         }
       ],
       "exits": [
@@ -2736,7 +3009,7 @@
       "encounter": {
         "enabled": true,
         "enemyId": 1,
-        "rate": 12,
+        "rate": 6,
         "enemies": [
           {
             "enemyId": 1,
@@ -2950,6 +3223,34 @@
             "y": 13,
             "width": 1,
             "height": 8
+          },
+          {
+            "tile": "cave-floor",
+            "x": 1,
+            "y": 10,
+            "width": 3,
+            "height": 4
+          },
+          {
+            "tile": "cave-floor",
+            "x": 3,
+            "y": 11,
+            "width": 4,
+            "height": 2
+          },
+          {
+            "tile": "cave-floor",
+            "x": 27,
+            "y": 10,
+            "width": 3,
+            "height": 4
+          },
+          {
+            "tile": "cave-floor",
+            "x": 24,
+            "y": 11,
+            "width": 4,
+            "height": 2
           }
         ]
       },
@@ -3047,6 +3348,36 @@
           "itemId": 18,
           "kind": "treasure-chest",
           "parameters": []
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 32,
+          "y": 176,
+          "parameters": [],
+          "itemId": 21
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 448,
+          "y": 176,
+          "parameters": [],
+          "itemId": 20
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 16,
+          "y": 160,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 76
+          }
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 464,
+          "y": 160,
+          "parameters": []
         }
       ],
       "exits": [
@@ -3062,19 +3393,23 @@
       "encounter": {
         "enabled": true,
         "enemyId": 5,
-        "rate": 14,
+        "rate": 8,
         "enemies": [
           {
             "enemyId": 5,
-            "weight": 5
+            "weight": 50
           },
           {
             "enemyId": 6,
-            "weight": 3
+            "weight": 30
           },
           {
             "enemyId": 7,
-            "weight": 2
+            "weight": 20
+          },
+          {
+            "enemyId": 10,
+            "weight": 5
           }
         ]
       }
@@ -3387,13 +3722,34 @@
             "y": 2,
             "width": 1,
             "height": 17
+          },
+          {
+            "tile": "wall-top",
+            "x": 2,
+            "y": 9,
+            "width": 5,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 2,
+            "y": 13,
+            "width": 5,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 14,
+            "y": 6,
+            "width": 5,
+            "height": 1
           }
         ]
       },
       "entities": [
         {
           "kind": "elder",
-          "x": 80,
+          "x": 128,
           "y": 192,
           "parameters": [],
           "dialogue": {
@@ -3450,6 +3806,30 @@
           "y": 224,
           "parameters": [],
           "itemId": 19
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 48,
+          "y": 176,
+          "parameters": [],
+          "itemId": 24
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 288,
+          "y": 128,
+          "parameters": [],
+          "itemId": 22
+        },
+        {
+          "kind": "stone-tablet",
+          "x": 64,
+          "y": 176,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 77
+          }
         }
       ],
       "exits": [
@@ -3602,7 +3982,7 @@
     {
       "id": 13,
       "name": "海辺の集落",
-      "width": 25,
+      "width": 29,
       "height": 21,
       "spawn": {
         "x": 192,
@@ -3619,7 +3999,7 @@
             "tile": "grass",
             "x": 3,
             "y": 0,
-            "width": 22,
+            "width": 26,
             "height": 20
           },
           {
@@ -3669,6 +4049,41 @@
             "x": 11,
             "y": 18,
             "width": 3,
+            "height": 2
+          },
+          {
+            "tile": "brick",
+            "x": 21,
+            "y": 8,
+            "width": 7,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 27,
+            "y": 7,
+            "width": 1,
+            "height": 2
+          },
+          {
+            "tile": "brick",
+            "x": 12,
+            "y": 19,
+            "width": 16,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 27,
+            "y": 18,
+            "width": 1,
+            "height": 2
+          },
+          {
+            "tile": "brick",
+            "x": 21,
+            "y": 7,
+            "width": 1,
             "height": 2
           }
         ]
@@ -3821,6 +4236,37 @@
           "y": 256,
           "parameters": [],
           "itemId": 2
+        },
+        {
+          "kind": "house-red",
+          "x": 416,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 72
+          }
+        },
+        {
+          "kind": "house-slate",
+          "x": 416,
+          "y": 224,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 73
+          },
+          "itemId": 19
+        },
+        {
+          "kind": "innkeeper",
+          "x": 384,
+          "y": 160,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 85
+          }
         }
       ],
       "exits": [
@@ -4023,6 +4469,767 @@
           "targetStageId": 8,
           "targetX": 15,
           "targetY": 1,
+          "direction": "front"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "辺境の大陸",
+      "width": 32,
+      "height": 32,
+      "spawn": {
+        "x": 240,
+        "y": 464
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "sea",
+        "rectangles": [
+          {
+            "tile": "sand",
+            "x": 3,
+            "y": 1,
+            "width": 26,
+            "height": 30
+          },
+          {
+            "tile": "grass",
+            "x": 4,
+            "y": 2,
+            "width": 24,
+            "height": 28
+          },
+          {
+            "tile": "world-mountain",
+            "x": 4,
+            "y": 3,
+            "width": 2,
+            "height": 6
+          },
+          {
+            "tile": "world-mountain",
+            "x": 28,
+            "y": 3,
+            "width": 1,
+            "height": 8
+          },
+          {
+            "tile": "world-mountain",
+            "x": 4,
+            "y": 22,
+            "width": 3,
+            "height": 7
+          },
+          {
+            "tile": "world-forest",
+            "x": 8,
+            "y": 3,
+            "width": 4,
+            "height": 3
+          },
+          {
+            "tile": "world-forest",
+            "x": 18,
+            "y": 25,
+            "width": 4,
+            "height": 3
+          },
+          {
+            "tile": "world-forest",
+            "x": 19,
+            "y": 8,
+            "width": 4,
+            "height": 3
+          },
+          {
+            "tile": "sea",
+            "x": 3,
+            "y": 14,
+            "width": 26,
+            "height": 5
+          },
+          {
+            "tile": "sand",
+            "x": 3,
+            "y": 13,
+            "width": 26,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 3,
+            "y": 19,
+            "width": 26,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 15,
+            "y": 5,
+            "width": 1,
+            "height": 26
+          },
+          {
+            "tile": "dirt",
+            "x": 6,
+            "y": 7,
+            "width": 10,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 15,
+            "y": 5,
+            "width": 10,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 15,
+            "y": 24,
+            "width": 11,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 25,
+            "y": 10,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "dirt",
+            "x": 15,
+            "y": 10,
+            "width": 11,
+            "height": 1
+          },
+          {
+            "tile": "bridge",
+            "x": 15,
+            "y": 14,
+            "width": 1,
+            "height": 5
+          },
+          {
+            "tile": "bridge",
+            "x": 25,
+            "y": 14,
+            "width": 1,
+            "height": 5
+          },
+          {
+            "tile": "empty",
+            "x": 0,
+            "y": 31,
+            "width": 32,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 15,
+            "y": 31,
+            "width": 1,
+            "height": 1
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "demon-guard",
+          "x": 240,
+          "y": 240,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 78
+          },
+          "battleEvent": {
+            "enemyId": 8,
+            "once": true,
+            "clear": false
+          }
+        },
+        {
+          "kind": "signpost",
+          "x": 224,
+          "y": 400,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 79
+          }
+        },
+        {
+          "kind": "signpost",
+          "x": 384,
+          "y": 336,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 80
+          }
+        },
+        {
+          "kind": "world-forest-entrance",
+          "x": 96,
+          "y": 112,
+          "parameters": []
+        },
+        {
+          "kind": "world-ruins",
+          "x": 384,
+          "y": 80,
+          "parameters": []
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 160,
+          "y": 160,
+          "parameters": [],
+          "itemId": 2
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 336,
+          "y": 384,
+          "parameters": [],
+          "itemId": 19
+        }
+      ],
+      "exits": [
+        {
+          "x": 15,
+          "y": 31,
+          "targetStageId": 6,
+          "targetX": 7,
+          "targetY": 1,
+          "direction": "front"
+        },
+        {
+          "x": 6,
+          "y": 7,
+          "targetStageId": 16,
+          "targetX": 15,
+          "targetY": 27,
+          "direction": "back"
+        },
+        {
+          "x": 24,
+          "y": 5,
+          "targetStageId": 17,
+          "targetX": 12,
+          "targetY": 25,
+          "direction": "back"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "風渡りの森",
+      "width": 31,
+      "height": 29,
+      "spawn": {
+        "x": 240,
+        "y": 416
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "forest-ground",
+            "x": 0,
+            "y": 0,
+            "width": 31,
+            "height": 28
+          },
+          {
+            "tile": "grass",
+            "x": 11,
+            "y": 3,
+            "width": 9,
+            "height": 22
+          },
+          {
+            "tile": "dirt",
+            "x": 14,
+            "y": 3,
+            "width": 3,
+            "height": 25
+          },
+          {
+            "tile": "dirt",
+            "x": 4,
+            "y": 12,
+            "width": 23,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 9,
+            "y": 22,
+            "width": 8,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 16,
+            "y": 10,
+            "width": 7,
+            "height": 1
+          },
+          {
+            "tile": "meadow-flowers",
+            "x": 4,
+            "y": 20,
+            "width": 4,
+            "height": 3
+          },
+          {
+            "tile": "sea",
+            "x": 23,
+            "y": 7,
+            "width": 4,
+            "height": 3
+          },
+          {
+            "tile": "dirt",
+            "x": 15,
+            "y": 28,
+            "width": 1,
+            "height": 1
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 64,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 128,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 320,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 384,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 448,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 64,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 64,
+          "y": 64,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 128,
+          "y": 64,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 320,
+          "y": 64,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 384,
+          "y": 64,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 448,
+          "y": 64,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 256,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 64,
+          "y": 256,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 128,
+          "y": 256,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 320,
+          "y": 256,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 384,
+          "y": 256,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 448,
+          "y": 256,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 384,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 64,
+          "y": 384,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 128,
+          "y": 384,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 320,
+          "y": 384,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 384,
+          "y": 384,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 448,
+          "y": 384,
+          "parameters": []
+        },
+        {
+          "kind": "forest-fairy",
+          "x": 176,
+          "y": 144,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 81
+          }
+        },
+        {
+          "kind": "signpost",
+          "x": 208,
+          "y": 400,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 81
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 64,
+          "y": 176,
+          "parameters": [],
+          "itemId": 19
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 416,
+          "y": 176,
+          "parameters": [],
+          "itemId": 2
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 144,
+          "y": 336,
+          "parameters": [],
+          "itemId": 21
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 352,
+          "y": 176,
+          "parameters": [],
+          "itemId": 23
+        }
+      ],
+      "exits": [
+        {
+          "x": 15,
+          "y": 28,
+          "targetStageId": 15,
+          "targetX": 6,
+          "targetY": 8,
+          "direction": "front"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "enemyId": 1,
+        "rate": 6,
+        "enemies": [
+          {
+            "enemyId": 1,
+            "weight": 5
+          },
+          {
+            "enemyId": 2,
+            "weight": 3
+          },
+          {
+            "enemyId": 3,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": 17,
+      "name": "忘れられた砦",
+      "width": 25,
+      "height": 27,
+      "spawn": {
+        "x": 192,
+        "y": 384
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "ruins-floor",
+            "x": 1,
+            "y": 1,
+            "width": 23,
+            "height": 24
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 0,
+            "width": 25,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 1,
+            "width": 1,
+            "height": 25
+          },
+          {
+            "tile": "wall-top",
+            "x": 24,
+            "y": 1,
+            "width": 1,
+            "height": 25
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 25,
+            "width": 11,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 14,
+            "y": 25,
+            "width": 11,
+            "height": 1
+          },
+          {
+            "tile": "ruins-floor",
+            "x": 11,
+            "y": 25,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 12,
+            "y": 20,
+            "width": 1,
+            "height": 7
+          },
+          {
+            "tile": "wall-top",
+            "x": 1,
+            "y": 8,
+            "width": 10,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 14,
+            "y": 8,
+            "width": 10,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 1,
+            "y": 17,
+            "width": 8,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 16,
+            "y": 17,
+            "width": 8,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 7,
+            "y": 10,
+            "width": 1,
+            "height": 5
+          },
+          {
+            "tile": "wall-top",
+            "x": 17,
+            "y": 10,
+            "width": 1,
+            "height": 5
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "elder",
+          "x": 144,
+          "y": 64,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 83
+          }
+        },
+        {
+          "kind": "stone-tablet",
+          "x": 192,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 82
+          }
+        },
+        {
+          "kind": "pillar",
+          "x": 64,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "pillar",
+          "x": 320,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "pillar",
+          "x": 64,
+          "y": 320,
+          "parameters": []
+        },
+        {
+          "kind": "pillar",
+          "x": 320,
+          "y": 320,
+          "parameters": []
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 64,
+          "y": 80,
+          "parameters": [],
+          "itemId": 21
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 320,
+          "y": 80,
+          "parameters": [],
+          "itemId": 23
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 80,
+          "y": 224,
+          "parameters": [],
+          "itemId": 24
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 304,
+          "y": 352,
+          "parameters": [],
+          "itemId": 22
+        }
+      ],
+      "exits": [
+        {
+          "x": 12,
+          "y": 26,
+          "targetStageId": 15,
+          "targetX": 24,
+          "targetY": 6,
           "direction": "front"
         }
       ]

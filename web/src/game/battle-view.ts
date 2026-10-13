@@ -138,6 +138,15 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
         rect('#f2eee2', x - 12, 102, 28, 10);
         rect('#c2c8c7', x - 14, 112, 32, 4);
       }
+    } else if (battle.enemy.background === 'void') {
+      rect('#171127', 0, 0, 320, 192);
+      for (let i = 0; i < 48; i++) rect(i % 3 ? '#65518a' : '#bb9ce3', i * 73 % 320, i * 31 % 108, 2, 2);
+      rect('#362748', 0, 112, 320, 80);
+      for (let y = 112; y < 192; y += 16) {
+        rect('#67517b', 0, y, 320, 1);
+        for (let x = y % 32 ? 12 : 0; x < 320; x += 32) rect('#67517b', x, y, 1, 16);
+      }
+      for (const x of [30, 278]) { rect('#8061aa', x, 84, 12, 28); rect('#d3b6ef', x + 3, 88, 4, 23); }
     } else if (battle.enemy.background === 'cave') {
       rect('#171b2b', 0, 0, 320, 192);
       for (let y = 0; y < 112; y += 16) for (let x = -(y % 32 ? 16 : 0); x < 320; x += 32) {
@@ -186,7 +195,7 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
     const phase = battle.phase;
     inventory = supplies.inventory?.() ?? inventory;
     const choosing = phase === 'commands', browsing = choosing && menu === 'items';
-    const usableItems = inventory.filter(({ itemId, count }) => count > 0 && findItem(itemId)?.effect);
+    const usableItems = inventory.filter(({ itemId, count }) => count > 0 && ['heal-hp', 'heal-mp', 'cure-poison'].includes(findItem(itemId)?.effect?.type ?? ''));
     const browsingSkills = choosing && (menu === 'techniques' || menu === 'spells');
     const skills = (battle.player.skills ?? []).map(findSkill).filter(skill => skill && (skill.learnLevel ?? 1) <= (battle!.player.level ?? 1) && skill.kind === (menu === 'techniques' ? 'technique' : 'spell'));
     get('[data-battle-commands]').hidden = !choosing || menu !== 'commands';
@@ -196,7 +205,7 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
     get('[data-battle-player-name]').textContent = `${battle.player.name}　Lv ${battle.player.level ?? 1}${battle.poisoned ? '　毒' : ''}`;
     get('[data-battle-player-hp]').textContent = `HP ${battle.playerHp} / ${battle.player.stats.hp}`;
     get('[data-battle-player-mp]').textContent = `MP ${battle.playerMp} / ${battle.player.maxMp ?? 0}`;
-    get('[data-battle-resources]').textContent = `${supplies.gold?.() ?? 0}G`;
+    get('[data-battle-resources]').textContent = `${supplies.gold?.() ?? 0}G　魔力 ${battle.player.stats.magic}`;
     const hpBar = get<HTMLProgressElement>('[data-battle-player-hp-bar]');
     updateResourceBar(hpBar, battle.playerHp, battle.player.stats.hp, `${battle.player.name}のHP`);
     updateResourceBar(get<HTMLProgressElement>('[data-battle-player-mp-bar]'), battle.playerMp, battle.player.maxMp ?? 0, `${battle.player.name}のMP`);

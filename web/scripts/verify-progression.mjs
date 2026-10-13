@@ -23,29 +23,29 @@ try {
   const { skillCatalog, findSkill, parseSkillCatalog } = await module('skills');
   const { itemCatalog, findItem, parseItemCatalog } = await module('items');
   const player = createPlayerState();
-  assert.equal(player.level, 1); assert.equal(player.experience, 0); assert.equal(player.nextLevelExperience, 20);
+  assert.equal(player.level, 1); assert.equal(player.experience, 0); assert.equal(player.nextLevelExperience, 15);
   player.setVitals({ hp: 25, mp: 4, poisoned: true });
-  player.gainExperience(19); assert.equal(player.level, 1);
+  player.gainExperience(14); assert.equal(player.level, 1);
   const leveled = player.gainExperience(1);
   assert.deepEqual(leveled, { previousLevel: 1, level: 2, learnedSkills: [] });
-  assert.deepEqual(player.definition.stats, { hp: 45, attack: 12, defense: 1 });
-  assert.deepEqual(player.vitals, { hp: 30, mp: 6, poisoned: true }); // missing HP/MP is preserved
+  assert.deepEqual(player.definition.stats, { hp: 45, attack: 12, defense: 1, magic: 12 });
+  assert.deepEqual(player.vitals, { hp: 45, mp: 12, poisoned: true }); // level-up restores all HP/MP
   player.addItem(0, 1); player.useItem(0); assert.equal(player.vitals.hp, 45);
-  player.gainExperience(100); assert.equal(player.level, 4); assert.equal(player.nextLevelExperience, 200);
-  assert.deepEqual(player.definition.stats, { hp: 55, attack: 16, defense: 3 });
+  player.gainExperience(100); assert.equal(player.level, 4); assert.equal(player.nextLevelExperience, 140);
+  assert.deepEqual(player.definition.stats, { hp: 55, attack: 16, defense: 3, magic: 16 });
   const high = createPlayerState({ ...playerConfig, initialExperience: 60 });
   assert.equal(high.level, 3); assert.equal(high.vitals.hp, 50); assert.equal(high.vitals.mp, 14);
   high.gainExperience(999999); assert.equal(high.level, 99); assert.equal(high.nextLevelExperience, null);
   for (let index = 0; index < 1000; index++) high.gainExperience(999999);
   assert.equal(high.experience, maximumExperience); assert.equal(high.level, 99);
   assert.equal(progressionConfig.levelThresholds.length, 99);
-  assert.deepEqual(progressionConfig.levelThresholds.slice(0, 10), [0, 20, 60, 120, 200, 300, 420, 560, 720, 900]);
+  assert.deepEqual(progressionConfig.levelThresholds.slice(0, 10), [0, 15, 40, 80, 140, 220, 330, 470, 650, 900]);
   for (const [index, threshold] of progressionConfig.levelThresholds.entries()) {
     assert.equal(levelForExperience(threshold), index + 1);
     if (index) assert.equal(levelForExperience(threshold - 1), index);
   }
   assert.equal(levelForExperience(97020), 99);
-  assert.deepEqual(high.baseStats, { hp: 530, mp: 206, attack: 206, defense: 98 });
+  assert.deepEqual(high.baseStats, { hp: 530, mp: 206, attack: 206, defense: 98, magic: 206 });
   const veteran = createPlayerState();
   assert.deepEqual(veteran.gainExperience(97020).learnedSkills, skillCatalog.filter(skill => skill.learnLevel > 1).map(skill => skill.id));
   assert.deepEqual(veteran.gainExperience(1).learnedSkills, [], 'skills are announced only once');
@@ -63,27 +63,27 @@ try {
     assert.equal(battle.playerMp, definition.maxMp - skill.mpCost);
     assert.equal(battle.phase, 'player-action');
     if (skill.effect.type === 'magic-damage') {
-      assert.equal(battle.enemyHp, 9999 - skill.effect.amount);
+      assert.equal(battle.enemyHp, 9999 - Math.max(1, skill.effect.amount + Math.floor(definition.stats.magic * 1.0) - battle.enemy.stats.defense));
       assert.equal(caster.useFieldSkill(skill.id).ok, false);
     } else if (skill.effect.type === 'physical-damage') {
       assert.equal(battle.enemyHp, 9999 - Math.max(1, Math.floor(definition.stats.attack * skill.effect.power) - battle.enemy.stats.defense));
       assert.equal(battle.playerHp, 1);
       assert.equal(caster.useFieldSkill(skill.id).ok, false, 'physical techniques are battle-only');
     } else {
-      assert.equal(battle.playerHp, Math.min(definition.stats.hp, 1 + skill.effect.amount));
+      assert.equal(battle.playerHp, Math.min(definition.stats.hp, 1 + skill.effect.amount + Math.floor(definition.stats.magic * 0.8)));
       assert.equal(caster.useFieldSkill(skill.id).ok, false, 'full HP does not consume MP');
       caster.setVitals({ hp: 1, mp: skill.mpCost - 1, poisoned: false });
       const insufficient = caster.vitals;
       assert.equal(caster.useFieldSkill(skill.id).ok, false); assert.deepEqual(caster.vitals, insufficient);
       caster.setVitals({ hp: 1, mp: definition.maxMp, poisoned: false });
       assert.equal(caster.useFieldSkill(skill.id).ok, true);
-      assert.deepEqual(caster.vitals, { hp: Math.min(definition.stats.hp, 1 + skill.effect.amount), mp: definition.maxMp - skill.mpCost, poisoned: false });
+      assert.deepEqual(caster.vitals, { hp: Math.min(definition.stats.hp, 1 + skill.effect.amount + Math.floor(definition.stats.magic * 0.8)), mp: definition.maxMp - skill.mpCost, poisoned: false });
     }
     const dry = createBattle(enemyCatalog[1], { player: definition, playerHp: 1, playerMp: skill.mpCost - 1 });
     assert.equal(dry.useSkill(skill.id).ok, false); assert.equal(dry.playerMp, skill.mpCost - 1); assert.equal(dry.phase, 'commands');
   }
-  const capped = createPlayerState({ ...playerConfig, stats: { hp: 9998, attack: 9998, defense: 9998 }, maxMp: 9998 });
-  capped.gainExperience(900); assert.deepEqual(capped.definition.stats, { hp: 9999, attack: 9999, defense: 9999 });
+  const capped = createPlayerState({ ...playerConfig, stats: { hp: 9998, attack: 9998, defense: 9998, magic: 9998 }, maxMp: 9998 });
+  capped.gainExperience(900); assert.deepEqual(capped.definition.stats, { hp: 9999, attack: 9999, defense: 9999, magic: 9999 });
   assert.equal(capped.vitals.mp, 9999);
 
   const skill = findSkill(1), gear = findItem(4).equipment;

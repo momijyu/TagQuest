@@ -17,7 +17,9 @@ try {
   const { createBattle } = await read('battle');
   const { enemyCatalog, playerConfig, parseEnemyDefinitions } = await read('config');
   const { createPlayerState } = await read('state');
-  const { createWorldGame } = await read('world');
+  const { createWorldGame: createWorldGameBase } = await read('world');
+  // Safety is tested with defaults in verify-gameplay; this suite isolates combat retries.
+  const createWorldGame = (scenes, initial, random, options = {}) => createWorldGameBase(scenes, initial, random, { ...options, encounterGraceSteps: 0 });
   const { findItem } = await read('items');
   const mushroom = enemyCatalog.find(e => e.id === 2);
   const king = enemyCatalog.find(e => e.id === 0), demon = enemyCatalog.find(e => e.id === 4);
@@ -87,7 +89,7 @@ try {
   state.setVitals({ hp: 10, mp: 10, poisoned: true });
   for (const id of [255, 0, 1]) assert.equal(state.useFieldSkill(id).ok, false);
   assert.deepEqual(state.vitals, { hp: 10, mp: 10, poisoned: true });
-  assert.equal(state.useFieldSkill(2).ok, true); assert.deepEqual(state.vitals, { hp: 30, mp: 7, poisoned: true });
+  assert.equal(state.useFieldSkill(2).ok, true); assert.deepEqual(state.vitals, { hp: 38, mp: 7, poisoned: true });
   assert.equal(state.useFieldSkill(2).ok, true); assert.deepEqual(state.vitals, { hp: 40, mp: 4, poisoned: true });
   assert.equal(state.useFieldSkill(2).ok, false); assert.equal(state.vitals.mp, 4);
   state.setVitals({ hp: 20, mp: 2, poisoned: false }); assert.equal(state.useFieldSkill(2).ok, false);

@@ -10,7 +10,7 @@ import { isWorldLocation } from '../data/objects/world-locations';
 
 export type Direction = 'front' | 'back' | 'left' | 'right';
 export interface Position { readonly x: number; readonly y: number }
-const walkableTiles = new Set(['marble', 'carpet', 'grass', 'dirt', 'brick', 'bridge', 'forest-ground', 'sand', 'cave-floor', 'demon-floor', 'demon-carpet', 'world-forest', 'meadow-flowers', 'ruins-floor']);
+const walkableTiles = new Set(['void-rift', 'marble', 'carpet', 'grass', 'dirt', 'brick', 'bridge', 'forest-ground', 'sand', 'cave-floor', 'demon-floor', 'demon-carpet', 'world-forest', 'meadow-flowers', 'ruins-floor']);
 type Rectangle = Position & { readonly width: number; readonly height: number };
 export interface GameMessage { readonly speaker: string; readonly text: string; readonly dialogue?: Dialogue; readonly shopKind?: string; readonly battleEntityIndex?: number }
 const overlaps = (a: Rectangle, b: Rectangle) => a.x < b.x + b.width && a.x + a.width > b.x
@@ -45,7 +45,7 @@ export function interactionTarget(scene: SceneData, position: Position, directio
       const throne = entity.kind === 'throne' || entity.kind === 'demon-throne';
       if (throne && (direction !== 'back' || playerCollisionFrame(position).y < frame.y + frame.height)) continue;
       if (removed.has(index) || entity.kind === 'loot' && collected.has(index)
-        || !(isNpc(entity.kind) && (entity.dialogue || entity.battleEvent || entity.kind.endsWith('-merchant')) || entity.kind === 'loot' && entity.itemId !== undefined
+        || !(isNpc(entity.kind) && (entity.dialogue || entity.battleEvent || (entity.kind.endsWith('-merchant') || entity.kind === 'innkeeper')) || entity.kind === 'loot' && entity.itemId !== undefined
           || object)) continue;
       // 店員は同じ売り場のカウンター越しに、下側から2マスまで話せる。
       const shop = direction === 'back' && entity.kind.endsWith('-merchant') ? scene.entities.find(candidate => {
@@ -103,6 +103,17 @@ export function createWalkingGame(source: SceneData, entry?: { position: Positio
   collectTouched();
   return {
     scene,
+    snapshot() { return { position: { ...position }, direction, collected: [...collected], opened: [...opened], removed: [...removed], inventory: [...inventory] }; },
+    restore(value: { position: Position; direction: Direction; collected: number[]; opened: number[]; removed: number[]; inventory: [number, number][] }): void {
+      for (const list of [value.collected, value.opened, value.removed]) if (!Array.isArray(list) || list.some(index => !Number.isInteger(index) || index < 0 || index >= scene.entities.length)) throw new Error('マップの保存状態が不正です。');
+      if (!['front', 'back', 'left', 'right'].includes(value.direction)) throw new Error('保存方向が不正です。');
+      collected.clear(); for (const id of value.collected) collected.add(id);
+      opened.clear(); for (const id of value.opened) opened.add(id);
+      removed.clear(); for (const id of value.removed) removed.add(id);
+      inventory.clear(); for (const [id, count] of value.inventory) { if (!findItem(id) || !Number.isSafeInteger(count) || count < 1) throw new Error('保存報酬が不正です。'); inventory.set(id, count); }
+      if (!Number.isSafeInteger(value.position.x) || !Number.isSafeInteger(value.position.y) || !canStand(collisionScene(), value.position)) throw new Error('保存位置が不正です。');
+      position = { ...value.position }; direction = value.direction; messages.length = 0;
+    },
     get position(): Position { return { ...position }; },
     get direction(): Direction { return direction; },
     get message(): GameMessage | null { return messages[0] ?? null; },
@@ -139,10 +150,10 @@ export function createWalkingGame(source: SceneData, entry?: { position: Positio
         return;
       }
       if (chest) opened.add(index);
-      if (entity.dialogue || entity.battleEvent || entity.kind.endsWith('-merchant')) messages.push({ speaker: dialogueSpeaker(entity.dialogue, npcNames[entity.kind] ?? ''), text: entity.dialogue ? dialogueText(entity.dialogue) : entity.battleEvent ? '戦いが始まる！' : 'いらっしゃい！',
+      if (entity.dialogue || entity.battleEvent || (entity.kind.endsWith('-merchant') || entity.kind === 'innkeeper')) messages.push({ speaker: dialogueSpeaker(entity.dialogue, npcNames[entity.kind] ?? ''), text: entity.dialogue ? dialogueText(entity.dialogue) : entity.battleEvent ? '戦いが始まる！' : 'いらっしゃい！',
         ...(entity.dialogue ? { dialogue: entity.dialogue } : {}),
         ...(entity.battleEvent ? { battleEntityIndex: index } : {}),
-        ...(entity.kind.endsWith('-merchant') ? { shopKind: entity.kind } : {}) });
+        ...((entity.kind.endsWith('-merchant') || entity.kind === 'innkeeper') ? { shopKind: entity.kind } : {}) });
       else if (entity.itemId === undefined || collected.has(index)) {
         if (object) messages.push({ speaker: '', text: inspectionText(entity.kind) });
       }

@@ -3,7 +3,7 @@
     "stageId": 3,
     "enabled": true,
     "enemyId": 1,
-    "rate": 12,
+    "rate": 6,
     "enemies": [
       {
         "enemyId": 1,
@@ -23,19 +23,23 @@
     "stageId": 4,
     "enabled": true,
     "enemyId": 5,
-    "rate": 14,
+    "rate": 8,
     "enemies": [
       {
         "enemyId": 5,
-        "weight": 5
+        "weight": 50
       },
       {
         "enemyId": 6,
-        "weight": 3
+        "weight": 30
       },
       {
         "enemyId": 7,
-        "weight": 2
+        "weight": 20
+      },
+      {
+        "enemyId": 10,
+        "weight": 5
       }
     ]
   }

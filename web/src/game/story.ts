@@ -13,6 +13,8 @@ export function createStory(scenes: readonly SceneData[]) {
   const heard = new Set<string>();
   const chapters = config.chapters.filter(chapter => chapter.roles.every(role => available.has(role)));
   return {
+    snapshot() { return [...heard]; },
+    restore(roles: string[]): void { heard.clear(); for (const role of roles) if (available.has(role) || role === 'king') heard.add(role); },
     get ending() { return available.size ? config.ending : null; },
     record(dialogue?: Dialogue): void {
       const role = dialogue?.type === 'template' ? dialogueTemplates[dialogue.id].storyRole : undefined;
@@ -20,7 +22,8 @@ export function createStory(scenes: readonly SceneData[]) {
     },
     summary(cleared: boolean) {
       if (!available.size) return null;
-      return { title: config.title, objective: cleared ? config.clearedObjective : chapters.find(chapter => chapter.roles.some(role => !heard.has(role)))?.objective ?? config.finalObjective };
+      const pending = chapters.find(chapter => !(chapter.roles.includes('departure') && heard.size > 0) && chapter.roles.some(role => !heard.has(role)));
+      return { title: config.title, objective: cleared ? config.clearedObjective : pending?.objective ?? config.finalObjective };
     },
     reset(): void { heard.clear(); },
   };

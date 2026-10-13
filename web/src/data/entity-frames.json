@@ -202,5 +202,17 @@
     "y": 0,
     "width": 16,
     "height": 32
+  },
+  "demon-guard": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "innkeeper": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
   }
 }

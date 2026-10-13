@@ -1,7 +1,9 @@
 import type { PixelSprite } from '../objects/types';
 
 import { pixelCanvas } from '../characters/pixel-canvas';
+import { voidGodBattle } from '../characters/void-god';
 import { demonLordBattle } from '../characters/demon-lord';
+import { demonGuardBattle } from '../characters/demon-guard';
 import { caveEnemyPixels } from './cave-enemy-pixels';
 
 function leafGel(): PixelSprite {
@@ -138,4 +140,16 @@ export const enemyPixelSprites: Readonly<Record<string, PixelSprite>> = {
   'ghost-mushroom': ghostMushroom(),
   'forest-wolf': forestWolf(),
   'demon-lord': demonLordBattle,
+  'demon-guard': demonGuardBattle,
+  'void-god': voidGodBattle,
+  'void-shade': { ...caveEnemyPixels['cave-bat'], palette: ['#161523', '#35284d', '#625184', '#aa8bca', '#e9d7ef', '#7ab8c8', '#c7edf0', '#d7d2f4'] },
+  'rift-wolf': { ...forestWolf(), palette: ['#181425', '#30213d', '#534262', '#8b6fa0', '#283549', '#4d617a', '#92a4c3', '#b4cbd6', '#5b476c', '#977fa8', '#d8b4dd', '#f5d8f0', '#6dbfcb', '#3c354b', '#8d819c', '#d6c9df'] },
+  'abyss-sentinel': { ...caveEnemyPixels['rock-hermit'], palette: ['#171521', '#322a40', '#514763', '#817192', '#a898b9', '#d8c9df', '#413753', '#70557b', '#9bbec9', '#e8d6ff'] },
+  'stray-crystal': (() => {
+    const art = pixelCanvas(32, 32, ['#25354d', '#407a9d', '#70c2d2', '#c2eef2', '#fff4dc']);
+    art.shape([[16, 2], [27, 12], [24, 25], [16, 30], [7, 25], [4, 12]], '1', true);
+    art.shape([[16, 4], [16, 27], [6, 12]], '2'); art.shape([[16, 4], [25, 12], [16, 15]], '3');
+    art.line([16, 15], [16, 26], '3'); art.rect(11, 17, 2, 3, '0'); art.rect(20, 17, 2, 3, '0'); art.dot(11, 17, '4'); art.dot(20, 17, '4');
+    return art.finish();
+  })(),
 };

@@ -15,19 +15,19 @@ export const editorMarkup = `
   </header>
   <div class="editor-summary card bg-base-200 border border-base-300">
     <div><strong id="editor-byte-count"></strong><span id="editor-url-count"></span></div>
-    <progress id="editor-budget" max="496" value="0" aria-label="NDEFと予約領域のタグ使用量"></progress>
+    <progress id="editor-budget" max="496" value="0" aria-label="データ使用量"></progress>
     <span id="editor-tag-count" role="status"></span>
     <span id="editor-save-state" role="status">ブラウザに保存</span>
   </div>
-  <details class="editor-panel"><summary>NFC用URL・マップ検証</summary>
+  <details class="editor-panel"><summary>ゲーム起動URL・マップ検証</summary>
       <label>公開先URL <input id="editor-base-url" class="input" type="url" value="${defaultPublicBase()}"></label>
-      <label>タグの種類 <select id="editor-tag-type" class="select"><option value="ntag213">NTAG213（NDEF 144B / メモリ144B）</option><option value="ntag215" selected>NTAG215（NDEF 496B / メモリ504B）</option><option value="ntag216">NTAG216（NDEF 872B / メモリ888B）</option><option value="custom">手動指定</option></select></label>
-      <label>タグのNDEF領域（B） <input id="editor-tag-budget" class="input" type="number" min="1" value="496"></label>
-      <label>追加レコード・予約領域（B） <input id="editor-tag-reserved" class="input" type="number" min="0" value="0"></label>
+      <label>容量上限 <select id="editor-tag-type" class="select"><option value="ntag213">最小サイズ（144B）</option><option value="ntag215" selected>標準サイズ（496B）</option><option value="ntag216">大容量サイズ（872B）</option><option value="custom">手動指定</option></select></label>
+      <label>容量上限（B） <input id="editor-tag-budget" class="input" type="number" min="1" value="496"></label>
+      <label>予約領域（B） <input id="editor-tag-reserved" class="input" type="number" min="0" value="0"></label>
       <p id="editor-ndef-detail"></p><textarea id="editor-game-url" class="textarea" readonly aria-label="ゲーム起動URL"></textarea>
-      <button id="editor-export-url" class="btn btn-sm" aria-describedby="editor-url-export-status">NFC用URLを書き出す</button><a id="editor-local-preview" class="btn btn-sm" target="_blank" rel="noopener">このブラウザで試す</a><a id="editor-open-url" class="btn btn-sm" target="_blank" rel="noopener">公開URLを開く</a>
+      <button id="editor-export-url" class="btn btn-sm" aria-describedby="editor-url-export-status">ゲーム起動URLを書き出す</button><a id="editor-local-preview" class="btn btn-sm" target="_blank" rel="noopener">このブラウザで試す</a><a id="editor-open-url" class="btn btn-sm" target="_blank" rel="noopener">公開URLを開く</a>
       <p id="editor-url-export-status" role="status"></p>
-      <p>URLのゲームは、最初に開始位置があるマップから始まります。公開先を確認してからタグへ書き込みます。容量は単一URIレコード・TLV・終端を含む計算値です。タグ上限は標準のNDEF領域です。書き込みアプリの追加レコードや既存のLock Control TLV等は予約領域に加えてください。ローカル環境でも登録した公開先URLを初期表示します。</p>
+      <p>URLのゲームは、最初に開始位置があるマップから始まります。容量はURLエンコード後のデータサイズを含む計算値です。ローカル環境でも登録した公開先URLを初期表示します。</p>
       <button id="editor-optimize-terrain" class="btn btn-sm">山・森の配置を床にまとめる</button><button id="editor-validate" class="btn btn-sm">マップを検証</button><div id="editor-issues" role="status"></div>
     </details>
     <p id="editor-error" class="alert alert-error" role="alert" hidden></p>
@@ -43,8 +43,8 @@ export const editorMarkup = `
     <button id="editor-add-stage" class="btn btn-sm">＋ マップ追加</button>
     <button id="editor-add-world-sample" class="btn btn-sm btn-soft">＋ 全体マップの見本</button>
     <button id="editor-add-adventure-sample" class="btn btn-sm btn-soft">＋ 通常の世界（6マップ）</button>
-    <button id="editor-add-large-sample" class="btn btn-sm btn-soft">＋ 巨大な世界（15マップ）</button>
-    <button id="editor-add-small-sample" class="btn btn-sm btn-soft">＋ NFC用の小さな世界（6マップ）</button>
+    <button id="editor-add-large-sample" class="btn btn-sm btn-soft">＋ 巨大な世界（18マップ）</button>
+    <button id="editor-add-small-sample" class="btn btn-sm btn-soft">＋ 小さな世界（6マップ）</button>
     <button id="editor-clear-world" class="btn btn-sm btn-soft btn-error">全マップを削除</button>
   </div>
   <div class="editor-layout">

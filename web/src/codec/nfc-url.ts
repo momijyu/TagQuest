@@ -39,7 +39,7 @@ export function defaultPublicBase(location?: { hostname: string; origin: string 
 }
 export function nfcBudget(bytes: Uint8Array, base: string, capacity: number, reserved = 0) {
   if (!Number.isInteger(capacity) || capacity < 1 || !Number.isInteger(reserved) || reserved < 0)
-    throw new Error('タグ容量・予約領域は正しい整数で入力してください。');
+    throw new Error('容量上限・予約領域は正しい整数で入力してください。');
   const url = gameUrl(bytes, base), ndefBytes = ndefSize(url);
   return { url, urlBytes: new TextEncoder().encode(url).length, ndefBytes,
     usedBytes: ndefBytes + reserved, remainingBytes: capacity - ndefBytes - reserved };

@@ -26,7 +26,9 @@ const router = startPageRouter({ gallery, editor, game, status }, {
     const [{ mountPlayView }, { characters }] = await Promise.all([import('./game/play-view'), loadCharacters()]);
     return (root, first, scenes, active) => {
       const view = mountPlayView(root, characters, active);
-      try { view.start(first, true, scenes); } catch (error) { view.dispose(); throw error; }
+      let storage: Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
+      try { storage = window.localStorage; } catch { storage = { getItem: () => null, setItem: () => { throw new Error('保存を利用できません。'); }, removeItem: () => {} }; }
+      try { view.start(first, true, scenes, { storage }); } catch (error) { view.dispose(); throw error; }
       return () => view.dispose();
     };
   },

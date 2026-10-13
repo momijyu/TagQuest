@@ -1,15 +1,15 @@
 {
   "format": "TQ v15 experimental",
-  "binary_bytes": 1795,
-  "base64url_chars": 2394,
+  "binary_bytes": 2417,
+  "base64url_chars": 3223,
   "base_url": "https://tag-quest-kappa.vercel.app/",
-  "final_url_bytes": 2430,
+  "final_url_bytes": 3259,
   "binary_target_bytes": 300,
-  "remaining_to_binary_target_bytes": -1495,
+  "remaining_to_binary_target_bytes": -2117,
   "includes_ndef_overhead": true,
-  "ndef_tlv_bytes": 2435,
+  "ndef_tlv_bytes": 3264,
   "ntag215_ndef_capacity_bytes": 496,
-  "remaining_ntag215_bytes": -1939,
+  "remaining_ntag215_bytes": -2768,
   "stages": [
     {
       "id": 0,
@@ -39,28 +39,28 @@
     {
       "id": 1,
       "name": "town",
-      "width": 25,
+      "width": 29,
       "height": 21,
       "floor_bytes": {
-        "RAW": 263,
-        "RLE": 88,
-        "RECT": 47
+        "RAW": 305,
+        "RLE": 94,
+        "RECT": 59
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
-      "entity_count": 17,
-      "entity_bytes": 57,
-      "interaction_bytes": 35,
+      "entity_count": 21,
+      "entity_bytes": 69,
+      "interaction_bytes": 48,
       "exit_bytes": 8,
       "encounter_bytes": 2,
-      "stage_bytes": 158,
+      "stage_bytes": 195,
       "tile_counts": {
-        "grass": 367,
-        "dirt": 9,
-        "brick": 101,
+        "grass": 425,
+        "dirt": 8,
+        "brick": 124,
         "water": 23,
         "bridge": 1,
-        "empty": 24
+        "empty": 28
       }
     },
     {
@@ -78,9 +78,9 @@
       "entity_count": 4,
       "entity_bytes": 8,
       "interaction_bytes": 6,
-      "exit_bytes": 14,
+      "exit_bytes": 15,
       "encounter_bytes": 2,
-      "stage_bytes": 195,
+      "stage_bytes": 196,
       "tile_counts": {
         "grass": 108,
         "dirt": 6,
@@ -99,22 +99,22 @@
       "height": 17,
       "floor_bytes": {
         "RAW": 162,
-        "RLE": 48,
-        "RECT": 26
+        "RLE": 54,
+        "RECT": 38
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
-      "entity_count": 19,
-      "entity_bytes": 39,
-      "interaction_bytes": 15,
+      "entity_count": 22,
+      "entity_bytes": 45,
+      "interaction_bytes": 24,
       "exit_bytes": 5,
       "encounter_bytes": 10,
-      "stage_bytes": 104,
+      "stage_bytes": 131,
       "tile_counts": {
-        "grass": 19,
-        "dirt": 17,
+        "grass": 36,
+        "dirt": 27,
         "empty": 18,
-        "forest-ground": 263,
+        "forest-ground": 236,
         "sea": 6
       }
     },
@@ -125,21 +125,21 @@
       "height": 17,
       "floor_bytes": {
         "RAW": 166,
-        "RLE": 46,
-        "RECT": 33
+        "RLE": 54,
+        "RECT": 45
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
-      "entity_count": 4,
-      "entity_bytes": 8,
-      "interaction_bytes": 15,
+      "entity_count": 9,
+      "entity_bytes": 18,
+      "interaction_bytes": 24,
       "exit_bytes": 5,
-      "encounter_bytes": 10,
-      "stage_bytes": 80,
+      "encounter_bytes": 12,
+      "stage_bytes": 113,
       "tile_counts": {
         "empty": 18,
-        "cave-floor": 103,
-        "cave-wall": 202
+        "cave-floor": 139,
+        "cave-wall": 166
       }
     },
     {
@@ -174,23 +174,23 @@
       "height": 32,
       "floor_bytes": {
         "RAW": 520,
-        "RLE": 317,
-        "RECT": 55
+        "RLE": 324,
+        "RECT": 58
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
-      "entity_count": 3,
-      "entity_bytes": 6,
-      "interaction_bytes": 6,
-      "exit_bytes": 14,
+      "entity_count": 4,
+      "entity_bytes": 8,
+      "interaction_bytes": 9,
+      "exit_bytes": 18,
       "encounter_bytes": 2,
-      "stage_bytes": 92,
+      "stage_bytes": 104,
       "tile_counts": {
-        "grass": 434,
-        "dirt": 49,
+        "grass": 432,
+        "dirt": 53,
         "bridge": 3,
-        "sea": 269,
-        "sand": 162,
+        "sea": 268,
+        "sand": 161,
         "world-mountain": 36,
         "world-forest": 71
       }
@@ -198,28 +198,28 @@
     {
       "id": 7,
       "name": "北の市場",
-      "width": 25,
+      "width": 29,
       "height": 21,
       "floor_bytes": {
-        "RAW": 271,
-        "RLE": 102,
-        "RECT": 61
+        "RAW": 313,
+        "RLE": 108,
+        "RECT": 73
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
-      "entity_count": 17,
-      "entity_bytes": 57,
-      "interaction_bytes": 35,
+      "entity_count": 20,
+      "entity_bytes": 66,
+      "interaction_bytes": 45,
       "exit_bytes": 8,
       "encounter_bytes": 2,
-      "stage_bytes": 172,
+      "stage_bytes": 203,
       "tile_counts": {
-        "grass": 355,
-        "dirt": 9,
-        "brick": 101,
+        "grass": 413,
+        "dirt": 8,
+        "brick": 124,
         "water": 23,
         "bridge": 1,
-        "empty": 24,
+        "empty": 28,
         "meadow-flowers": 12
       }
     },
@@ -256,22 +256,22 @@
       "height": 29,
       "floor_bytes": {
         "RAW": 455,
-        "RLE": 144,
-        "RECT": 85
+        "RLE": 152,
+        "RECT": 97
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
-      "entity_count": 13,
-      "entity_bytes": 27,
-      "interaction_bytes": 27,
+      "entity_count": 17,
+      "entity_bytes": 35,
+      "interaction_bytes": 36,
       "exit_bytes": 5,
-      "encounter_bytes": 10,
-      "stage_bytes": 163,
+      "encounter_bytes": 12,
+      "stage_bytes": 194,
       "tile_counts": {
         "empty": 30,
         "sea": 12,
-        "cave-floor": 335,
-        "cave-wall": 522
+        "cave-floor": 367,
+        "cave-wall": 490
       }
     },
     {
@@ -309,22 +309,22 @@
       "height": 19,
       "floor_bytes": {
         "RAW": 205,
-        "RLE": 79,
-        "RECT": 34
+        "RLE": 85,
+        "RECT": 43
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
-      "entity_count": 8,
-      "entity_bytes": 24,
-      "interaction_bytes": 21,
+      "entity_count": 11,
+      "entity_bytes": 33,
+      "interaction_bytes": 30,
       "exit_bytes": 5,
       "encounter_bytes": 2,
-      "stage_bytes": 95,
+      "stage_bytes": 122,
       "tile_counts": {
-        "wall-top": 83,
+        "wall-top": 98,
         "dirt": 17,
         "empty": 20,
-        "ruins-floor": 279
+        "ruins-floor": 264
       }
     },
     {
@@ -355,25 +355,25 @@
     {
       "id": 13,
       "name": "海辺の集落",
-      "width": 25,
+      "width": 29,
       "height": 21,
       "floor_bytes": {
-        "RAW": 270,
-        "RLE": 114,
-        "RECT": 33
+        "RAW": 312,
+        "RLE": 121,
+        "RECT": 48
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
-      "entity_count": 17,
-      "entity_bytes": 53,
-      "interaction_bytes": 44,
+      "entity_count": 20,
+      "entity_bytes": 62,
+      "interaction_bytes": 54,
       "exit_bytes": 5,
       "encounter_bytes": 2,
-      "stage_bytes": 146,
+      "stage_bytes": 180,
       "tile_counts": {
-        "grass": 332,
-        "brick": 57,
-        "empty": 24,
+        "grass": 389,
+        "brick": 80,
+        "empty": 28,
         "sea": 60,
         "sand": 40,
         "meadow-flowers": 12
@@ -404,11 +404,92 @@
         "sea": 20,
         "meadow-flowers": 203
       }
+    },
+    {
+      "id": 15,
+      "name": "辺境の大陸",
+      "width": 32,
+      "height": 32,
+      "floor_bytes": {
+        "RAW": 521,
+        "RLE": 220,
+        "RECT": 74
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 7,
+      "entity_bytes": 14,
+      "interaction_bytes": 18,
+      "exit_bytes": 12,
+      "encounter_bytes": 5,
+      "stage_bytes": 132,
+      "tile_counts": {
+        "grass": 377,
+        "dirt": 68,
+        "bridge": 10,
+        "empty": 31,
+        "sea": 332,
+        "sand": 133,
+        "world-mountain": 41,
+        "world-forest": 32
+      }
+    },
+    {
+      "id": 16,
+      "name": "風渡りの森",
+      "width": 31,
+      "height": 29,
+      "floor_bytes": {
+        "RAW": 457,
+        "RLE": 136,
+        "RECT": 36
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 30,
+      "entity_bytes": 60,
+      "interaction_bytes": 21,
+      "exit_bytes": 5,
+      "encounter_bytes": 10,
+      "stage_bytes": 141,
+      "tile_counts": {
+        "grass": 120,
+        "dirt": 107,
+        "empty": 30,
+        "forest-ground": 618,
+        "sea": 12,
+        "meadow-flowers": 12
+      }
+    },
+    {
+      "id": 17,
+      "name": "忘れられた砦",
+      "width": 25,
+      "height": 27,
+      "floor_bytes": {
+        "RAW": 343,
+        "RLE": 104,
+        "RECT": 49
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 10,
+      "entity_bytes": 30,
+      "interaction_bytes": 21,
+      "exit_bytes": 5,
+      "encounter_bytes": 2,
+      "stage_bytes": 116,
+      "tile_counts": {
+        "wall-top": 141,
+        "dirt": 7,
+        "empty": 24,
+        "ruins-floor": 503
+      }
     }
   ],
   "binary_bytes_by_floor_codec": {
-    "RAW": 5307,
-    "RLE": 2874,
-    "RECT": 1875
+    "RAW": 7130,
+    "RLE": 3764,
+    "RECT": 2497
   }
 }

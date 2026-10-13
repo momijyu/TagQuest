@@ -4,13 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#111820" />
-    <meta name="description" content="NFCタグをゲームカートリッジとして使う、超小容量RPG。" />
+    <meta name="description" content="街や森を探索し、魔王に挑むドット絵RPG。" />
     <title>TagQuest</title>
   </head>
   <body>
     <main id="gallery-page" class="app">
       <header class="page-header">
         <div class="navbar flex-wrap gap-3 px-0">
+          <a class="btn btn-sm btn-primary" href="#editor">ワールドエディタ</a>
+
 
           <fieldset class="theme-switch">
             <legend class="sr-only">画面の配色</legend>
@@ -21,156 +23,117 @@
           </fieldset>
         </div>
         <h1 class="font-bold">TagQuest</h1>
+        <p class="badge badge-lg badge-warning" id="title-true-clear" data-title-true-clear hidden>★ TRUE CLEAR — 世界の真の覇者</p>
 
-        <nav class="gallery-nav" aria-label="素材カテゴリ">
-          <a class="btn btn-sm btn-primary" href="#editor">ワールドエディタ</a>
+        <nav class="gallery-nav" aria-label="ホーム画面のカテゴリ">
           <a class="btn btn-sm btn-soft" href="#walking-title">歩いてみる</a>
-          <a class="btn btn-sm btn-soft" href="#game-ui-title">文字</a>
-          <a class="btn btn-sm btn-soft" href="#castle-exterior-title">街並み</a>
-          <a class="btn btn-sm btn-soft" href="#shops-title">お店</a>
-          <a class="btn btn-sm btn-soft" href="#npcs-title">住民</a>
-          <a class="btn btn-sm btn-soft" href="#items-title">アイテム</a>
-          <a class="btn btn-sm btn-soft" href="#tile-title">城</a>
+          <a class="btn btn-sm btn-soft" href="#enemies-title">モンスター図鑑</a>
+          <a class="btn btn-sm btn-soft" href="#items-title">アイテム図鑑</a>
           <a class="btn btn-sm btn-soft" href="#player-title">キャラクター</a>
-          <a class="btn btn-sm btn-soft" href="#enemies-title">モンスター</a>
-          <a class="btn btn-sm btn-soft" href="#demon-castle-title">魔王城</a>
-          <a class="btn btn-sm btn-soft" href="#cave-title">洞窟</a>
-          <a class="btn btn-sm btn-soft" href="#forest-title">草原・森</a>
+          <a class="btn btn-sm btn-soft" href="#king-title">王様</a>
+          <a class="btn btn-sm btn-soft" href="#npcs-title">住民</a>
           <a class="btn btn-sm btn-soft" href="#world-title">全体マップ</a>
+          <a class="btn btn-sm btn-soft" href="#castle-exterior-title">街並み</a>
+          <a class="btn btn-sm btn-soft" href="#houses-title">民家</a>
+          <a class="btn btn-sm btn-soft" href="#shops-title">お店</a>
+          <a class="btn btn-sm btn-soft" href="#forest-title">草原・森</a>
+          <a class="btn btn-sm btn-soft" href="#cave-title">洞窟</a>
+          <a class="btn btn-sm btn-soft" href="#demon-castle-title">魔王城</a>
+          <a class="btn btn-sm btn-soft" href="#game-ui-title">文字</a>
+          <a class="btn btn-sm btn-soft" href="#adventure-materials-title">イベント素材</a>
+          <a class="btn btn-sm btn-soft" href="#decorations-title">井戸・落とし物</a>
+          <a class="btn btn-sm btn-soft" href="#town-title">街の床</a>
+          <a class="btn btn-sm btn-soft" href="#tile-title">城の床</a>
+          <a class="btn btn-sm btn-soft" href="#throne-title">玉座</a>
+          <a class="btn btn-sm btn-soft" href="#wall-title">城の壁</a>
+          <a class="btn btn-sm btn-soft" href="#pillar-title">柱</a>
         </nav>
       </header>
       <section id="gallery-walking" class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="walking-title">
         <div class="card-body tile-card">
           <div class="play-heading">
             <h2 id="walking-title" class="card-title">歩いてみる</h2>
-            <label>世界 <select id="gallery-play-size"><option value="normal">通常の世界</option><option value="large">巨大な世界</option><option value="small">NFC用の小さな世界</option></select></label>
+            <label>世界 <select id="gallery-play-size"><option value="normal">通常の世界</option><option value="large">巨大な世界</option><option value="small">小さな世界</option></select></label>
             <label><span class="sr-only">マップ</span><select id="gallery-play-map"><option value="castle">城</option><option value="town">街</option><option value="world">全体マップ</option><option value="forest">森</option><option value="cave">洞窟</option><option value="demon-castle">魔王城</option></select></label>
             <button id="gallery-play-toggle" class="btn btn-sm btn-primary">▶ プレイ</button>
           </div>
-          <p id="gallery-play-budget"></p>
           <a id="gallery-play-url" class="link" target="_blank" rel="noopener">この世界の起動URL</a>
           <div id="gallery-play-view" class="play-session" hidden></div>
           <p id="gallery-play-error" class="alert alert-error" role="alert" hidden></p>
         </div>
       </section>
-      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="game-ui-title">
-        <div class="card-body tile-card">
-          <h2 id="game-ui-title" class="card-title">文字の見本</h2>
-          <div class="game-ui">
-            <div class="game-window game-status" aria-label="ステータスの表示見本">
-              <span>ゆうしゃ</span>
-              <span>HP 128/128</span>
-              <span>MP 24/24</span>
-              <span>303 G</span>
-            </div>
-            <ul class="game-window game-commands" aria-label="コマンドの表示見本">
-              <li>はなす</li>
-              <li>どうぐ</li>
-              <li>つよさ</li>
-            </ul>
-            <p class="game-window">いらっしゃい！<br />何を買いますか？</p>
-          </div>
-        </div>
-      </section>
       <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="enemies-title">
-        <div class="card-body tile-card"><h2 id="enemies-title" class="card-title">モンスター</h2><div id="enemy-catalog" class="enemy-catalog"></div></div>
-      </section>
-      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="world-title">
-        <div class="card-body tile-card">
-          <h2 id="world-title" class="card-title">全体マップ</h2>
-          <figure class="world-preview"><canvas id="world-preview" width="512" height="384" aria-label="海と砂浜に囲まれた草原、山脈と森、川と橋、街・森の入口・洞窟・魔王城のある全体マップ">全体マップの見本</canvas></figure>
-          <div class="floor-views world-materials">
-            <figure><canvas id="world-sea" width="16" height="16" aria-label="全体マップの青い海と川">海・川</canvas><figcaption>海・川</figcaption></figure>
-            <figure><canvas id="world-sand" width="16" height="16" aria-label="淡い砂色の砂浜">砂浜</canvas><figcaption>砂浜</figcaption></figure>
-            <figure><canvas id="world-mountain" width="16" height="16" aria-label="茶色の斜面がある山">山</canvas><figcaption>山</figcaption></figure>
-            <figure><canvas id="world-forest" width="16" height="16" aria-label="全体マップ用の小さな木の群れ">森</canvas><figcaption>森</figcaption></figure>
-          </div>
-          <div id="world-locations" class="world-locations"></div>
-        </div>
-      </section>
-      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="demon-castle-title">
-        <div class="card-body">
-          <h2 id="demon-castle-title" class="card-title">魔王城</h2>
-          <div id="demon-castle-materials" class="floor-views"></div>
-          <figure class="demon-castle-stage-preview"><canvas id="demon-castle-stage-preview" width="272" height="304" aria-label="暗い石壁と柱、紫のカーペットと玉座のある魔王城の内部">魔王城の中</canvas></figure>
-        </div>
-      </section>
-      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="cave-title">
-        <div class="card-body">
-          <h2 id="cave-title" class="card-title">洞窟</h2>
-          <div class="floor-views">
-            <figure><canvas id="cave-floor" width="16" height="16" aria-label="灰褐色の小石が混じる岩の床">岩の床</canvas><figcaption>岩の床</figcaption></figure>
-            <figure><canvas id="cave-wall" width="16" height="16" aria-label="厚みのある灰色の岩壁">岩の壁</canvas><figcaption>岩の壁</figcaption></figure>
-          </div>
-          <figure class="cave-stage-preview"><canvas id="cave-stage-preview" width="304" height="272" aria-label="岩壁の間に曲がった道と広間のある洞窟">洞窟の中</canvas></figure>
-        </div>
-      </section>
-      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="adventure-materials-title">
-        <div class="card-body tile-card">
-          <h2 id="adventure-materials-title" class="card-title">宝箱・魔女・妖精・魔王</h2>
-          <div id="adventure-materials" class="house-views"></div>
-        </div>
-      </section>
-      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="forest-title">
-        <div class="card-body tile-card">
-          <h2 id="forest-title" class="card-title">草原と森</h2>
-          <div class="forest-materials">
-            <figure><canvas id="forest-grass" width="16" height="16" aria-label="街と共通の草の床">草</canvas><figcaption>草</figcaption></figure>
-            <figure><canvas id="forest-ground" width="16" height="16" aria-label="苔と落ち葉が混じる森の地面のドット絵">森の地面</canvas><figcaption>森の地面</figcaption></figure>
-            <figure><canvas id="forest-tree" width="48" height="48" aria-label="丸い緑の葉と茶色い幹を持つ広葉樹のドット絵">木</canvas><figcaption>木</figcaption></figure>
-          </div>
-          <figure class="forest-preview"><canvas id="forest-preview" width="176" height="144" aria-label="草地と森の地面、土の道、木を並べた見本">草原と森の素材見本</canvas></figure>
-          <figure class="forest-stage-preview"><canvas id="forest-stage-preview" width="304" height="272" aria-label="大きな木、曲がった土の道、広場、池と光る落とし物のある森">森の中</canvas><figcaption>森の中</figcaption></figure>
-        </div>
+        <div class="card-body tile-card"><h2 id="enemies-title" class="card-title">モンスター図鑑</h2><div id="enemy-catalog" class="enemy-catalog"></div></div>
       </section>
       <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="items-title">
-        <div class="card-body tile-card"><h2 id="items-title" class="card-title">アイテム</h2><div id="item-catalog" class="item-catalog"></div></div>
+        <div class="card-body tile-card"><h2 id="items-title" class="card-title">アイテム図鑑</h2><div id="item-catalog" class="item-catalog"></div></div>
       </section>
-      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="castle-exterior-title">
+      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="player-title">
         <div class="card-body tile-card">
         <div class="tile-heading">
 
-          <h2 id="castle-exterior-title" class="card-title">お城と街並み</h2>
+          <h2 id="player-title" class="card-title">冒険の主人公</h2>
 
         </div>
-        <figure class="castle-exterior-preview">
-          <div class="town-scene">
-            <canvas id="castle-exterior-preview" width="400" height="336" aria-label="城と堀と橋、広場を囲むお店と民家、井戸、道の脇の住民、下端に突き出した出口がある街のドット絵">城と街並みを表示します。</canvas>
-            <canvas id="town-loot-overlay" width="400" height="336" aria-hidden="true"></canvas>
-          </div>
-
-        </figure>
-        <div class="castle-parts">
+        <div class="character-views">
           <figure>
-            <canvas id="castle-moat" width="16" height="16" aria-label="青い堀の水面のドット絵">堀の水</canvas>
-            <figcaption>堀の水</figcaption>
+            <canvas id="player-front" width="64" height="64" aria-label="勇者風プレイヤーの正面のドット絵">正面の立ち姿</canvas>
+            <figcaption>正面</figcaption>
           </figure>
           <figure>
-            <canvas id="castle-bridge" width="16" height="16" aria-label="左右の欄干と横板のある木橋のドット絵">木の橋</canvas>
-            <figcaption>木の橋</figcaption>
+            <canvas id="player-back" width="64" height="64" aria-label="勇者風プレイヤーの背面のドット絵">背面の立ち姿</canvas>
+            <figcaption>背面</figcaption>
+          </figure>
+          <figure>
+            <canvas id="player-left" width="64" height="64" aria-label="勇者風プレイヤーの左向きのドット絵">左向きの立ち姿</canvas>
+            <figcaption>左向き</figcaption>
+          </figure>
+          <figure>
+            <canvas id="player-right" width="64" height="64" aria-label="勇者風プレイヤーの右向きのドット絵">右向きの立ち姿</canvas>
+            <figcaption>右向き</figcaption>
           </figure>
         </div>
         </div>
       </section>
-      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="shops-title">
+      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="king-title">
         <div class="card-body tile-card">
         <div class="tile-heading">
 
-          <h2 id="shops-title" class="card-title">武器屋・防具屋・道具屋</h2>
+          <h2 id="king-title" class="card-title">王様</h2>
 
         </div>
-        <div class="shop-views">
+        <div class="character-views">
           <figure>
-            <canvas id="shop-weapon" width="80" height="80" aria-label="剣や斧を飾った武器屋の売り場、木のカウンターの奥の店員">武器屋と店員</canvas>
-            <figcaption>武器屋</figcaption>
+            <canvas id="king-standingHeroStyle" width="64" height="64" aria-label="勇者をベースにした、白髪と王冠と赤い服の王様">勇者をベースにした王様</canvas>
+            <figcaption>装備中の正面</figcaption>
+          </figure>
+          <figure class="coarse-king-preview">
+            <canvas id="king-standingChunky" width="48" height="48" aria-label="粗いドットで新しく制作した王様の正面の立ち姿">新しい王様の立ち姿</canvas>
+            <figcaption>立ち姿（粗いドット）</figcaption>
           </figure>
           <figure>
-            <canvas id="shop-armor" width="80" height="80" aria-label="盾や鎧を飾った防具屋の売り場、木のカウンターの奥の店員">防具屋と店員</canvas>
-            <figcaption>防具屋</figcaption>
+            <canvas id="king-standing" width="64" height="64" aria-label="王冠をかぶり赤いマントを着た王様の正面の立ち姿">王様の正面立ち姿</canvas>
+            <figcaption>立ち姿</figcaption>
           </figure>
           <figure>
-            <canvas id="shop-item" width="80" height="80" aria-label="赤と緑の薬瓶、薬草や包みの棚、緑の服の店員がいる道具屋">道具屋と店員</canvas>
-            <figcaption>道具屋</figcaption>
+            <canvas id="king-back" width="64" height="64" aria-label="主人公ベースの王様の後ろ姿">王様の後ろ姿</canvas>
+            <figcaption>後ろ</figcaption>
+          </figure>
+          <figure>
+            <canvas id="king-left" width="64" height="64" aria-label="主人公ベースの王様の左向き">王様の左向き</canvas>
+            <figcaption>左</figcaption>
+          </figure>
+          <figure>
+            <canvas id="king-right" width="64" height="64" aria-label="主人公ベースの王様の右向き">王様の右向き</canvas>
+            <figcaption>右</figcaption>
+          </figure>
+          <figure>
+            <canvas id="king-seated" width="64" height="64" aria-label="赤と金の玉座に座り、肘掛けに手を置いた王様">玉座に座った王様</canvas>
+            <figcaption>座り姿</figcaption>
+          </figure>
+          <figure>
+            <canvas id="king-seatedOverlay" width="64" height="64" aria-label="既存の玉座に重ねるための、椅子を含まない王様の座り姿">王様だけの座り姿</canvas>
+            <figcaption>王様のみ</figcaption>
           </figure>
         </div>
         </div>
@@ -198,6 +161,45 @@
         </div>
         </div>
       </section>
+      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="world-title">
+        <div class="card-body tile-card">
+          <h2 id="world-title" class="card-title">全体マップ</h2>
+          <figure class="world-preview"><canvas id="world-preview" width="512" height="384" aria-label="海と砂浜に囲まれた草原、山脈と森、川と橋、街・森の入口・洞窟・魔王城のある全体マップ">全体マップの見本</canvas></figure>
+          <div class="floor-views world-materials">
+            <figure><canvas id="world-sea" width="16" height="16" aria-label="全体マップの青い海と川">海・川</canvas><figcaption>海・川</figcaption></figure>
+            <figure><canvas id="world-sand" width="16" height="16" aria-label="淡い砂色の砂浜">砂浜</canvas><figcaption>砂浜</figcaption></figure>
+            <figure><canvas id="world-mountain" width="16" height="16" aria-label="茶色の斜面がある山">山</canvas><figcaption>山</figcaption></figure>
+            <figure><canvas id="world-forest" width="16" height="16" aria-label="全体マップ用の小さな木の群れ">森</canvas><figcaption>森</figcaption></figure>
+          </div>
+          <div id="world-locations" class="world-locations"></div>
+        </div>
+      </section>
+      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="castle-exterior-title">
+        <div class="card-body tile-card">
+        <div class="tile-heading">
+
+          <h2 id="castle-exterior-title" class="card-title">お城と街並み</h2>
+
+        </div>
+        <figure class="castle-exterior-preview">
+          <div class="town-scene">
+            <canvas id="castle-exterior-preview" width="400" height="336" aria-label="城と堀と橋、広場を囲むお店と民家、井戸、道の脇の住民、下端に突き出した出口がある街のドット絵">城と街並みを表示します。</canvas>
+            <canvas id="town-loot-overlay" width="400" height="336" aria-hidden="true"></canvas>
+          </div>
+
+        </figure>
+        <div class="castle-parts">
+          <figure>
+            <canvas id="castle-moat" width="16" height="16" aria-label="青い堀の水面のドット絵">堀の水</canvas>
+            <figcaption>堀の水</figcaption>
+          </figure>
+          <figure>
+            <canvas id="castle-bridge" width="16" height="16" aria-label="左右の欄干と横板のある木橋のドット絵">木の橋</canvas>
+            <figcaption>木の橋</figcaption>
+          </figure>
+        </div>
+        </div>
+      </section>
       <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="houses-title">
         <div class="card-body tile-card">
         <div class="tile-heading">
@@ -215,6 +217,83 @@
             <figcaption>青灰の屋根</figcaption>
           </figure>
         </div>
+        </div>
+      </section>
+      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="shops-title">
+        <div class="card-body tile-card">
+        <div class="tile-heading">
+
+          <h2 id="shops-title" class="card-title">武器屋・防具屋・道具屋</h2>
+
+        </div>
+        <div class="shop-views">
+          <figure>
+            <canvas id="shop-weapon" width="80" height="80" aria-label="剣や斧を飾った武器屋の売り場、木のカウンターの奥の店員">武器屋と店員</canvas>
+            <figcaption>武器屋</figcaption>
+          </figure>
+          <figure>
+            <canvas id="shop-armor" width="80" height="80" aria-label="盾や鎧を飾った防具屋の売り場、木のカウンターの奥の店員">防具屋と店員</canvas>
+            <figcaption>防具屋</figcaption>
+          </figure>
+          <figure>
+            <canvas id="shop-item" width="80" height="80" aria-label="赤と緑の薬瓶、薬草や包みの棚、緑の服の店員がいる道具屋">道具屋と店員</canvas>
+            <figcaption>道具屋</figcaption>
+          </figure>
+        </div>
+        </div>
+      </section>
+      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="forest-title">
+        <div class="card-body tile-card">
+          <h2 id="forest-title" class="card-title">草原と森</h2>
+          <div class="forest-materials">
+            <figure><canvas id="forest-grass" width="16" height="16" aria-label="街と共通の草の床">草</canvas><figcaption>草</figcaption></figure>
+            <figure><canvas id="forest-ground" width="16" height="16" aria-label="苔と落ち葉が混じる森の地面のドット絵">森の地面</canvas><figcaption>森の地面</figcaption></figure>
+            <figure><canvas id="forest-tree" width="48" height="48" aria-label="丸い緑の葉と茶色い幹を持つ広葉樹のドット絵">木</canvas><figcaption>木</figcaption></figure>
+          </div>
+          <figure class="forest-preview"><canvas id="forest-preview" width="176" height="144" aria-label="草地と森の地面、土の道、木を並べた見本">草原と森の素材見本</canvas></figure>
+          <figure class="forest-stage-preview"><canvas id="forest-stage-preview" width="304" height="272" aria-label="大きな木、曲がった土の道、広場、池と光る落とし物のある森">森の中</canvas><figcaption>森の中</figcaption></figure>
+        </div>
+      </section>
+      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="cave-title">
+        <div class="card-body">
+          <h2 id="cave-title" class="card-title">洞窟</h2>
+          <div class="floor-views">
+            <figure><canvas id="cave-floor" width="16" height="16" aria-label="灰褐色の小石が混じる岩の床">岩の床</canvas><figcaption>岩の床</figcaption></figure>
+            <figure><canvas id="cave-wall" width="16" height="16" aria-label="厚みのある灰色の岩壁">岩の壁</canvas><figcaption>岩の壁</figcaption></figure>
+          </div>
+          <figure class="cave-stage-preview"><canvas id="cave-stage-preview" width="304" height="272" aria-label="岩壁の間に曲がった道と広間のある洞窟">洞窟の中</canvas></figure>
+        </div>
+      </section>
+      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="demon-castle-title">
+        <div class="card-body">
+          <h2 id="demon-castle-title" class="card-title">魔王城</h2>
+          <div id="demon-castle-materials" class="floor-views"></div>
+          <figure class="demon-castle-stage-preview"><canvas id="demon-castle-stage-preview" width="272" height="304" aria-label="暗い石壁と柱、紫のカーペットと玉座のある魔王城の内部">魔王城の中</canvas></figure>
+        </div>
+      </section>
+      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="game-ui-title">
+        <div class="card-body tile-card">
+          <h2 id="game-ui-title" class="card-title">文字の見本</h2>
+          <div class="game-ui">
+            <div class="game-window game-status" aria-label="ステータスの表示見本">
+              <span>ゆうしゃ</span>
+              <span>HP 128/128</span>
+              <span>MP 24/24</span>
+              <span>303 G</span>
+            </div>
+            <ul class="game-window game-commands" aria-label="コマンドの表示見本">
+              <li>はなす</li>
+              <li>どうぐ</li>
+              <li>つよさ</li>
+            </ul>
+            <p class="game-window">いらっしゃい！<br />何を買いますか？</p>
+          </div>
+        </div>
+      </section>
+      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="adventure-materials-title">
+        <div class="card-body tile-card">
+          <h2 id="adventure-materials-title" class="card-title">宝箱・特殊イベント素材</h2>
+          <div id="adventure-materials" class="house-views"></div>
         </div>
       </section>
       <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="decorations-title">
@@ -290,76 +369,6 @@
           </div>
           <figcaption>主人公・正面</figcaption>
         </figure>
-        </div>
-      </section>
-      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="player-title">
-        <div class="card-body tile-card">
-        <div class="tile-heading">
-
-          <h2 id="player-title" class="card-title">冒険の主人公</h2>
-
-        </div>
-        <div class="character-views">
-          <figure>
-            <canvas id="player-front" width="64" height="64" aria-label="勇者風プレイヤーの正面のドット絵">正面の立ち姿</canvas>
-            <figcaption>正面</figcaption>
-          </figure>
-          <figure>
-            <canvas id="player-back" width="64" height="64" aria-label="勇者風プレイヤーの背面のドット絵">背面の立ち姿</canvas>
-            <figcaption>背面</figcaption>
-          </figure>
-          <figure>
-            <canvas id="player-left" width="64" height="64" aria-label="勇者風プレイヤーの左向きのドット絵">左向きの立ち姿</canvas>
-            <figcaption>左向き</figcaption>
-          </figure>
-          <figure>
-            <canvas id="player-right" width="64" height="64" aria-label="勇者風プレイヤーの右向きのドット絵">右向きの立ち姿</canvas>
-            <figcaption>右向き</figcaption>
-          </figure>
-        </div>
-        </div>
-      </section>
-      <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="king-title">
-        <div class="card-body tile-card">
-        <div class="tile-heading">
-
-          <h2 id="king-title" class="card-title">王様</h2>
-
-        </div>
-        <div class="character-views">
-          <figure>
-            <canvas id="king-standingHeroStyle" width="64" height="64" aria-label="勇者をベースにした、白髪と王冠と赤い服の王様">勇者をベースにした王様</canvas>
-            <figcaption>装備中の正面</figcaption>
-          </figure>
-          <figure class="coarse-king-preview">
-            <canvas id="king-standingChunky" width="48" height="48" aria-label="粗いドットで新しく制作した王様の正面の立ち姿">新しい王様の立ち姿</canvas>
-            <figcaption>立ち姿（粗いドット）</figcaption>
-          </figure>
-          <figure>
-            <canvas id="king-standing" width="64" height="64" aria-label="王冠をかぶり赤いマントを着た王様の正面の立ち姿">王様の正面立ち姿</canvas>
-            <figcaption>立ち姿</figcaption>
-          </figure>
-          <figure>
-            <canvas id="king-back" width="64" height="64" aria-label="主人公ベースの王様の後ろ姿">王様の後ろ姿</canvas>
-            <figcaption>後ろ</figcaption>
-          </figure>
-          <figure>
-            <canvas id="king-left" width="64" height="64" aria-label="主人公ベースの王様の左向き">王様の左向き</canvas>
-            <figcaption>左</figcaption>
-          </figure>
-          <figure>
-            <canvas id="king-right" width="64" height="64" aria-label="主人公ベースの王様の右向き">王様の右向き</canvas>
-            <figcaption>右</figcaption>
-          </figure>
-          <figure>
-            <canvas id="king-seated" width="64" height="64" aria-label="赤と金の玉座に座り、肘掛けに手を置いた王様">玉座に座った王様</canvas>
-            <figcaption>座り姿</figcaption>
-          </figure>
-          <figure>
-            <canvas id="king-seatedOverlay" width="64" height="64" aria-label="既存の玉座に重ねるための、椅子を含まない王様の座り姿">王様だけの座り姿</canvas>
-            <figcaption>王様のみ</figcaption>
-          </figure>
-        </div>
         </div>
       </section>
       <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="throne-title">

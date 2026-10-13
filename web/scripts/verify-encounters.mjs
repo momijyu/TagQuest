@@ -15,7 +15,9 @@ try {
   } });
   const { initialWorld, parseWorld, encodeWorld } = await import(pathToFileURL(join(temporary, 'model.mjs')).href);
   const { decodeScenes } = await import(pathToFileURL(join(temporary, 'decoder.mjs')).href);
-  const { createWorldGame } = await import(pathToFileURL(join(temporary, 'world.mjs')).href);
+  const { createWorldGame: createWorldGameBase } = await import(pathToFileURL(join(temporary, 'world.mjs')).href);
+  // The grace-period contract is exercised with defaults in verify-gameplay; these fixtures isolate repeated battles.
+  const createWorldGame = (scenes, initial, random, options = {}) => createWorldGameBase(scenes, initial, random, { ...options, encounterGraceSteps: 0 });
   // Escape lifecycle fixtures explicitly opt in; production bosses forbid escape.
   const escapableKing = { ...JSON.parse(readFileSync(join(root, 'web/src/data/encounters/enemies/king.json'), 'utf8')), canEscape: true };
   function finish(game, outcome) {
@@ -88,12 +90,12 @@ try {
     game.move('right'); assert.equal(Boolean(game.encounter), hit, 'half-percent rate uses the exact probability boundary');
   }
   assert.equal(initialWorld().stages[0].encounter.rate, 0.1);
-  for (const [value, hit] of [[0, true], [0.00099999, true], [0.001, false], [0.999999, false]]) {
-    const rare = stage(0); rare.encounter.rate = 0.1;
+  for (const rate of [0.1, 0.01]) for (const [value, hit] of [[0, true], [rate / 100 - 1e-8, true], [rate / 100, false], [0.999999, false]]) {
+    const rare = stage(0); rare.encounter.rate = rate;
     for (const compact of [false, true]) {
       const restored = decodeScenes(encodeWorld(parseWorld(rare), compact).bytes);
       const game = createWorldGame(restored, 0, () => value);
-      game.move('right'); assert.equal(Boolean(game.encounter), hit, '0.1% king uses the exact one-in-a-thousand boundary after URL-format encoding');
+      game.move('right'); assert.equal(Boolean(game.encounter), hit, `${rate}% king uses the exact probability boundary after URL-format encoding`);
     }
   }
   const always = createWorldGame(scenes(guaranteed), 0, () => 0.999999); always.move('right'); assert.ok(always.encounter);

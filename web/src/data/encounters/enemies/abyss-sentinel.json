@@ -1,0 +1,49 @@
+{
+  "id": 14,
+  "name": "深淵の番人",
+  "characterId": "abyss-sentinel",
+  "battleImage": "abyss-sentinel",
+  "background": "void",
+  "stats": {
+    "hp": 300,
+    "attack": 42,
+    "defense": 20,
+    "magic": 30
+  },
+  "reward": {
+    "gold": 80,
+    "experience": 200,
+    "items": [
+      {
+        "itemId": 19,
+        "quantity": 1
+      }
+    ]
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "attack",
+        "text": "深淵の番人の攻撃！",
+        "power": 1
+      },
+      {
+        "type": "magic-attack",
+        "text": "深淵の番人は異次元の光を放った！",
+        "power": 1
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "attack",
+        "text": "深淵の番人の攻撃！",
+        "power": 1
+      },
+      {
+        "type": "magic-attack",
+        "text": "深淵の番人は異次元の光を放った！",
+        "power": 1
+      }
+    ]
+  }
+}

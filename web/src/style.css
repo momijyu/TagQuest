@@ -126,7 +126,8 @@ h2 {
   min-width: 0;
 }
 
-.item-category h3 {
+.item-category h3,
+.enemy-category h3 {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -136,7 +137,8 @@ h2 {
   font-weight: 700;
 }
 
-.item-category-count {
+.item-category-count,
+.enemy-category-count {
   font-size: 12px;
   font-weight: 400;
   white-space: nowrap;
@@ -161,7 +163,8 @@ h2 {
 }
 
 .item-category p,
-.item-category-count {
+.item-category-count,
+.enemy-category-count {
   color: color-mix(in oklab, var(--color-base-content) 75%, transparent);
 }
 
@@ -380,13 +383,17 @@ canvas {
   display: none;
 }
 
-.enemy-catalog { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; width: 100%; }
+.enemy-catalog { display: grid; gap: 28px; width: 100%; min-width: 0; }
+.enemy-category { min-width: 0; }
+.enemy-category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 24px 20px; }
 .enemy-catalog figure { display: flex; flex-direction: column; gap: 8px; align-items: center; margin: 0; }
 .enemy-catalog img { width: 100%; max-width: 220px; height: 200px; object-fit: contain; image-rendering: auto; }
 .enemy-catalog canvas { display: block; width: 192px; max-width: 100%; height: auto; image-rendering: pixelated; }
 .enemy-catalog details { width: 100%; text-align: center; font-size: 14px; }
 .enemy-catalog summary { cursor: pointer; }
 .enemy-catalog figcaption { text-align: center; }
+.enemy-catalog figcaption strong { display: block; overflow-wrap: anywhere; }
+.enemy-catalog figcaption small { display: block; margin-top: 4px; font-size: 12px; line-height: 1.6; color: color-mix(in oklab, var(--color-base-content) 75%, transparent); }
 
 @media (max-width: 440px) {
   .tile-card {

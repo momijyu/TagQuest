@@ -12,6 +12,14 @@ try {
   const { initialWorld, encodeWorld } = await import(pathToFileURL(join(temp, 'model.mjs')));
   const { base64url } = await import(pathToFileURL(join(temp, 'nfc.mjs')));
   const valid = '#' + base64url(encodeWorld(initialWorld(), true).bytes);
+  const home = readFileSync(join(root, 'web/index.html'), 'utf8');
+  const sections = [...home.matchAll(/<section\b[^>]*aria-labelledby="([^"]+)"/g)].map(match => match[1]);
+  const navigation = [...home.match(/<nav class="gallery-nav"[\s\S]*?<\/nav>/)[0].matchAll(/href="#([^"]+)"/g)].map(match => match[1]);
+  const expectedOrder = ['walking-title','enemies-title','items-title','player-title','king-title','npcs-title','world-title','castle-exterior-title','houses-title','shops-title','forest-title','cave-title','demon-castle-title','game-ui-title','adventure-materials-title','decorations-title','town-title','tile-title','throne-title','wall-title','pillar-title'];
+  assert.deepEqual(sections, expectedOrder); assert.deepEqual(navigation, expectedOrder);
+  const ids = [...home.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]); assert.equal(new Set(ids).size, ids.length, 'reordering preserves unique preview IDs');
+  assert.ok(home.includes('href="#editor"'), 'the editor entry remains available');
+
   class Element {
     hidden = false; children = []; dataset = {}; textContent = '';
     append(...children) { this.children.push(...children); }
@@ -83,8 +91,11 @@ try {
       width = 300; height = 150; attributes = new Map(); style = {};
       setAttribute(key, value) { this.attributes.set(key, value); }
       getAttribute(key) { return this.attributes.get(key) ?? null; }
-      addEventListener() {}
-      getContext() { return { canvas: this, fillRect() { paints++; }, clearRect() {}, drawImage() {}, scale() {}, setTransform() {} }; }
+      events = new Map(); images = [];
+      addEventListener(type, callback) { this.events.set(type, callback); }
+      get src() { return this.attributes.get('src'); }
+      set src(value) { this.attributes.set('src', value); }
+      getContext() { return { canvas: this, fillRect() { paints++; }, clearRect() {}, drawImage: (...args) => { this.images.push(args); }, scale() {}, setTransform() {} }; }
     }
     const elements = new Map();
     for (const match of readFileSync(join(root, 'web/index.html'), 'utf8').matchAll(/<[^>]+\bid="([^"]+)"[^>]*>/g)) {
@@ -93,33 +104,69 @@ try {
       elements.set('#' + match[1], element);
     }
     globalThis.document = { hidden: false, querySelector: selector => selector === '#gallery-walking' ? null : elements.get(selector) ?? null, createElement: () => new PreviewElement() };
-    globalThis.window = { matchMedia: () => ({ matches: false, addEventListener: (_event, fn) => motionListeners.add(fn), removeEventListener: (_event, fn) => motionListeners.delete(fn) }), requestAnimationFrame: fn => { frames.set(++frameId, fn); return frameId; }, cancelAnimationFrame: id => frames.delete(id) };
+    const badgeStorage = new Map(), badgeEvents = new Map();
+    globalThis.window = { localStorage: { getItem: key => badgeStorage.get(key) ?? null }, addEventListener: (event, fn) => badgeEvents.set(event, fn), removeEventListener: event => badgeEvents.delete(event), matchMedia: () => ({ matches: false, addEventListener: (_event, fn) => motionListeners.add(fn), removeEventListener: (_event, fn) => motionListeners.delete(fn) }), requestAnimationFrame: fn => { frames.set(++frameId, fn); return frameId; }, cancelAnimationFrame: id => frames.delete(id) };
     globalThis.fetch = async () => assert.fail('gallery previews reuse the playable sample; no separate old map download');
     const sprite = { image: {}, sourceX: 0, sourceY: 0, width: 64, height: 64 };
     const players = Object.fromEntries(['front', 'back', 'left', 'right'].map(key => [key, sprite]));
     const kings = Object.fromEntries(['standing', 'standingHeroStyle', 'standingChunky', 'seated', 'seatedOverlay', 'back', 'left', 'right'].map(key => [key, sprite]));
     const stop = await startGallery({ king: sprite, players, kings: players }, kings, () => active);
-    assert.deepEqual([elements.get('#castle-exterior-preview').width, elements.get('#castle-exterior-preview').height], [400, 336], 'gallery uses the same plaza town as play');
-    assert.deepEqual([elements.get('#town-loot-overlay').width, elements.get('#town-loot-overlay').height], [400, 336], 'sparkle overlay matches the new map');
+    assert.equal(elements.get('#title-true-clear').hidden, true);
+    badgeStorage.set('tagquest.play-save.v1', JSON.stringify({ version: 1, worlds: { test: { cleared: true, defeatCounts: [[11, 1]] } } }));
+    badgeEvents.get('hashchange')(); assert.equal(elements.get('#title-true-clear').hidden, false);
+    badgeStorage.clear(); badgeEvents.get('storage')(); assert.equal(elements.get('#title-true-clear').hidden, true);
+    assert.deepEqual([elements.get('#castle-exterior-preview').width, elements.get('#castle-exterior-preview').height], [464, 336], 'gallery uses the expanded residential town from play');
+    assert.deepEqual([elements.get('#town-loot-overlay').width, elements.get('#town-loot-overlay').height], [464, 336], 'sparkle overlay matches the expanded map');
     assert.deepEqual([elements.get('#repeat-preview').width, elements.get('#repeat-preview').height], [13 * 16 * 8, 12 * 16 * 8], 'castle preview matches the spacious playable hall');
     assert.equal(elements.get('#repeat-preview').style.width, '416px', 'whole castle displays at an integer 2x pixel scale');
     const catalog = JSON.parse(readFileSync(join(root, 'web/src/data/item-catalog.json'), 'utf8'));
     const verifyItemList = () => {
       const groups = elements.get('#item-catalog').children;
       assert.deepEqual(groups.map(group => group.children[0].textContent), ['回復・治療', '武器', '防具', '装飾品', '素材']);
-      assert.deepEqual(groups.map(group => group.children[1].children.length), [5, 6, 6, 2, 6]);
+      assert.deepEqual(groups.map(group => group.children[1].children.length), [7, 6, 9, 3, 6]);
       for (const group of groups) assert.equal(group.children[0].children[0].textContent, `${group.children[1].children.length}種類`);
       const displayed = groups.flatMap(group => group.children[1].children.map(row => [row.children[0].textContent, row.children[1].textContent]));
       assert.deepEqual(displayed.sort(), catalog.map(item => [item.name, item.description]).sort(), 'every current item and its effect/material use appears exactly once');
       assert.deepEqual(groups[4].children[1].children.map(row => row.children[0].textContent), catalog.filter(item => !item.effect && !item.equipment).map(item => item.name), 'monster drops are grouped as materials');
     };
-    assert.ok(paints > 1000); assert.equal(elements.get('#enemy-catalog').children.length, 7); assert.equal(elements.get('#world-locations').children.length, 5); verifyItemList(); assert.ok(elements.get('#status').hidden);
+    const enemies = JSON.parse(readFileSync(join(root, 'web/src/data/encounters/enemy-catalog.json'), 'utf8')).map(file => JSON.parse(readFileSync(join(root, `web/src/data/encounters/enemies/${file}.json`), 'utf8')));
+    const verifyEnemyList = () => {
+      const groups = elements.get('#enemy-catalog').children;
+      assert.equal(groups.length, 3);
+      assert.deepEqual(groups.map(group => group.children[0].textContent), ['草原・森の魔物', '洞窟の魔物', 'ボス・強敵']);
+      assert.deepEqual(groups.map(group => group.children[1].children.length), [3, 4, 7]);
+      assert.deepEqual(groups.map(group => group.dataset.category), ['forest', 'cave', 'boss']);
+      for (const group of groups) { assert.equal(group.className, 'enemy-category'); assert.equal(group.children[0].children[0].textContent, `${group.children[1].children.length}種類`); }
+      const cards = groups.flatMap(group => group.children[1].children);
+      assert.equal(cards.length, enemies.length);
+      assert.deepEqual(cards.map(card => Number(card.dataset.enemyId)).sort((a,b)=>a-b), enemies.map(enemy=>enemy.id).sort((a,b)=>a-b), 'all enemies, including the king and dimension creatures, appear once');
+      assert.deepEqual(groups[0].children[1].children.map(card=>Number(card.dataset.enemyId)), [1,2,3]);
+      assert.deepEqual(groups[1].children[1].children.map(card=>Number(card.dataset.enemyId)), [5,6,7,10]);
+      assert.deepEqual(groups[2].children[1].children.map(card=>Number(card.dataset.enemyId)), [0,8,4,11,12,13,14]);
+      for (const card of cards) {
+        const enemy = enemies.find(enemy=>enemy.id===Number(card.dataset.enemyId));
+        assert.equal(card.children[1].children[0].textContent, enemy.name);
+        assert.equal(card.children[1].children[1].textContent, `HP ${enemy.stats.hp} / 攻撃 ${enemy.stats.attack} / 防御 ${enemy.stats.defense}`);
+        assert.equal(card.children[0].width, 64); assert.equal(card.children[0].height, 64);
+        assert.equal(card.children[0].getAttribute('aria-label'), `${enemy.name}のドット絵`);
+      }
+      assert.equal(cards.find(card=>card.dataset.enemyId==='0').children[0].images.length, 1, 'king card uses the existing pixel character');
+      const references = cards.flatMap(card=>card.children.slice(2)); assert.equal(references.length, 3);
+      for (const details of references) {
+        const image = details.children[1]; assert.equal(image.src, undefined, 'reference originals remain lazy');
+        details.open = false; details.events.get('toggle')(); assert.equal(image.src, undefined);
+        details.open = true; details.events.get('toggle')(); assert.ok(image.src); const source = image.src;
+        details.events.get('toggle')(); assert.equal(image.src, source);
+      }
+    };
+    verifyEnemyList();
+    assert.ok(paints > 1000); assert.equal(elements.get('#world-locations').children.length, 5); verifyItemList(); assert.ok(elements.get('#status').hidden);
     const before = paints;
     active = false; const [id, tick] = frames.entries().next().value; frames.delete(id); tick(320); assert.equal(paints, before);
     active = true; const [nextId, nextTick] = frames.entries().next().value; frames.delete(nextId); nextTick(480); assert.ok(paints > before);
-    stop(); assert.equal(frames.size, 0); assert.equal(motionListeners.size, 0);
+    stop(); assert.equal(badgeEvents.size, 0); assert.equal(frames.size, 0); assert.equal(motionListeners.size, 0);
     const stopAgain = await startGallery({ king: sprite, players, kings: players }, kings, () => active);
-    verifyItemList(); stopAgain(); assert.equal(frames.size, 0); assert.equal(motionListeners.size, 0);
+    verifyItemList(); verifyEnemyList(); stopAgain(); assert.equal(frames.size, 0); assert.equal(motionListeners.size, 0);
     elements.delete('#repeat-preview');
     await assert.rejects(startGallery({ king: sprite, players, kings: players }, kings, () => active), /画面要素/);
     assert.equal(frames.size, 0); assert.equal(motionListeners.size, 0);

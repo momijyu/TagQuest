@@ -471,15 +471,15 @@ export function startEditor(root: HTMLElement, characters: PlayCharacters & { pl
       const capacity = Number(get<HTMLInputElement>('tag-budget').value), reserved = Number(get<HTMLInputElement>('tag-reserved').value);
       const { url, urlBytes, ndefBytes, usedBytes, remainingBytes } = nfcBudget(encoded.bytes, get<HTMLInputElement>('base-url').value, capacity, reserved);
       get('url-count').textContent = `URL全体 ${urlBytes} B`;
-      get('tag-count').textContent = `タグ使用量 ${usedBytes} / ${capacity} B · ${remainingBytes >= 0 ? `残り ${remainingBytes} B` : `${-remainingBytes} B超過`}`;
-      get('ndef-detail').textContent = `NDEF・TLV・終端 ${ndefBytes} B ＋ 予約 ${reserved} B`;
+      get('tag-count').textContent = `使用量 ${usedBytes} / ${capacity} B · ${remainingBytes >= 0 ? `残り ${remainingBytes} B` : `${-remainingBytes} B超過`}`;
+      get('ndef-detail').textContent = `データ容量（管理情報込み） ${ndefBytes} B ＋ 予約 ${reserved} B`;
       get<HTMLButtonElement>('export-url').disabled = remainingBytes < 0;
-      get('url-export-status').textContent = remainingBytes < 0 ? `容量を${-remainingBytes} B減らすと、NFC用URLを書き出せます。` : '指定したタグ容量内で書き出せます。';
+      get('url-export-status').textContent = remainingBytes < 0 ? `容量を${-remainingBytes} B減らすと、起動URLを書き出せます。` : '指定した容量上限内で書き出せます。';
       get<HTMLProgressElement>('budget').max = capacity;
       get<HTMLProgressElement>('budget').value = usedBytes;
       get<HTMLAnchorElement>('local-preview').href = '#' + base64url(encoded.bytes);
       get<HTMLTextAreaElement>('game-url').value = url; get<HTMLAnchorElement>('open-url').href = url;
-    } catch (value) { get('tag-count').textContent = String(value); get('ndef-detail').textContent = ''; get<HTMLProgressElement>('budget').value = 0; get<HTMLTextAreaElement>('game-url').value = ''; get('open-url').removeAttribute('href'); get('local-preview').removeAttribute('href'); get<HTMLButtonElement>('export-url').disabled = true; get('url-export-status').textContent = '公開先URL・タグ容量・予約領域を確認してください。'; }
+    } catch (value) { get('tag-count').textContent = String(value); get('ndef-detail').textContent = ''; get<HTMLProgressElement>('budget').value = 0; get<HTMLTextAreaElement>('game-url').value = ''; get('open-url').removeAttribute('href'); get('local-preview').removeAttribute('href'); get<HTMLButtonElement>('export-url').disabled = true; get('url-export-status').textContent = '公開先URL・容量設定・予約領域を確認してください。'; }
     const report = encoded.reports.find(r => r.id === s.id)!;
     get('stage-bytes').textContent = `${report.bytes} B · 床 ${report.floorBytes} B (${report.codec}) · 配置 ${report.entityBytes} B · 会話・アイテム ${report.interactionBytes} B · 出口 ${report.exitBytes} B · エンカウント ${report.encounterBytes} B`;
     get('stages').innerHTML = history.world.stages.map(stage => `<button class="btn btn-soft ${stage.id === active ? 'btn-primary' : ''}" data-stage="${stage.id}" aria-pressed="${stage.id === active}">${escapeHtml(stageLabel(stage))} <small>${stage.width}×${stage.height} · ${encoded.reports.find(r => r.id === stage.id)!.bytes} B</small></button>`).join('');

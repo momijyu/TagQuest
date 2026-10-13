@@ -15,7 +15,7 @@
     "id": 1,
     "name": "火の玉",
     "kind": "spell",
-    "description": "敵に12ダメージ",
+    "description": "敵を魔法で攻撃（基礎12）。魔力で威力が上がる",
     "mpCost": 3,
     "learnLevel": 1,
     "effect": {
@@ -27,7 +27,7 @@
     "id": 2,
     "name": "癒し",
     "kind": "spell",
-    "description": "自分のHPを20回復",
+    "description": "自分のHPを回復（基礎20）。魔力で威力が上がる",
     "mpCost": 3,
     "learnLevel": 1,
     "effect": {
@@ -39,7 +39,7 @@
     "id": 3,
     "name": "氷の矢",
     "kind": "spell",
-    "description": "敵に18ダメージ",
+    "description": "敵を魔法で攻撃（基礎18）。魔力で威力が上がる",
     "mpCost": 4,
     "learnLevel": 3,
     "effect": {
@@ -51,7 +51,7 @@
     "id": 4,
     "name": "大きな癒し",
     "kind": "spell",
-    "description": "自分のHPを50回復",
+    "description": "自分のHPを回復（基礎50）。魔力で威力が上がる",
     "mpCost": 6,
     "learnLevel": 5,
     "effect": {
@@ -63,7 +63,7 @@
     "id": 5,
     "name": "雷撃",
     "kind": "spell",
-    "description": "敵に36ダメージ",
+    "description": "敵を魔法で攻撃（基礎36）。魔力で威力が上がる",
     "mpCost": 7,
     "learnLevel": 8,
     "effect": {
@@ -75,7 +75,7 @@
     "id": 6,
     "name": "火炎",
     "kind": "spell",
-    "description": "敵に60ダメージ",
+    "description": "敵を魔法で攻撃（基礎60）。魔力で威力が上がる",
     "mpCost": 10,
     "learnLevel": 12,
     "effect": {
@@ -87,7 +87,7 @@
     "id": 7,
     "name": "深い癒し",
     "kind": "spell",
-    "description": "自分のHPを120回復",
+    "description": "自分のHPを回復（基礎120）。魔力で威力が上がる",
     "mpCost": 12,
     "learnLevel": 16,
     "effect": {
@@ -99,7 +99,7 @@
     "id": 8,
     "name": "氷嵐",
     "kind": "spell",
-    "description": "敵に110ダメージ",
+    "description": "敵を魔法で攻撃（基礎110）。魔力で威力が上がる",
     "mpCost": 16,
     "learnLevel": 24,
     "effect": {
@@ -111,7 +111,7 @@
     "id": 9,
     "name": "雷鳴",
     "kind": "spell",
-    "description": "敵に170ダメージ",
+    "description": "敵を魔法で攻撃（基礎170）。魔力で威力が上がる",
     "mpCost": 22,
     "learnLevel": 32,
     "effect": {
@@ -123,7 +123,7 @@
     "id": 10,
     "name": "命の光",
     "kind": "spell",
-    "description": "自分のHPを250回復",
+    "description": "自分のHPを回復（基礎250）。魔力で威力が上がる",
     "mpCost": 20,
     "learnLevel": 40,
     "effect": {
@@ -135,7 +135,7 @@
     "id": 11,
     "name": "星落とし",
     "kind": "spell",
-    "description": "敵に300ダメージ",
+    "description": "敵を魔法で攻撃（基礎300）。魔力で威力が上がる",
     "mpCost": 36,
     "learnLevel": 60,
     "effect": {
@@ -147,7 +147,7 @@
     "id": 12,
     "name": "奇跡の癒し",
     "kind": "spell",
-    "description": "自分のHPを600回復",
+    "description": "自分のHPを回復（基礎600）。魔力で威力が上がる",
     "mpCost": 32,
     "learnLevel": 80,
     "effect": {

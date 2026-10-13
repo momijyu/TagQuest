@@ -1,0 +1,62 @@
+{
+  "id": 11,
+  "name": "古代の虚無神",
+  "characterId": "void-god",
+  "battleImage": "void-god",
+  "background": "void",
+  "stats": {
+    "hp": 1200,
+    "attack": 55,
+    "defense": 25,
+    "magic": 55
+  },
+  "canEscape": false,
+  "reward": {
+    "gold": 1000,
+    "experience": 1000,
+    "items": [
+      {
+        "itemId": 30,
+        "quantity": 1
+      }
+    ]
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "attack",
+        "text": "古代の虚無神の虚無の爪痕！",
+        "power": 1.4
+      },
+      {
+        "type": "magic-attack",
+        "text": "古代の虚無神の虚無の波動！",
+        "power": 1.2
+      },
+      {
+        "type": "heal",
+        "text": "深淵の闇が、古代の虚無神を包む！",
+        "amount": 60
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "attack",
+        "text": "古代の虚無神の虚無の爪痕！",
+        "power": 1.4
+      },
+      {
+        "type": "magic-attack",
+        "text": "古代の虚無神の虚無の波動！",
+        "power": 1.2
+      },
+      {
+        "type": "heal",
+        "text": "深淵の闇が、古代の虚無神を包む！",
+        "amount": 60
+      }
+    ]
+  },
+  "actionsPerTurn": 2,
+  "victoryMessage": "古代の虚無神を打ち倒し、世界の真の覇者となった！"
+}

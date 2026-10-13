@@ -3,7 +3,8 @@
   "stats": {
     "hp": 40,
     "attack": 10,
-    "defense": 0
+    "defense": 0,
+    "magic": 10
   },
   "guardMultiplier": 0.5,
   "maxMp": 10,

@@ -14,7 +14,49 @@
   },
   {
     "stageId": 1,
-    "entities": [],
+    "entities": [
+      {
+        "kind": "house-red",
+        "x": 416,
+        "y": 48,
+        "parameters": [],
+        "dialogue": {
+          "type": "template",
+          "id": 72
+        }
+      },
+      {
+        "kind": "house-slate",
+        "x": 416,
+        "y": 224,
+        "parameters": [],
+        "dialogue": {
+          "type": "template",
+          "id": 73
+        },
+        "itemId": 19
+      },
+      {
+        "kind": "innkeeper",
+        "x": 384,
+        "y": 160,
+        "parameters": [],
+        "dialogue": {
+          "type": "template",
+          "id": 85
+        }
+      },
+      {
+        "kind": "signpost",
+        "x": 208,
+        "y": 288,
+        "parameters": [],
+        "dialogue": {
+          "type": "template",
+          "id": 87
+        }
+      }
+    ],
     "updates": [
       {
         "kind": "traveler",
@@ -73,7 +115,7 @@
         "x": 192,
         "y": 96,
         "parameters": [],
-        "itemId": 7
+        "itemId": 21
       },
       {
         "kind": "treasure-chest",
@@ -81,6 +123,30 @@
         "y": 128,
         "parameters": [],
         "itemId": 2
+      },
+      {
+        "kind": "treasure-chest",
+        "x": 64,
+        "y": 112,
+        "parameters": [],
+        "itemId": 19
+      },
+      {
+        "kind": "treasure-chest",
+        "x": 256,
+        "y": 176,
+        "parameters": [],
+        "itemId": 20
+      },
+      {
+        "kind": "signpost",
+        "x": 128,
+        "y": 128,
+        "parameters": [],
+        "dialogue": {
+          "type": "template",
+          "id": 74
+        }
       }
     ],
     "updates": []
@@ -103,14 +169,14 @@
         "x": 32,
         "y": 80,
         "parameters": [],
-        "itemId": 6
+        "itemId": 22
       },
       {
         "kind": "treasure-chest",
         "x": 224,
         "y": 112,
         "parameters": [],
-        "itemId": 4
+        "itemId": 23
       },
       {
         "kind": "treasure-chest",
@@ -118,6 +184,42 @@
         "y": 128,
         "parameters": [],
         "itemId": 1
+      },
+      {
+        "kind": "treasure-chest",
+        "x": 32,
+        "y": 192,
+        "parameters": [],
+        "itemId": 2
+      },
+      {
+        "kind": "treasure-chest",
+        "x": 240,
+        "y": 192,
+        "parameters": [],
+        "itemId": 8
+      },
+      {
+        "kind": "cave-crystal",
+        "x": 16,
+        "y": 176,
+        "parameters": []
+      },
+      {
+        "kind": "cave-crystal",
+        "x": 256,
+        "y": 176,
+        "parameters": []
+      },
+      {
+        "kind": "signpost",
+        "x": 128,
+        "y": 208,
+        "parameters": [],
+        "dialogue": {
+          "type": "template",
+          "id": 75
+        }
       }
     ],
     "updates": []

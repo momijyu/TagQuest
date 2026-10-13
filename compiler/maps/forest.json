@@ -61,6 +61,34 @@
         "y": 4,
         "width": 3,
         "height": 2
+      },
+      {
+        "tile": "grass",
+        "x": 3,
+        "y": 6,
+        "width": 3,
+        "height": 4
+      },
+      {
+        "tile": "grass",
+        "x": 14,
+        "y": 10,
+        "width": 4,
+        "height": 2
+      },
+      {
+        "tile": "dirt",
+        "x": 4,
+        "y": 9,
+        "width": 8,
+        "height": 1
+      },
+      {
+        "tile": "dirt",
+        "x": 11,
+        "y": 10,
+        "width": 4,
+        "height": 1
       }
     ]
   },

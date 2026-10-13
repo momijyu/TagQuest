@@ -2,7 +2,7 @@ import { findItem, equipmentSlots } from '../data/items';
 import type { ItemDefinition, EquipmentSlot } from '../data/items';
 import { playerConfig } from '../data/encounters/combat-config';
 import type { PlayerDefinition, VictoryReward, EnemyDefinition } from '../data/encounters/combat-config';
-import { whole } from '../data/catalog-validation';
+import { whole, record, label } from '../data/catalog-validation';
 import { findSkill } from '../data/skills';
 import { levelForExperience, progressionConfig, maximumExperience } from '../data/progression';
 import type { ProgressionDefinition } from '../data/progression';
@@ -27,13 +27,15 @@ export function recoverItem(item: ItemDefinition, vitals: Vitals, maxHp: number,
 /** 所持品は装備中の1個も含む。装備の切り替えで個数を増減させない。 */
 export function createPlayerState(definition: PlayerDefinition = playerConfig, progression: ProgressionDefinition = progressionConfig) {
   const base = structuredClone(definition);
+  let name = base.name;
+  let boost = { hp: 0, attack: 0 };
   const defeatGoldLossPercent = whole(base.defeatGoldLossPercent ?? 50, 0, 100);
   let experience = base.initialExperience ?? 0;
   let level = levelForExperience(experience, progression);
   function grownStats() {
     const growth = progression.growthPerLevel, steps = level - 1;
-    return { hp: Math.min(9999, base.stats.hp + steps * growth.hp), mp: Math.min(9999, (base.maxMp ?? 0) + steps * growth.mp),
-      attack: Math.min(9999, base.stats.attack + steps * growth.attack), defense: Math.min(9999, base.stats.defense + steps * growth.defense) };
+    return { hp: Math.min(9999, base.stats.hp + steps * growth.hp + boost.hp), mp: Math.min(9999, (base.maxMp ?? 0) + steps * growth.mp),
+      attack: Math.min(9999, base.stats.attack + steps * growth.attack + boost.attack), defense: Math.min(9999, base.stats.defense + steps * growth.defense), magic: Math.min(9999, (base.stats.magic ?? 0) + steps * (growth.magic ?? 0)) };
   }
   const learned = () => (base.skills ?? []).filter(id => (findSkill(id)?.learnLevel ?? 1) <= level);
   let gold = base.initialGold ?? 0;
@@ -61,14 +63,14 @@ export function createPlayerState(definition: PlayerDefinition = playerConfig, p
       stats.hp += gear.hp ?? 0; stats.mp += gear.mp ?? 0;
       if (isRoyalEquipment(id)) royalAttackBonus += gear.attack;
       else stats.attack += gear.attack;
-      stats.defense += gear.defense;
+      stats.defense += gear.defense; stats.magic += gear.magic ?? 0;
     }
     stats.attack += Math.floor(royalAttackBonus * royalAttackMultiplier);
-    return { hp: Math.min(9999, stats.hp), mp: Math.min(9999, stats.mp), attack: Math.min(9999, stats.attack), defense: Math.min(9999, stats.defense) };
+    return { hp: Math.min(9999, stats.hp), mp: Math.min(9999, stats.mp), attack: Math.min(9999, stats.attack), defense: Math.min(9999, stats.defense), magic: Math.min(9999, stats.magic) };
   }
   function effective(royalAttackMultiplier = 1): PlayerDefinition {
     const stats = effectiveStats(royalAttackMultiplier);
-    return { ...base, level, maxMp: stats.mp, skills: learned(), stats: { hp: stats.hp, attack: stats.attack, defense: stats.defense } };
+    return { ...base, name, level, maxMp: stats.mp, skills: learned(), stats: { hp: stats.hp, attack: stats.attack, defense: stats.defense, magic: stats.magic } };
   }
   function clampVitals(): void {
     const stats = effectiveStats();
@@ -77,16 +79,50 @@ export function createPlayerState(definition: PlayerDefinition = playerConfig, p
   }
   function gainExperience(amount: number) {
     whole(amount);
-    const previousLevel = level, previousStats = effectiveStats(), previousSkills = learned();
+    const previousLevel = level, previousSkills = learned();
     experience = Math.min(maximumExperience, experience + amount);
     level = levelForExperience(experience, progression);
     const nextStats = effectiveStats();
-    // 上限が増えた分だけ現在値も増やし、残りの回復必要量は維持する。
-    vitals = { ...vitals, hp: Math.min(nextStats.hp, vitals.hp + nextStats.hp - previousStats.hp), mp: Math.min(nextStats.mp, vitals.mp + nextStats.mp - previousStats.mp) };
+    if (level > previousLevel) vitals = { ...vitals, hp: nextStats.hp, mp: nextStats.mp };
     return { previousLevel, level, learnedSkills: learned().filter(id => !previousSkills.includes(id)) };
   }
   for (const item of base.initialItems ?? []) addItem(item.itemId, item.quantity);
   return {
+    snapshot() { return { name, level, experience, gold, vitals: { ...vitals }, boost: { ...boost }, equipment: { ...equipment }, inventory: [...inventory], discovered: [...discovered] }; },
+    restore(value: unknown): void {
+      const data = record(value), bonuses = record(data.boost), savedEquipment = record(data.equipment), health = record(data.vitals);
+      const savedName = label(data.name), xp = whole(data.experience, 0, maximumExperience), money = whole(data.gold, 0, Number.MAX_SAFE_INTEGER);
+      if ([...savedName].length > 20 || !Array.isArray(data.inventory) || data.inventory.length > 256 || !Array.isArray(data.discovered)) throw new Error('セーブデータの形式が不正です。');
+      const nextItems = new Map<number, number>();
+      for (const entry of data.inventory) {
+        if (!Array.isArray(entry) || entry.length !== 2 || !findItem(entry[0]) || nextItems.has(entry[0])) throw new Error('保存アイテムが不正です。');
+        nextItems.set(entry[0], whole(entry[1], 1, Number.MAX_SAFE_INTEGER));
+      }
+      const nextGear = { ...equipment };
+      for (const slot of equipmentSlots) {
+        const id = savedEquipment[slot];
+        if (id !== null && (typeof id !== 'number' || !nextItems.has(id) || findItem(id)?.equipment?.slot !== slot || levelForExperience(xp, progression) < (findItem(id)?.equipment?.requiredLevel ?? 1))) throw new Error('保存装備が不正です。');
+        nextGear[slot] = id as number | null;
+      }
+      const discoveredIds = data.discovered.map(id => { if (typeof id !== 'number' || !findItem(id)) throw new Error('図鑑データが不正です。'); return id; });
+      const nextBoost = { hp: whole(bonuses.hp, 0, 9999), attack: whole(bonuses.attack, 0, 9999) };
+      const nextVitals = { hp: whole(health.hp, 0, 9999), mp: whole(health.mp, 0, 9999), poisoned: health.poisoned };
+      if (typeof nextVitals.poisoned !== 'boolean') throw new Error('保存状態が不正です。');
+      name = savedName; experience = xp; level = levelForExperience(xp, progression); gold = money; boost = nextBoost;
+      inventory.clear(); for (const [id, count] of nextItems) inventory.set(id, count);
+      discovered.clear(); for (const id of [...discoveredIds, ...nextItems.keys()]) discovered.add(id);
+      Object.assign(equipment, nextGear); vitals = nextVitals as Vitals; clampVitals();
+    },
+    rename(value: string): ActionResult {
+      const next = value.trim();
+      if (!next || [...next].length > 20 || /[\u0000-\u001f\u007f]/u.test(next)) return { ok: false, message: '名前は1〜20文字で入力してください。' };
+      name = next; return { ok: true, message: `名前を${name}に変更した！` };
+    },
+    rest(price = 15): ActionResult {
+      whole(price); if (gold < price) return { ok: false, message: 'お金が足りない。' };
+      gold -= price; vitals = { hp: effectiveStats().hp, mp: effectiveStats().mp, poisoned: false };
+      return { ok: true, message: 'ゆっくり休んだ。HP・MPが全回復し、毒も治った！' };
+    },
     get gold() { return gold; },
     get level() { return level; },
     get experience() { return experience; },
@@ -189,6 +225,14 @@ export function createPlayerState(definition: PlayerDefinition = playerConfig, p
       const item = findItem(itemId);
       if (!item || !(inventory.get(itemId) ?? 0)) return { ok: false, message: '持っていない。' };
       const stats = effectiveStats();
+      if (item.effect?.type === 'boost-hp' || item.effect?.type === 'boost-attack') {
+        const key = item.effect.type === 'boost-hp' ? 'hp' : 'attack';
+        if (grownStats()[key] >= 9999) return { ok: false, message: 'これ以上強化できない。' };
+        const increase = Math.min(item.effect.amount, 9999 - grownStats()[key]);
+        boost[key] += increase; consume(itemId);
+        if (key === 'hp') vitals = { ...vitals, hp: Math.min(effectiveStats().hp, vitals.hp + increase) };
+        return { ok: true, message: `${item.name}を使った！\n基礎${key === 'hp' ? '最大HP' : '攻撃力'}が${increase}上がった！` };
+      }
       const result = recoverItem(item, vitals, stats.hp, stats.mp);
       if (result.ok && consume(itemId)) vitals = result.vitals;
       return result;
@@ -200,9 +244,9 @@ export function createPlayerState(definition: PlayerDefinition = playerConfig, p
       if (vitals.hp <= 0) return { ok: false, message: '今は使えない。' };
       if (vitals.hp === effectiveStats().hp) return { ok: false, message: 'HPは全快している。' };
       if (vitals.mp < skill.mpCost) return { ok: false, message: 'MPが足りない。' };
-      const amount = Math.min(skill.effect.amount, effectiveStats().hp - vitals.hp);
+      const amount = Math.min(skill.effect.amount + Math.floor(effectiveStats().magic * 0.8), effectiveStats().hp - vitals.hp);
       vitals = { ...vitals, hp: vitals.hp + amount, mp: vitals.mp - skill.mpCost };
-      return { ok: true, message: `${base.name}は${skill.name}を使った！\nHPが${amount}回復した！` };
+      return { ok: true, message: `${name}は${skill.name}を使った！\nHPが${amount}回復した！` };
     },
   };
 }

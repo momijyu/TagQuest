@@ -35,7 +35,9 @@ import { well } from '../data/objects/well';
 import { townHouses } from '../data/objects/town-houses';
 import { townNpcs } from '../data/characters/town-npcs';
 import { forestCaveNpcs } from '../data/characters/forest-cave-npcs';
+import { voidGod } from '../data/characters/void-god';
 import { demonLord } from '../data/characters/demon-lord';
+import { demonGuard } from '../data/characters/demon-guard';
 import { treasureChest, openTreasureChest } from '../data/objects/treasure-chest';
 import { townShops } from './shop-preview';
 import { drawTile } from './tile';
@@ -45,7 +47,11 @@ import { placementInsets } from '../data/entity-placement';
 import { playerCollisionFrame, playerDrawingPosition, playerPlacement } from '../data/player-placement';
 import { isNpc, npcDrawingPosition, npcPlacement } from '../data/npc-placement';
 
-const tiles = {
+const rift = { size: 16, palette: ['#271f47', '#7056b8', '#bba0f7', '#ebdcff'], pixels: Array.from({ length: 16 }, (_, y) => Array.from({ length: 16 }, (_, x) => {
+  const distance = ((x - 7.5) / 5) ** 2 + ((y - 7.5) / 7) ** 2;
+  return distance > 1 ? '0' : distance > 0.7 ? '3' : distance > 0.4 ? '1' : '0';
+}).join('')) };
+const tiles = { 'void-rift': rift,
   marble: castleFloor, carpet: castleCarpet, 'wall-top': castleWall,
   'wall-left': castleWallLeft, 'wall-right': castleWallRight,
   'wall-top-left': castleWallTopLeft, 'wall-top-right': castleWallTopRight,
@@ -61,6 +67,7 @@ const sprites = {
   'cave-witch': forestCaveNpcs['cave-witch'].sprite, 'forest-fairy': forestCaveNpcs['forest-fairy'].sprite,
   'treasure-chest': treasureChest,
   'demon-lord': demonLord,
+  'demon-guard': demonGuard, innkeeper: townNpcs.elder.sprite,
   'weapon-merchant': townShops.weapon.shopkeeper,
   'armor-merchant': townShops.armor.shopkeeper, 'item-merchant': townShops.item.shopkeeper,
 };
@@ -220,7 +227,7 @@ export function drawCompiledScene(
     if (kind in sprites) {
       const position = entityDrawingFrame(entity);
       const sprite = kind === 'treasure-chest' && options.openedChests?.has(entity)
-        ? openTreasureChest : sprites[kind as keyof typeof sprites];
+        ? openTreasureChest : kind === 'demon-lord' && entity.battleEvent?.enemyId === 11 ? voidGod : sprites[kind as keyof typeof sprites];
       drawSprite(context, sprite, position.x, position.y);
     }
     else if (kind in shops) {

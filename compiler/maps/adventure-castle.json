@@ -128,7 +128,7 @@
   "encounter": {
     "enabled": true,
     "enemyId": 0,
-    "rate": 0.1
+    "rate": 0.01
   },
   "buildingAnchor": "frame"
 }

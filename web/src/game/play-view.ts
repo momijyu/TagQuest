@@ -29,6 +29,7 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
   <p class="play-objective" data-play-objective role="status" hidden><strong>次の目的</strong><span data-play-objective-text></span></p>
   <div class="play-screen" data-play-screen>
   <span class="play-stage" data-play-stage></span>
+  <p class="play-save-warning" data-play-save-warning role="status" hidden></p>
   <div class="play-status"><div class="resource-meter"><span data-field-hp></span><progress class="resource-bar" data-field-hp-bar></progress></div>
     <div class="resource-meter"><span data-field-mp></span><progress class="resource-bar resource-mp" data-field-mp-bar></progress></div><span data-play-status></span></div>
   <div class="play-viewport" data-play-viewport>
@@ -94,7 +95,7 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
     game!.finishEncounter(outcome); clearInput(); draw(performance.now()); resize(); canvas.focus({ preventScroll: true });
   }, { inventory: () => game?.inventory ?? [], gold: () => game?.status.gold ?? 0, illustrations: characters.enemyIllustrations });
   const menus = mountPlayerMenus(root.querySelector<HTMLElement>('[data-play-inventory-window]')!, root.querySelector<HTMLElement>('[data-play-shop]')!,
-    () => game, active, () => { clearInput(); draw(performance.now()); if (!game?.shop && !inventory.open) canvas.focus({ preventScroll: true }); }, closeItems);
+    () => game, active, () => { clearInput(); if (game && (canvas.width !== game.scene.width * 64 || canvas.height !== game.scene.height * 64)) resize(); draw(performance.now()); if (!game?.shop && !inventory.open) canvas.focus({ preventScroll: true }); }, closeItems);
   function clearInput(): void {
     const id = swipe?.id; swipe = undefined;
     held.clear(); nextStep = 0;
@@ -169,13 +170,15 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
       if (element.textContent !== text) element.textContent = text;
     }
     setText('[data-play-speaker]', message?.speaker ?? '');
-    setText('[data-play-stage]', stageName?.(scene.id) ?? locationNames.get(scene.id) ?? '冒険の地');
-    const objective = game.story?.objective;
+    setText('[data-play-stage]', locationNames.has(scene.id) ? stageName?.(scene.id) ?? locationNames.get(scene.id)! : inferLocationName(scene));
+    const objective = game.story?.objective ?? '周りを探索し、人々に話を聞こう。';
     root.querySelector<HTMLElement>('[data-play-objective]')!.hidden = battleReady || !objective;
     setText('[data-play-objective-text]', objective ?? '');
-    root.querySelector<HTMLElement>('[data-play-clear]')!.hidden = !game.cleared;
+    const clearNotice = root.querySelector<HTMLElement>('[data-play-clear]')!;
+    clearNotice.hidden = !game.cleared;
+    clearNotice.textContent = game.trueCleared ? 'TRUE CLEAR！ 古代の虚無神を打ち倒し、世界の真の覇者となった！' : '第1部クリア！ 玉座の奥の裂け目から、虚無の回廊へ進めます。自由に冒険を続けられます。';
     const status = game.status;
-    setText('[data-play-status]', `Lv ${status.level}　${status.gold}G${status.poisoned ? '　毒' : ''}`);
+    setText('[data-play-status]', `Lv ${status.level}　${status.gold}G　${status.nextLevelExperience === null ? '最高レベル' : `次まで ${status.nextLevelExperience - status.experience}EXP`}${status.poisoned ? '　毒' : ''}`);
     setText('[data-field-hp]', `HP ${status.hp} / ${status.maxHp}`);
     setText('[data-field-mp]', `MP ${status.mp} / ${status.maxMp}`);
     updateResourceBar(root.querySelector<HTMLProgressElement>('[data-field-hp-bar]')!, status.hp, status.maxHp, `${status.name}のHP`);
@@ -183,6 +186,10 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
     setText('[data-play-text]', message?.text ?? '');
     setText('[data-play-advance]', message?.battleEntityIndex === undefined ? 'つづける' : '戦う');
     root.querySelector<HTMLElement>('[data-play-cancel-battle]')!.hidden = message?.battleEntityIndex === undefined;
+    game.save();
+    const saveWarning = root.querySelector<HTMLElement>('[data-play-save-warning]')!;
+    saveWarning.hidden = !/できません|読み込めなかった/.test(game.saveStatus);
+    saveWarning.textContent = saveWarning.hidden ? '' : game.saveStatus;
     menus.sync();
   }
   function follow(): void {
@@ -267,11 +274,20 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
   function keyup(event: KeyboardEvent): void {
     held.delete(event.key.length === 1 ? event.key.toLowerCase() : event.key);
   }
+  function windowKeydown(event: KeyboardEvent): void {
+    const target = event.target as HTMLElement | null;
+    // 背景をクリックしてフォーカスがbodyへ移っても、ゲームの決定操作を受け取る。
+    // root内は既存のハンドラーに任せ、外部の入力欄・リンク等の操作を奪わない。
+    if (event.defaultPrevented || root.contains(target) || target?.isContentEditable
+      || ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON', 'SUMMARY', 'A'].includes(target?.tagName ?? '')) return;
+    keydown(event);
+  }
   function focusout(event: FocusEvent): void {
     if (!root.contains(event.relatedTarget as Node | null)) clearInput();
   }
   root.addEventListener('keydown', keydown);
   root.addEventListener('focusout', focusout);
+  window.addEventListener('keydown', windowKeydown);
   window.addEventListener('keyup', keyup);
   window.addEventListener('blur', pauseInput);
   window.addEventListener('hashchange', pauseInput);
@@ -352,6 +368,7 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
       stop(); battle.dispose();
       root.removeEventListener('keydown', keydown);
       root.removeEventListener('focusout', focusout);
+      window.removeEventListener('keydown', windowKeydown);
       window.removeEventListener('keyup', keyup);
       window.removeEventListener('blur', pauseInput);
       window.removeEventListener('hashchange', pauseInput);

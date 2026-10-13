@@ -8,7 +8,7 @@ export type AdventureSize = 'normal' | 'large' | 'small';
 export const adventurePresets = [
   { id: 'normal', name: '通常の世界', entryStageId: 0 },
   { id: 'large', name: '巨大な世界', entryStageId: 0 },
-  { id: 'small', name: 'NFC用の小さな世界', entryStageId: 0 },
+  { id: 'small', name: '小さな世界', entryStageId: 0 },
 ] as const;
 export function createAdventurePreset(size: AdventureSize): World {
   if (size === 'normal') return createAdventureWorld();

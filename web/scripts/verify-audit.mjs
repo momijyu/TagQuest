@@ -11,7 +11,9 @@ try {
   const entries = { model:'editor/model', world:'game/world', battle:'game/battle', state:'game/player-state', config:'data/encounters/combat-config', nfc:'codec/nfc-url', decoder:'codec/scenes', renderer:'renderer/compiled-scene', sprites:'renderer/sprite', validation:'editor/validation', adventure:'editor/adventure', references:'data/encounters/enemy-illustrations', walking:'game/walking', sound:'game/battle-sound' };
   await build({configFile:false,logLevel:'silent',build:{lib:{entry:Object.fromEntries(Object.entries(entries).map(([key,p])=>[key,join(root,'web/src',p+'.ts')])),formats:['es'],fileName:(_,name)=>name+'.mjs'},outDir:temp,emptyOutDir:false}});
   const modules = Object.fromEntries(await Promise.all(Object.keys(entries).map(async key=>[key,await import(pathToFileURL(join(temp,key+'.mjs')))])));
-  const {parseWorld,encodeWorld,toSceneData}=modules.model, {createWorldGame}=modules.world, {decodeScenes}=modules.decoder;
+  const {parseWorld,encodeWorld,toSceneData}=modules.model, { createWorldGame: createWorldGameBase }=modules.world, {decodeScenes}=modules.decoder;
+  // The grace-period contract is exercised with defaults in verify-gameplay; these fixtures isolate repeated battles.
+  const createWorldGame = (scenes, initial, random, options = {}) => createWorldGameBase(scenes, initial, random, { ...options, encounterGraceSteps: 0 });
   const {enemyCatalog,playerConfig}=modules.config, {createPlayerState}=modules.state;
   // Audio is gesture-enabled, optional, short-lived and closable, with no effect on turn state.
   const audioStore=new Map();globalThis.localStorage={getItem:key=>audioStore.get(key),setItem:(key,value)=>audioStore.set(key,value)};
@@ -135,7 +137,7 @@ try {
   const modernPixels = raster(modern), legacyPixels = raster(legacy); const differences = [...modernPixels.keys()].filter(i=>modernPixels[i]!==legacyPixels[i]); if(differences.length) console.log('pixel differences', differences.length, differences.slice(0,10).map(i=>[i%(modern.width*16),Math.floor(i/(modern.width*16)),modernPixels[i].toString(16),legacyPixels[i].toString(16)])); assert.equal(differences.length,0);
   for(let y=0;y<modern.height;y++)for(let x=0;x<modern.width;x++)assert.equal(modules.walking.canStand(modern,{x:x*16,y:y*16-16}),modules.walking.canStand(legacy,{x:x*16,y:y*16-16}));
   const liveDemon=enemyCatalog.find(e=>e.id===4), emptyGear={weapon:null,armor:null,shield:null,accessory:null,head:null};
-  assert.deepEqual(liveDemon.stats,{hp:360,attack:36,defense:12});
+  assert.deepEqual(liveDemon.stats,{hp:360,attack:36,defense:12,magic:0});
   assert.equal(liveDemon.royalEquipmentAttack,undefined);
   assert.equal(liveDemon.royalEquipmentPlayerAttackMultiplier,undefined);
   assert.equal(royal.battleDefinition(liveDemon).stats.attack,328, 'the production boss preserves royal attack bonuses');
@@ -152,7 +154,7 @@ try {
   function probe(equipment,enemy=demon){const battle=modules.battle.createBattle(enemy,{player:royal.definition,equipment});battle.guard();battle.advance();return battle;}
   assert.equal(probe(emptyGear).enemyAttackMultiplier,1);
   for(const [slot,id] of [['head',9],['armor',10],['weapon',11],['weapon',12]]) {
-    const partial={...emptyGear,[slot]:id}, fight=probe(partial);assert.equal(fight.enemyAttackMultiplier,100);assert.match(fight.text,/470のダメージ/);
+    const partial={...emptyGear,[slot]:id}, fight=probe(partial);assert.equal(fight.enemyAttackMultiplier,100);assert.match(fight.text,/485のダメージ/);
     assert.equal(probe(partial,{...demon,royalEquipmentAttack:{multiplier:100,match:'set'}}).enemyAttackMultiplier,1);
     assert.equal(probe(partial,enemyCatalog[1]).enemyAttackMultiplier,1);
   }
@@ -173,11 +175,11 @@ try {
   const physical = modules.battle.createBattle(demon,{player:sealed,equipment:royal.equipment});
   physical.useSkill(0);assert.equal(physical.enemyHp,82);
   const magic = modules.battle.createBattle(demon,{player:sealed,equipment:royal.equipment});
-  magic.useSkill(1);assert.equal(magic.enemyHp,108);
+  magic.useSkill(1);assert.equal(magic.enemyHp,44);
   assert.equal(royal.battleDefinition(enemyCatalog[1]).stats.attack,328);
   assert.equal(royal.battleDefinition({...demon,royalEquipmentPlayerAttackMultiplier:0.1}).stats.attack,58);
   assert.equal(royal.battleDefinition({...demon,royalEquipmentPlayerAttackMultiplier:1}).stats.attack,328);
-  for(const [slot,id,bonus] of [['head',9,50],['armor',10,50],['weapon',11,150],['weapon',12,200]]) {
+  for(const [slot,id,bonus] of [['head',9,50],['armor',10,50],['weapon',11,30],['weapon',12,200]]) {
     const individual=createPlayerState({...playerConfig,initialExperience:900,initialItems:[{itemId:id,quantity:1},{itemId:3,quantity:1},{itemId:8,quantity:1}]});
     individual.equip(3);individual.equip(8);individual.equip(id);
     const normalAttack=28+1+(slot==='weapon'?0:3);

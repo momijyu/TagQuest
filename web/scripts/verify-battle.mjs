@@ -15,7 +15,9 @@ try {
   }, formats: ['es'], fileName: (_, name) => `${name}.mjs` }, outDir: out, emptyOutDir: false } });
   const { createBattle } = await import(pathToFileURL(join(out, 'battle.mjs')));
   const { enemyCatalog, playerConfig, parseEnemyDefinitions, parsePlayerDefinition } = await import(pathToFileURL(join(out, 'config.mjs')));
-  const { createWorldGame } = await import(pathToFileURL(join(out, 'world.mjs')));
+  const { createWorldGame: createWorldGameBase } = await import(pathToFileURL(join(out, 'world.mjs')));
+  // The grace-period contract is exercised with defaults in verify-gameplay; these fixtures isolate repeated battles.
+  const createWorldGame = (scenes, initial, random, options = {}) => createWorldGameBase(scenes, initial, random, { ...options, encounterGraceSteps: 0 });
   const { initialWorld, toSceneData } = await import(pathToFileURL(join(out, 'model.mjs')));
   const { skillCatalog, parseSkillCatalog } = await import(pathToFileURL(join(out, 'skills.mjs')));
   const king = enemyCatalog[0], before = structuredClone(king);
@@ -74,10 +76,10 @@ try {
   assert.equal(skills.wasAttacked, true); assert.equal(skills.useSkill(0).ok, false); assert.equal(skills.playerMp, 8);
   skills.advance(); assert.match(skills.speech, /何をするんじゃ/); skills.advance();
   assert.equal(skills.useSkill(2).ok, true); assert.equal(skills.playerHp, 40); assert.equal(skills.playerMp, 5);
-  skills.advance(); skills.advance(); skills.useSkill(1); assert.equal(skills.enemyHp, 3); assert.equal(skills.playerMp, 2);
-  skills.advance(); skills.advance(); assert.equal(skills.useSkill(1).ok, false); assert.equal(skills.phase, 'commands');
+  skills.advance(); skills.advance(); skills.useSkill(1); assert.equal(skills.enemyHp, 0); assert.equal(skills.playerMp, 2);
+  skills.advance(); skills.advance(); assert.equal(skills.useSkill(1).ok, false); assert.equal(skills.phase, 'victory');
   const peacefulHeal = createBattle(king, { playerHp: 10 }); peacefulHeal.useSkill(2); peacefulHeal.advance();
-  assert.equal(peacefulHeal.playerHp, 30); assert.equal(peacefulHeal.wasAttacked, false);
+  assert.equal(peacefulHeal.playerHp, 38); assert.equal(peacefulHeal.wasAttacked, false);
   const skillKill = createBattle({ ...king, stats: { ...king.stats, hp: 12 }, reward: { gold: 10, items: [] } });
   skillKill.useSkill(1); assert.equal(skillKill.phase, 'victory'); assert.equal(skillKill.playerHp, 40); assert.match(skillKill.text, /10G/);
   const gearSkill = createBattle(king, { player: { ...playerConfig, stats: { ...playerConfig.stats, attack: 17 } } });
@@ -114,9 +116,13 @@ try {
   assert.deepEqual(scenes, source);
   const previousExperience = new Map([[1, 8], [2, 14], [3, 22], [4, 0], [5, 12], [6, 26], [7, 38]]);
   assert.equal(king.reward.experience, 900, 'the hidden king reward stays unchanged');
-  for (const enemy of enemyCatalog.filter(enemy => enemy.id !== 0)) assert.equal(enemy.reward.experience, previousExperience.get(enemy.id) * 2);
+  for (const enemy of enemyCatalog.filter(enemy => previousExperience.has(enemy.id))) assert.equal(enemy.reward.experience, previousExperience.get(enemy.id) * 2);
+  const bridgeGuard = enemyCatalog.find(enemy => enemy.id === 8);
+  assert.deepEqual(bridgeGuard.stats, { hp: 90, attack: 14, defense: 4, magic: 0 });
+  assert.equal(bridgeGuard.canEscape, true);
+  assert.equal(bridgeGuard.reward.experience, 180);
   const demon = enemyCatalog.find(enemy => enemy.id === 4);
-  assert.deepEqual(demon.stats, { hp: 360, attack: 36, defense: 12 });
+  assert.deepEqual(demon.stats, { hp: 360, attack: 36, defense: 12, magic: 0 });
   const bossPower = createBattle(demon, { player: { ...playerConfig, stats: { hp: 400, attack: 10, defense: 0 } } });
   bossPower.guard(); bossPower.advance(); assert.equal(bossPower.feedback.amount, 18);
   bossPower.advance(); bossPower.guard(); bossPower.advance(); assert.equal(bossPower.feedback.amount, 25, 'dark flame keeps its 1.4x pattern power after the base-stat increase');
@@ -128,19 +134,20 @@ try {
     assert.equal(bossWorld.battle.useSkill(8).ok, true);
     bossWorld.battle.advance(); assert.notEqual(bossWorld.battle.phase, 'defeat'); bossWorld.battle.advance();
   }
-  assert.equal(bossWorld.battle.playerMp, 8); assert.equal(bossWorld.battle.playerHp, 102); assert.equal(bossWorld.battle.enemyHp, 30);
+  assert.equal(bossWorld.battle.playerMp, 8); assert.equal(bossWorld.battle.playerHp, 115); assert.equal(bossWorld.battle.enemyHp, 0);
   bossWorld.battle.attack(); assert.equal(bossWorld.battle.phase, 'victory');
   bossWorld.finishEncounter('victory'); assert.equal(bossWorld.status.experience, 5520);
   for (const enemy of enemyCatalog.filter(enemy => enemy.id !== 0)) {
     // Every normal monster attacks without provocation and awards repeatable rewards.
-    const guarded = createBattle(enemy, { player: { ...playerConfig, stats: { ...playerConfig.stats, hp: 9999 } } }); guarded.guard(); guarded.advance();
+    const guarded = createBattle(enemy, { random: () => 0.999999, player: { ...playerConfig, stats: { ...playerConfig.stats, hp: 9999 } } }); guarded.guard(); guarded.advance();
     assert.equal(guarded.phase, 'enemy-action'); assert.ok(guarded.playerHp < 9999);
     assert.equal(guarded.wasAttacked, false); assert.equal(guarded.speech, null);
     const field = { ...manaScene, encounter: { enemyId: enemy.id, enabled: true, rate: 100 },
       entities: [{ kind: 'king', x: 48, y: 0, parameters: [1] }] };
     // Boss artwork/config is also usable from an NFC enemy ID; use a stronger test player for it.
-    const loop = createWorldGame([field], 0, () => 0, { player: { ...playerConfig,
+    const loop = createWorldGame([field], 0, () => 0.999999, { player: { ...playerConfig,
       ...(enemy.characterId === 'demon-lord' ? { stats: { hp: 3000, attack: 400, defense: 259 } } : {}),
+      ...(enemy.id >= 8 ? { stats: { hp: 3000, attack: 400, defense: 100 } } : {}),
       initialItems: [{ itemId: 0, quantity: 6 }, ...(enemy.background === 'cave' ? [4, 6, 7].map(itemId => ({ itemId, quantity: 1 })) : [])] },
       initialEquipment: enemy.background === 'cave' ? [4, 6, 7] : [] });
     for (let round = 1; round <= 2; round++) {

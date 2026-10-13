@@ -127,7 +127,7 @@
   {
     "id": 10,
     "name": "王のローブ",
-    "description": "最大HP＋200・最大MP＋50・攻撃力＋50・防御力＋150",
+    "description": "最大HP＋200・最大MP＋50・攻撃力＋50・防御力＋120・魔力＋40",
     "price": 10000,
     "sellPrice": 500,
     "equipment": {
@@ -136,13 +136,14 @@
       "hp": 200,
       "mp": 50,
       "attack": 50,
-      "defense": 150
+      "defense": 120,
+      "magic": 40
     }
   },
   {
     "id": 11,
     "name": "王の杖",
-    "description": "最大HP＋100・最大MP＋200・攻撃力＋150・防御力＋50",
+    "description": "最大HP＋100・最大MP＋200・攻撃力＋30・防御力＋50・魔力＋180",
     "price": 10000,
     "sellPrice": 500,
     "equipment": {
@@ -150,8 +151,9 @@
       "slot": "weapon",
       "hp": 100,
       "mp": 200,
-      "attack": 150,
-      "defense": 50
+      "attack": 30,
+      "defense": 50,
+      "magic": 180
     }
   },
   {
@@ -248,14 +250,15 @@
   {
     "id": 22,
     "name": "羽のお守り",
-    "description": "最大MP＋8・防御力＋2",
+    "description": "最大MP＋8・防御力＋2・魔力＋4",
     "price": 110,
     "sellPrice": 35,
     "equipment": {
       "slot": "accessory",
       "mp": 8,
       "attack": 0,
-      "defense": 2
+      "defense": 2,
+      "magic": 4
     }
   },
   {
@@ -273,14 +276,95 @@
   {
     "id": 24,
     "name": "水晶の杖",
-    "description": "木の剣を水晶の杖に作り替える。最大MP＋15・攻撃力＋5",
+    "description": "最大MP＋15・攻撃力＋2・魔力＋14",
     "price": 180,
     "sellPrice": 65,
     "equipment": {
       "slot": "weapon",
       "mp": 15,
-      "attack": 5,
-      "defense": 0
+      "attack": 2,
+      "defense": 0,
+      "magic": 14
+    }
+  },
+  {
+    "id": 25,
+    "name": "革の帽子",
+    "description": "防御力＋2",
+    "price": 40,
+    "sellPrice": 20,
+    "equipment": {
+      "slot": "head",
+      "attack": 0,
+      "defense": 2,
+      "mp": 0,
+      "requiredLevel": 1
+    }
+  },
+  {
+    "id": 26,
+    "name": "鉄の兜",
+    "description": "防御力＋6",
+    "price": 120,
+    "sellPrice": 60,
+    "equipment": {
+      "slot": "head",
+      "attack": 0,
+      "defense": 6,
+      "mp": 0,
+      "requiredLevel": 4
+    }
+  },
+  {
+    "id": 27,
+    "name": "魔導の三角帽子",
+    "description": "最大MP＋10・攻撃力＋2・防御力＋3・魔力＋6",
+    "price": 150,
+    "sellPrice": 75,
+    "equipment": {
+      "slot": "head",
+      "attack": 2,
+      "defense": 3,
+      "mp": 10,
+      "requiredLevel": 3,
+      "magic": 6
+    }
+  },
+  {
+    "id": 28,
+    "name": "ちからの種",
+    "description": "基礎攻撃力を永久に＋1",
+    "price": 300,
+    "sellPrice": 150,
+    "effect": {
+      "type": "boost-attack",
+      "amount": 1
+    }
+  },
+  {
+    "id": 29,
+    "name": "いのちの木の実",
+    "description": "基礎最大HPを永久に＋5",
+    "price": 300,
+    "sellPrice": 150,
+    "effect": {
+      "type": "boost-hp",
+      "amount": 5
+    }
+  },
+  {
+    "id": 30,
+    "name": "星屑のオーブ",
+    "description": "最大HP＋100・最大MP＋50・攻撃力＋30・防御力＋30・魔力＋30",
+    "price": 20000,
+    "sellPrice": 0,
+    "equipment": {
+      "slot": "accessory",
+      "hp": 100,
+      "mp": 50,
+      "attack": 30,
+      "defense": 30,
+      "magic": 30
     }
   }
 ]

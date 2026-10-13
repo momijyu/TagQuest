@@ -10,7 +10,9 @@ try {
     ['player', 'game/player-state'], ['world', 'game/world'], ['model', 'editor/model'], ['config', 'data/encounters/combat-config'],
   ].map(([name, file]) => [name, join(root, `web/src/${file}.ts`)])), formats: ['es'], fileName: (_, name) => `${name}.mjs` }, outDir: out } });
   const read = name => import(pathToFileURL(join(out, `${name}.mjs`)).href);
-  const { createPlayerState } = await read('player'), { createWorldGame } = await read('world');
+  const { createPlayerState } = await read('player'), { createWorldGame: createWorldGameBase } = await read('world');
+  // The grace-period contract is exercised with defaults in verify-gameplay; these fixtures isolate repeated battles.
+  const createWorldGame = (scenes, initial, random, options = {}) => createWorldGameBase(scenes, initial, random, { ...options, encounterGraceSteps: 0 });
   const { parseWorld, toSceneData } = await read('model'), { playerConfig, enemyCatalog, parsePlayerDefinition } = await read('config');
   for (const percent of [0, 25, 50, 100]) for (const gold of [0, 1, 2, 99, 101, Number.MAX_SAFE_INTEGER]) {
     const state = createPlayerState({ ...playerConfig, initialGold: gold, defeatGoldLossPercent: percent });

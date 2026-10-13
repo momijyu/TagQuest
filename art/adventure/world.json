@@ -139,13 +139,13 @@
       "encounter": {
         "enabled": true,
         "enemyId": 0,
-        "rate": 0.1
+        "rate": 0.01
       }
     },
     {
       "id": 1,
       "name": "town",
-      "width": 25,
+      "width": 29,
       "height": 21,
       "spawn": {
         "x": 192,
@@ -162,7 +162,7 @@
             "tile": "grass",
             "x": 0,
             "y": 0,
-            "width": 25,
+            "width": 29,
             "height": 20
           },
           {
@@ -262,6 +262,34 @@
             "y": 19,
             "width": 9,
             "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 21,
+            "y": 8,
+            "width": 7,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 27,
+            "y": 7,
+            "width": 1,
+            "height": 2
+          },
+          {
+            "tile": "brick",
+            "x": 12,
+            "y": 19,
+            "width": 16,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 27,
+            "y": 18,
+            "width": 1,
+            "height": 2
           }
         ]
       },
@@ -413,6 +441,47 @@
             4
           ],
           "itemId": 1
+        },
+        {
+          "kind": "house-red",
+          "x": 416,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 72
+          }
+        },
+        {
+          "kind": "house-slate",
+          "x": 416,
+          "y": 224,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 73
+          },
+          "itemId": 19
+        },
+        {
+          "kind": "innkeeper",
+          "x": 384,
+          "y": 160,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 85
+          }
+        },
+        {
+          "kind": "signpost",
+          "x": 208,
+          "y": 288,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 87
+          }
         }
       ],
       "exits": [
@@ -1431,6 +1500,34 @@
             "y": 4,
             "width": 3,
             "height": 2
+          },
+          {
+            "tile": "grass",
+            "x": 3,
+            "y": 6,
+            "width": 3,
+            "height": 4
+          },
+          {
+            "tile": "grass",
+            "x": 14,
+            "y": 10,
+            "width": 4,
+            "height": 2
+          },
+          {
+            "tile": "dirt",
+            "x": 4,
+            "y": 9,
+            "width": 8,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 11,
+            "y": 10,
+            "width": 4,
+            "height": 1
           }
         ]
       },
@@ -1549,7 +1646,7 @@
           "x": 192,
           "y": 96,
           "parameters": [],
-          "itemId": 7
+          "itemId": 21
         },
         {
           "kind": "treasure-chest",
@@ -1557,6 +1654,30 @@
           "y": 128,
           "parameters": [],
           "itemId": 2
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 64,
+          "y": 112,
+          "parameters": [],
+          "itemId": 19
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 256,
+          "y": 176,
+          "parameters": [],
+          "itemId": 20
+        },
+        {
+          "kind": "signpost",
+          "x": 128,
+          "y": 128,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 74
+          }
         }
       ],
       "exits": [
@@ -1572,7 +1693,7 @@
       "encounter": {
         "enabled": true,
         "enemyId": 1,
-        "rate": 12,
+        "rate": 6,
         "enemies": [
           {
             "enemyId": 1,
@@ -1667,6 +1788,34 @@
             "y": 16,
             "width": 1,
             "height": 1
+          },
+          {
+            "tile": "cave-floor",
+            "x": 1,
+            "y": 11,
+            "width": 4,
+            "height": 4
+          },
+          {
+            "tile": "cave-floor",
+            "x": 4,
+            "y": 12,
+            "width": 4,
+            "height": 2
+          },
+          {
+            "tile": "cave-floor",
+            "x": 14,
+            "y": 11,
+            "width": 3,
+            "height": 4
+          },
+          {
+            "tile": "cave-floor",
+            "x": 11,
+            "y": 12,
+            "width": 4,
+            "height": 2
           }
         ]
       },
@@ -1686,14 +1835,14 @@
           "x": 32,
           "y": 80,
           "parameters": [],
-          "itemId": 6
+          "itemId": 22
         },
         {
           "kind": "treasure-chest",
           "x": 224,
           "y": 112,
           "parameters": [],
-          "itemId": 4
+          "itemId": 23
         },
         {
           "kind": "treasure-chest",
@@ -1701,6 +1850,42 @@
           "y": 128,
           "parameters": [],
           "itemId": 1
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 32,
+          "y": 192,
+          "parameters": [],
+          "itemId": 2
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 240,
+          "y": 192,
+          "parameters": [],
+          "itemId": 8
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 16,
+          "y": 176,
+          "parameters": []
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 256,
+          "y": 176,
+          "parameters": []
+        },
+        {
+          "kind": "signpost",
+          "x": 128,
+          "y": 208,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 75
+          }
         }
       ],
       "exits": [
@@ -1716,19 +1901,23 @@
       "encounter": {
         "enabled": true,
         "enemyId": 5,
-        "rate": 14,
+        "rate": 8,
         "enemies": [
           {
             "enemyId": 5,
-            "weight": 5
+            "weight": 50
           },
           {
             "enemyId": 6,
-            "weight": 3
+            "weight": 30
           },
           {
             "enemyId": 7,
-            "weight": 2
+            "weight": 20
+          },
+          {
+            "enemyId": 10,
+            "weight": 5
           }
         ]
       }

@@ -59,13 +59,13 @@
 .player-stats, .player-feedback { white-space: pre-line; overflow-wrap: anywhere; font-size: 18px; line-height: 1.5; }
 .player-feedback { color: #ffe3a0; }
 .player-menu-tabs { display: flex; gap: 8px; margin-block: 8px; flex-wrap: wrap; }
-.player-menu-tabs button, .player-item-row button { min-height: 44px; padding: 6px 10px; border: 1px solid #a4b2a2; border-radius: 4px; color: #f8f8ed; background: #18251c; font: inherit; font-size: 18px; touch-action: manipulation; cursor: pointer; }
+.player-menu-tabs button, .player-menu-list button { min-height: 44px; padding: 6px 10px; border: 1px solid #a4b2a2; border-radius: 4px; color: #f8f8ed; background: #18251c; font: inherit; font-size: 18px; touch-action: manipulation; cursor: pointer; }
 .player-menu-tabs button[aria-pressed="true"] { color: #ffe3a0; border-color: #ffe3a0; }
 .player-item-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-block: 8px; border-bottom: 1px solid #465548; }
 .player-item-row span { min-width: 0; overflow-wrap: anywhere; font-size: 18px; }
 .player-item-row small, .player-menu-list p small { display: block; font-size: 16px; color: #a4b2a2; }
 .player-item-row button { flex: none; }
-.player-menu-tabs button:focus-visible, .player-item-row button:focus-visible { outline: 2px solid #ffe3a0; outline-offset: 2px; }
+.player-menu-tabs button:focus-visible, .player-menu-list button:focus-visible { outline: 2px solid #ffe3a0; outline-offset: 2px; }
 .play-inventory p { margin-block: 8px 12px; font-size: 16px; white-space: pre-wrap; }
 .play-battle { grid-column: 1 / -1; background: #151a25; color: #f8f8ed; font-family: "PixelMplus12", monospace; }
 .battle-field { height: clamp(272px, calc(100svh - 340px), 420px); display: grid; grid-template-rows: 96px minmax(0, 1fr); background: #50596a; overflow: hidden; }

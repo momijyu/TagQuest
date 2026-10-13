@@ -42,7 +42,10 @@
     "verify:adventure": "node scripts/verify-adventure.mjs",
     "verify:routing": "node scripts/verify-routing.mjs",
     "verify:font": "python3 scripts/export-font.py --check",
-    "export:font": "python3 scripts/export-font.py"
+    "export:font": "python3 scripts/export-font.py",
+    "verify:gameplay": "node scripts/verify-gameplay.mjs",
+    "verify:magic": "node scripts/verify-magic.mjs",
+    "verify:postgame": "node scripts/verify-postgame.mjs"
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.3.3",

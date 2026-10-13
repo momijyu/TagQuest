@@ -12,9 +12,11 @@ export type BattlePhase = 'commands' | 'player-action' | 'enemy-action' | 'escap
 /** メッセージの確認ごとに進行し、再描画や時間経過ではターンを進めない。 */
 export function createBattle(enemy: EnemyDefinition, options: {
   player?: PlayerDefinition; playerHp?: number; playerMp?: number; poisoned?: boolean; wasAttacked?: boolean; onAttacked?: () => void;
-  consumeItem?: (itemId: number) => boolean; equipment?: Readonly<Record<EquipmentSlot, number | null>>;
+  consumeItem?: (itemId: number) => boolean; equipment?: Readonly<Record<EquipmentSlot, number | null>>; random?: () => number; victoryText?: () => string;
 } = {}) {
   const config = structuredClone(enemy), player = structuredClone(options.player ?? playerConfig);
+  // 旧configや試遊用定義で省略された魔力は0として扱う。
+  Object.assign(player.stats, { magic: player.stats.magic ?? 0 });
   const condition = config.royalEquipmentAttack;
   const attackMultiplier = condition && options.equipment && (condition.match === 'any' ? wearsAnyRoyalEquipment(options.equipment) : wearsRoyalSet(options.equipment)) ? condition.multiplier : 1;
   let playerHp = options.playerHp ?? player.stats.hp;
@@ -27,12 +29,12 @@ export function createBattle(enemy: EnemyDefinition, options: {
   const emit = (target: BattleFeedback['target'], amount: number) => { feedback = { id: ++feedbackId, target, amount }; };
   let wasAttacked = options.wasAttacked ?? false;
   const canEscape = () => config.canEscape !== false || config.canEscapeBeforeAttacked === true && !wasAttacked;
-  let firstReaction = false, guarding = false;
+  let firstReaction = false, guarding = false, enemyEscaped = false;
   let peacefulTurn = 0, angryTurn = 0;
   let phase: BattlePhase = 'commands';
   let action: 'attack' | 'guard' | 'item' | 'skill' | null = null;
   const firstEntry = config.patterns.beforeAttacked[0];
-  const intro = wasAttacked ? config.firstAttackedMessage : firstEntry.type === 'say' ? firstEntry.text : firstEntry.speech;
+  const intro = wasAttacked ? config.firstAttackedMessage : firstEntry.type === 'say' ? firstEntry.text : 'speech' in firstEntry ? firstEntry.speech : undefined;
   let speech: string | null = intro ?? null;
   let text = `${config.name}があらわれた！${intro ? `\n「${intro}」` : ''}`;
   if (config.canEscape === false && canEscape()) text += '\n攻撃する前なら「にげる」で立ち去れます。';
@@ -44,32 +46,49 @@ export function createBattle(enemy: EnemyDefinition, options: {
     phase = enemyHp === 0 ? 'victory' : 'player-action';
     text = `${announcement}\n${damage}のダメージ！`;
     if (phase === 'victory') text += `\n${config.name}をたおした！`;
+
     if (phase === 'victory' && config.reward) {
       if (config.reward.experience) text += `\n${config.reward.experience}の経験値を手に入れた！`;
       if (config.reward.gold) text += `\n${config.reward.gold}Gを手に入れた！`;
       for (const item of config.reward.items) text += `\n${findItem(item.itemId)!.name} ×${item.quantity}を手に入れた！`;
     }
+    if (phase === 'victory' && config.victoryMessage) text += `\n${config.victoryMessage}`;
+    if (phase === 'victory' && options.victoryText) text += `\n${options.victoryText()}`;
   }
   function enemyTurn(): void {
     const hpBefore = playerHp;
     const poisonedBefore = poisoned;
     const pattern = wasAttacked ? config.patterns.afterAttacked : config.patterns.beforeAttacked;
-    const index = wasAttacked ? angryTurn++ : peacefulTurn++;
-    const entry = pattern[index % pattern.length];
-    speech = [firstReaction ? config.firstAttackedMessage : undefined, entry.type === 'say' ? entry.text : entry.speech].filter(Boolean).join('\n') || null;
-    const lines = firstReaction && config.firstAttackedMessage ? [`「${config.firstAttackedMessage}」`] : [];
+    const lines: string[] = [], speeches: string[] = [];
+    if (firstReaction && config.firstAttackedMessage) { lines.push(`「${config.firstAttackedMessage}」`); speeches.push(config.firstAttackedMessage); }
     firstReaction = false;
-    if (entry.type === 'attack' && entry.speech) lines.push(`「${entry.speech}」`);
-    lines.push(entry.type === 'say' ? `「${entry.text}」` : entry.text);
-    if (entry.type === 'attack') {
-      const base = Math.max(1, Math.floor(config.stats.attack * attackMultiplier * entry.power) - player.stats.defense);
-      const damage = Math.max(1, Math.floor(base * (guarding ? player.guardMultiplier : 1)));
-      playerHp = Math.max(0, playerHp - damage);
-      lines.push(`${player.name}に${damage}のダメージ！`);
-      if (entry.inflictPoison && !poisoned && playerHp > 0) {
-        poisoned = true; lines.push(`${player.name}は毒を受けた！`);
+    for (let step = 0; step < (config.actionsPerTurn ?? 1) && playerHp > 0; step++) {
+      const index = wasAttacked ? angryTurn++ : peacefulTurn++, entry = pattern[index % pattern.length];
+      const quote = entry.type === 'say' ? entry.text : 'speech' in entry ? entry.speech : undefined;
+      if (quote) speeches.push(quote);
+      if (entry.type === 'escape' && (options.random ?? Math.random)() < entry.chance) {
+        phase = 'escape'; enemyEscaped = true; speech = speeches.join('\n') || null;
+        lines.push(`${config.name}は逃げてしまった！`); text = lines.join('\n');
+        if (playerHp < hpBefore) emit('player', hpBefore - playerHp);
+        return;
+      }
+      if ((entry.type === 'attack' || entry.type === 'magic-attack') && entry.speech) lines.push(`「${entry.speech}」`);
+      lines.push(entry.type === 'say' ? `「${entry.text}」` : entry.text);
+      if (entry.type === 'heal') {
+        const healed = Math.min(entry.amount, config.stats.hp - enemyHp); enemyHp += healed; lines.push(`HPが${healed}回復した！`);
+      }
+      if (entry.type === 'attack' || entry.type === 'magic-attack' || entry.type === 'escape') {
+        // 魔法は敵の魔力を使い、物理防御を引かない。防御コマンドは両方に有効。
+        const base = entry.type === 'magic-attack' ? Math.max(1, Math.floor((config.stats.magic ?? 0) * entry.power))
+          : Math.max(1, Math.floor(config.stats.attack * attackMultiplier * (entry.type === 'attack' ? entry.power : 1)) - player.stats.defense);
+        const damage = Math.max(1, Math.floor(base * (guarding ? player.guardMultiplier : 1)));
+        playerHp = Math.max(0, playerHp - damage); lines.push(`${player.name}に${damage}のダメージ！`);
+        if (entry.type !== 'escape' && entry.inflictPoison && !poisoned && playerHp > 0) {
+          poisoned = true; lines.push(`${player.name}は毒を受けた！`);
+        }
       }
     }
+    speech = speeches.join('\n') || null;
     if (poisonedBefore && poisoned && playerHp > 0) {
       const damage = Math.min(2, playerHp);
       playerHp -= damage; lines.push(`${player.name}は毒で${damage}のダメージ！`);
@@ -94,6 +113,10 @@ export function createBattle(enemy: EnemyDefinition, options: {
     get action() { return action; },
     get wasAttacked() { return wasAttacked; },
     get canEscape() { return canEscape(); },
+    completeVictory(definition: PlayerDefinition, vitals: { hp: number; mp: number; poisoned: boolean }): void {
+      if (phase !== 'victory') return;
+      Object.assign(player, structuredClone(definition)); playerHp = vitals.hp; playerMp = vitals.mp; poisoned = vitals.poisoned;
+    },
     attack(): void {
       if (phase !== 'commands') return;
       action = 'attack'; guarding = false; speech = null;
@@ -110,10 +133,10 @@ export function createBattle(enemy: EnemyDefinition, options: {
       playerMp -= skill.mpCost; action = 'skill'; guarding = false; speech = null;
       const announcement = `${player.name}は${skill.name}を使った！`;
       if (skill.effect.type === 'heal-hp') {
-        const amount = Math.min(skill.effect.amount, player.stats.hp - playerHp);
+        const amount = Math.min(skill.effect.amount + Math.floor(player.stats.magic * 0.8), player.stats.hp - playerHp);
         playerHp += amount; emit('heal', amount); phase = 'player-action'; text = `${announcement}\nHPが${amount}回復した！`;
       } else {
-        const damage = skill.effect.type === 'physical-damage' ? Math.max(1, Math.floor(player.stats.attack * skill.effect.power) - config.stats.defense) : skill.effect.amount;
+        const damage = skill.effect.type === 'physical-damage' ? Math.max(1, Math.floor(player.stats.attack * skill.effect.power) - config.stats.defense) : Math.max(1, skill.effect.amount + Math.floor(player.stats.magic * 1.0) - config.stats.defense);
         damageEnemy(damage, announcement);
       }
       return { ok: true, message: text };
@@ -142,7 +165,7 @@ export function createBattle(enemy: EnemyDefinition, options: {
       phase = 'escape'; speech = null; text = `${player.name}はにげだした！`;
     },
     cancelEscape(): void {
-      if (phase !== 'escape') return;
+      if (phase !== 'escape' || enemyEscaped) return;
       phase = 'commands'; text = `${player.name}のターン。`;
     },
     advance(): void {

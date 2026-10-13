@@ -53,7 +53,7 @@ export const labels: Record<string, string> = {
   'armor-shop': '防具屋', 'item-shop': '道具屋', 'house-red': '赤屋根の家', 'house-slate': '青屋根の家',
   'weapon-merchant': '武器屋の店員', 'armor-merchant': '防具屋の店員', 'item-merchant': '道具屋の店員',
   traveler: '若者', resident: '女性', elder: 'おじいさん', loot: 'キラキラ',
-  'treasure-chest': '宝箱', 'cave-witch': '洞窟の魔女', 'forest-fairy': '森の妖精', 'demon-lord': '魔王',
+  'treasure-chest': '宝箱', 'cave-witch': '洞窟の魔女', 'forest-fairy': '森の妖精', 'demon-lord': '魔王', 'demon-guard': '魔王の子分', innkeeper: '宿屋の主人', 'void-rift': '異次元への裂け目',
   'meadow-flowers': '花の草地', 'ruins-floor': '遺跡の石畳', 'world-ruins': '古城の遺跡（全体マップ）', signpost: '道しるべ', 'cave-crystal': '洞窟の水晶',
   'stone-tablet': '古い石碑',
   'moat-outer-bank': '堀の外縁', 'moat-inner-bank': '堀の内縁',

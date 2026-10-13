@@ -1,3 +1,4 @@
+import { mountClearRecord } from './game/clear-record';
 import { castleFloor } from './data/tiles/castle-floor';
 import { castleCarpet } from './data/tiles/castle-carpet';
 import { castleWall } from './data/tiles/castle-wall';
@@ -38,6 +39,8 @@ export async function startGallery(characters: PlayCharacters, kingSprites: Awai
   const playerSprites = characters.players;
   const disposers: (() => void)[] = [];
   try {
+    const clearRecord = document.querySelector<HTMLElement>('#title-true-clear');
+    if (clearRecord) disposers.push(mountClearRecord(clearRecord));
     for (const id of ['adventure-materials', 'world-locations', 'item-catalog', 'enemy-catalog', 'demon-castle-materials']) document.querySelector(`#${id}`)?.replaceChildren();
     const adventureMaterialList = document.querySelector<HTMLElement>('#adventure-materials');
     if (adventureMaterialList) for (const { name, sprite } of Object.values(adventureMaterials)) {
@@ -194,24 +197,50 @@ export async function startGallery(characters: PlayCharacters, kingSprites: Awai
     const pillarCanvas = document.querySelector<HTMLCanvasElement>('#pillar-preview');
     const status = document.querySelector<HTMLParagraphElement>('#status');
     const enemyList = document.querySelector<HTMLElement>('#enemy-catalog');
-    if (enemyList) for (const enemy of enemyCatalog) {
-      const sprite = enemy.battleImage ? enemyPixelSprites[enemy.battleImage] : undefined;
-      if (!sprite) continue;
-      const card = document.createElement('figure');
-      const preview = document.createElement('canvas'); preview.width = 64; preview.height = 56;
-      preview.setAttribute('aria-label', `${enemy.name}のドット絵`);
-      const context = preview.getContext('2d');
-      if (context) drawSprite(context, sprite, (64 - sprite.width) / 2, 56 - sprite.height);
-      const caption = document.createElement('figcaption'); caption.textContent = enemy.name;
-      card.append(preview, caption); enemyList.append(card);
-      const referenceUrl = enemyReferenceUrl(enemy.battleImage!);
-      if (referenceUrl) {
-        const details = document.createElement('details'), summary = document.createElement('summary');
-        summary.textContent = '参考イラスト';
-        const image = document.createElement('img'); image.width = 256; image.height = 256;
-        image.alt = `${enemy.name}の原案イラスト`;
-        details.addEventListener('toggle', () => { if (details.open && !image.getAttribute('src')) image.src = referenceUrl; });
-        details.append(summary, image); card.append(details);
+    if (enemyList) {
+      const forestIds = ['leaf-gel', 'ghost-mushroom', 'forest-wolf'];
+      const caveIds = ['cave-bat', 'rock-hermit', 'crystal-lizard', 'stray-crystal'];
+      const groups = [['forest', '草原・森の魔物'], ['cave', '洞窟の魔物'], ['boss', 'ボス・強敵']] as const;
+      // 異次元の魔物と今後追加する強敵も、一覧から欠落しないよう最後の分類へ含める。
+      const category = (enemy: typeof enemyCatalog[number]) => forestIds.includes(enemy.characterId) ? 'forest' : caveIds.includes(enemy.characterId) ? 'cave' : 'boss';
+      const bossOrder = ['king', 'demon-guard', 'demon-lord', 'void-god'];
+      const bossRank = (enemy: typeof enemyCatalog[number]) => {
+        const index = bossOrder.indexOf(enemy.characterId);
+        return index < 0 ? bossOrder.length : index;
+      };
+      for (const [kind, label] of groups) {
+        const enemies = enemyCatalog.filter(enemy => category(enemy) === kind);
+        if (kind === 'boss') enemies.sort((a, b) => bossRank(a) - bossRank(b));
+        const section = document.createElement('section'); section.className = 'enemy-category'; section.dataset.category = kind;
+        const heading = document.createElement('h3'); heading.textContent = label;
+        const count = document.createElement('span'); count.className = 'enemy-category-count'; count.textContent = `${enemies.length}種類`; heading.append(count);
+        const list = document.createElement('div'); list.className = 'enemy-category-grid';
+        for (const enemy of enemies) {
+          const sprite = enemy.battleImage ? enemyPixelSprites[enemy.battleImage] : undefined;
+          const card = document.createElement('figure'); card.dataset.enemyId = String(enemy.id);
+          const preview = document.createElement('canvas'); preview.width = 64; preview.height = 64;
+          preview.setAttribute('aria-label', `${enemy.name}のドット絵`);
+          const context = preview.getContext('2d');
+          if (context && sprite) drawSprite(context, sprite, (64 - sprite.width) / 2, 64 - sprite.height);
+          else if (context && enemy.characterId === 'king') {
+            const king = kingSprites.standingHeroStyle;
+            drawImageSprite(context, king, (64 - king.width) / 2, 64 - king.height);
+          }
+          const caption = document.createElement('figcaption');
+          const name = document.createElement('strong'); name.textContent = enemy.name;
+          const stats = document.createElement('small'); stats.textContent = `HP ${enemy.stats.hp} / 攻撃 ${enemy.stats.attack} / 防御 ${enemy.stats.defense}`;
+          caption.append(name, stats); card.append(preview, caption); list.append(card);
+          const referenceUrl = enemy.battleImage ? enemyReferenceUrl(enemy.battleImage) : undefined;
+          if (referenceUrl) {
+            const details = document.createElement('details'), summary = document.createElement('summary');
+            summary.textContent = '参考イラスト';
+            const image = document.createElement('img'); image.width = 256; image.height = 256;
+            image.alt = `${enemy.name}の原案イラスト`;
+            details.addEventListener('toggle', () => { if (details.open && !image.getAttribute('src')) image.src = referenceUrl; });
+            details.append(summary, image); card.append(details);
+          }
+        }
+        section.append(heading, list); enemyList.append(section);
       }
     }
     const playerPreviews = Object.entries(playerSprites).map(([direction, sprite]) => {

@@ -28,7 +28,8 @@
     "world-mountain",
     "world-forest",
     "meadow-flowers",
-    "ruins-floor"
+    "ruins-floor",
+    "void-rift"
   ],
   "entities": [
     {
@@ -173,6 +174,14 @@
     },
     {
       "name": "stone-tablet",
+      "parameters": 0
+    },
+    {
+      "name": "demon-guard",
+      "parameters": 0
+    },
+    {
+      "name": "innkeeper",
       "parameters": 0
     }
   ]

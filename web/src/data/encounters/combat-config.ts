@@ -24,10 +24,14 @@ export function parseReward(value: unknown): VictoryReward | null {
   return { gold: whole(data.gold), experience: whole(data.experience ?? 0), items };
 }
 
-export interface CombatStats { readonly hp: number; readonly attack: number; readonly defense: number }
+export interface CombatStats { readonly hp: number; readonly attack: number; readonly defense: number; readonly magic: number }
 export type EnemyAction = { readonly type: 'say'; readonly text: string }
-  | { readonly type: 'attack'; readonly text: string; readonly power: number; readonly speech?: string; readonly inflictPoison?: boolean };
+  | { readonly type: 'escape'; readonly text: string; readonly chance: number }
+  | { readonly type: 'heal'; readonly text: string; readonly amount: number }
+  | { readonly type: 'attack' | 'magic-attack'; readonly text: string; readonly power: number; readonly speech?: string; readonly inflictPoison?: boolean };
 export interface EnemyDefinition {
+  readonly actionsPerTurn?: number;
+  readonly victoryMessage?: string;
   readonly canEscape?: boolean;
   readonly canEscapeBeforeAttacked?: boolean;
   readonly royalEquipmentWarning?: string;
@@ -37,7 +41,7 @@ export interface EnemyDefinition {
   readonly name: string;
   readonly characterId: string;
   readonly battleImage?: string;
-  readonly background?: 'castle' | 'grassland' | 'forest' | 'cave';
+  readonly background?: 'castle' | 'grassland' | 'forest' | 'cave' | 'void';
   readonly stats: CombatStats;
   readonly firstAttackedMessage?: string;
   readonly reward?: VictoryReward | null;
@@ -65,19 +69,21 @@ function integer(value: unknown, min: number, max: number): number {
 }
 function stats(value: unknown): CombatStats {
   const data = object(value);
-  return { hp: integer(data.hp, 1, 9999), attack: integer(data.attack, 0, 9999), defense: integer(data.defense, 0, 9999) };
+  return { hp: integer(data.hp, 1, 9999), attack: integer(data.attack, 0, 9999), defense: integer(data.defense, 0, 9999), magic: integer(data.magic ?? 0, 0, 9999) };
 }
 function pattern(value: unknown): readonly EnemyAction[] {
   if (!Array.isArray(value) || !value.length || value.length > 64) throw new Error('敵の行動パターンは1〜64件にしてください。');
   return value.map(entry => {
     const data = object(entry), text = validateCustomDialogue(data.text);
     if (data.type === 'say') return { type: 'say', text };
-    if (data.type === 'attack' && typeof data.power === 'number' && Number.isFinite(data.power) && data.power > 0 && data.power <= 10) {
-      return { type: 'attack', text, power: data.power,
+    if (data.type === 'escape' && typeof data.chance === 'number' && data.chance >= 0 && data.chance <= 1) return { type: 'escape', text, chance: data.chance };
+    if (data.type === 'heal') return { type: 'heal', text, amount: whole(data.amount, 1, 9999) };
+    if ((data.type === 'attack' || data.type === 'magic-attack') && typeof data.power === 'number' && Number.isFinite(data.power) && data.power > 0 && data.power <= 10) {
+      return { type: data.type, text, power: data.power,
         ...(data.inflictPoison === undefined ? {} : { inflictPoison: boolean(data.inflictPoison) }),
         ...(data.speech === undefined ? {} : { speech: validateCustomDialogue(data.speech) }) };
     }
-    throw new Error('敵の行動はsay、またはpowerが0より大きく10以下のattackにしてください。');
+    throw new Error('敵の行動はsay・escape・heal・attack・magic-attackを設定してください。攻撃倍率は0より大きく10以下です。');
   });
 }
 function boolean(value: unknown): boolean {
@@ -101,8 +107,10 @@ export function parseEnemyDefinitions(value: unknown): readonly EnemyDefinition[
     if (seen.has(id)) throw new Error('敵IDが重複しています。');
     seen.add(id);
     if (data.battleImage !== undefined && (typeof data.battleImage !== 'string' || !illustrationIds.includes(data.battleImage))) throw new Error('敵の戦闘画像IDが不明です。');
-    if (data.background !== undefined && (typeof data.background !== 'string' || !['castle', 'grassland', 'forest', 'cave'].includes(data.background))) throw new Error('戦闘背景はcastle・grassland・forest・caveを指定してください。');
+    if (data.background !== undefined && (typeof data.background !== 'string' || !['castle', 'grassland', 'forest', 'cave', 'void'].includes(data.background))) throw new Error('戦闘背景はcastle・grassland・forest・cave・voidを指定してください。');
     return { id, ...(data.royalEquipmentWarning === undefined ? {} : { royalEquipmentWarning: validateCustomDialogue(data.royalEquipmentWarning) }), name: validateCustomDialogue(data.name), characterId: validateCustomDialogue(data.characterId), stats: stats(data.stats),
+      ...(data.actionsPerTurn === undefined ? {} : { actionsPerTurn: whole(data.actionsPerTurn, 1, 4) }),
+      ...(data.victoryMessage === undefined ? {} : { victoryMessage: validateCustomDialogue(data.victoryMessage) }),
       ...(data.canEscape === undefined ? {} : { canEscape: boolean(data.canEscape) }),
       ...(data.canEscapeBeforeAttacked === undefined ? {} : { canEscapeBeforeAttacked: boolean(data.canEscapeBeforeAttacked) }),
       ...(data.battleImage === undefined ? {} : { battleImage: data.battleImage as string }),

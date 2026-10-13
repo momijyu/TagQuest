@@ -23,7 +23,7 @@ try {
   const initial = initialWorld(), before = structuredClone(initial), world = createAdventureWorld();
   assert.deepEqual(initialWorld(), before, 'sample additions do not change the default castle/town');
   assert.equal(world.stages.length, 6);
-  assert.equal(world.stages.flatMap(s => s.entities).filter(e => e.kind === 'treasure-chest').length, 8);
+  assert.equal(world.stages.flatMap(s => s.entities).filter(e => e.kind === 'treasure-chest').length, 12);
   const issues = validateWorld(world).filter(issue => !issue.text.includes('開始位置なし'));
   assert.deepEqual(issues, [], 'all stage connections and NPC/chest approaches remain reachable');
   const scenes = readGameHash(new URL(gameUrl(encodeWorld(world, true).bytes, defaultPublicBase())).hash);
@@ -31,7 +31,7 @@ try {
   const tileAt = (scene, x, y) => catalog.tiles[scene.tiles[y * scene.width + x]];
   const castle = scenes.find(scene => scene.id === 0), town = scenes.find(scene => scene.id === 1);
   assert.deepEqual([castle.width, castle.height], [13, 12], 'castle has space around the throne and a side treasure alcove');
-  assert.deepEqual([town.width, town.height], [25, 21], 'town is a broad plaza, rather than a narrow vertical strip');
+  assert.deepEqual([town.width, town.height], [29, 21], 'the plaza town has an eastern residential lane');
   for (const scene of scenes.filter(scene => scene.id !== 2)) {
     const exit = scene.exits.find(exit => exit.y === scene.height - 1);
     assert.ok(exit, `stage ${scene.id} has a visible boundary exit`);
@@ -90,12 +90,12 @@ try {
     }
     assert.deepEqual(scene, sceneBefore);
   }
-  assert.equal(rewards, 10, '8 chests + well + hidden house reward');
+  assert.equal(rewards, 15, '12 chests + well + original house + residential gift');
   assert.ok(conversations >= 10);
-  assert.equal(castle.encounter.rate, 0.1, 'hidden king is a one-in-a-thousand encounter after URL replay');
+  assert.equal(castle.encounter.rate, 0.01, 'hidden king is a one-in-ten-thousand encounter after URL replay');
   assert.equal(scenes.find(s => s.id === 2).encounter, undefined, 'overworld remains peaceful');
   assert.deepEqual(scenes.find(s => s.id === 3).encounter.enemies.map(e => e.enemyId), [1, 2, 3]);
-  assert.deepEqual(scenes.find(s => s.id === 4).encounter.enemies.map(e => e.enemyId), [5, 6, 7]);
+  assert.deepEqual(scenes.find(s => s.id === 4).encounter.enemies.map(e => e.enemyId), [5, 6, 7, 10]);
   for (const [stageId, ids] of [[3, [1, 2, 3]], [4, [5, 6, 7]]]) {
     const scene = scenes.find(s => s.id === stageId);
     const spawn = exitArrival(scenes.flatMap(s => s.exits ?? []).find(e => e.targetStageId === stageId));
@@ -110,5 +110,5 @@ try {
     assert.doesNotMatch(dialogueText(entity.dialogue), /王の装備|百倍|100倍|装備を外/);
   }
   assert.deepEqual(createAdventureWorld(), world, 'another sample starts fresh');
-  console.log(`Adventure: spacious castle, plaza town, Vercel URL replay, 0.1% hidden king, three forest/three cave encounters, no boss hints, all six connections, ${conversations} dialogues, ${rewards} one-time rewards and source isolation passed.`);
+  console.log(`Adventure: spacious castle, plaza town, Vercel URL replay, 0.01% hidden king, three forest/three cave encounters, no boss hints, all six connections, ${conversations} dialogues, ${rewards} one-time rewards and source isolation passed.`);
 } finally { rmSync(out, { recursive: true, force: true }); }

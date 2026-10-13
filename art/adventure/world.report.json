@@ -1,15 +1,15 @@
 {
   "format": "TQ v15 experimental",
-  "binary_bytes": 702,
-  "base64url_chars": 936,
+  "binary_bytes": 799,
+  "base64url_chars": 1066,
   "base_url": "https://tag-quest-kappa.vercel.app/",
-  "final_url_bytes": 972,
+  "final_url_bytes": 1102,
   "binary_target_bytes": 300,
-  "remaining_to_binary_target_bytes": -402,
+  "remaining_to_binary_target_bytes": -499,
   "includes_ndef_overhead": true,
-  "ndef_tlv_bytes": 977,
+  "ndef_tlv_bytes": 1107,
   "ntag215_ndef_capacity_bytes": 496,
-  "remaining_ntag215_bytes": -481,
+  "remaining_ntag215_bytes": -611,
   "stages": [
     {
       "id": 0,
@@ -39,28 +39,28 @@
     {
       "id": 1,
       "name": "town",
-      "width": 25,
+      "width": 29,
       "height": 21,
       "floor_bytes": {
-        "RAW": 263,
-        "RLE": 88,
-        "RECT": 47
+        "RAW": 305,
+        "RLE": 94,
+        "RECT": 59
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
-      "entity_count": 17,
-      "entity_bytes": 57,
-      "interaction_bytes": 35,
+      "entity_count": 21,
+      "entity_bytes": 69,
+      "interaction_bytes": 48,
       "exit_bytes": 8,
       "encounter_bytes": 2,
-      "stage_bytes": 158,
+      "stage_bytes": 195,
       "tile_counts": {
-        "grass": 367,
-        "dirt": 9,
-        "brick": 101,
+        "grass": 425,
+        "dirt": 8,
+        "brick": 124,
         "water": 23,
         "bridge": 1,
-        "empty": 24
+        "empty": 28
       }
     },
     {
@@ -98,22 +98,22 @@
       "height": 17,
       "floor_bytes": {
         "RAW": 162,
-        "RLE": 48,
-        "RECT": 26
+        "RLE": 54,
+        "RECT": 38
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
-      "entity_count": 19,
-      "entity_bytes": 39,
-      "interaction_bytes": 15,
+      "entity_count": 22,
+      "entity_bytes": 45,
+      "interaction_bytes": 24,
       "exit_bytes": 5,
       "encounter_bytes": 10,
-      "stage_bytes": 104,
+      "stage_bytes": 131,
       "tile_counts": {
-        "grass": 19,
-        "dirt": 17,
+        "grass": 36,
+        "dirt": 27,
         "empty": 18,
-        "forest-ground": 263,
+        "forest-ground": 236,
         "sea": 6
       }
     },
@@ -124,21 +124,21 @@
       "height": 17,
       "floor_bytes": {
         "RAW": 166,
-        "RLE": 46,
-        "RECT": 33
+        "RLE": 54,
+        "RECT": 45
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
-      "entity_count": 4,
-      "entity_bytes": 8,
-      "interaction_bytes": 15,
+      "entity_count": 9,
+      "entity_bytes": 18,
+      "interaction_bytes": 24,
       "exit_bytes": 5,
-      "encounter_bytes": 10,
-      "stage_bytes": 80,
+      "encounter_bytes": 12,
+      "stage_bytes": 113,
       "tile_counts": {
         "empty": 18,
-        "cave-floor": 103,
-        "cave-wall": 202
+        "cave-floor": 139,
+        "cave-wall": 166
       }
     },
     {
@@ -168,8 +168,8 @@
     }
   ],
   "binary_bytes_by_floor_codec": {
-    "RAW": 1604,
-    "RLE": 860,
-    "RECT": 780
+    "RAW": 1707,
+    "RLE": 941,
+    "RECT": 877
   }
 }

@@ -1,0 +1,33 @@
+{
+  "id": 10,
+  "name": "はぐれクリスタル",
+  "characterId": "stray-crystal",
+  "battleImage": "stray-crystal",
+  "background": "cave",
+  "stats": {
+    "hp": 8,
+    "attack": 8,
+    "defense": 50
+  },
+  "reward": {
+    "gold": 100,
+    "experience": 250,
+    "items": []
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "escape",
+        "text": "はぐれクリスタルは逃げ出そうとした！",
+        "chance": 0.5
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "escape",
+        "text": "はぐれクリスタルは逃げ出そうとした！",
+        "chance": 0.5
+      }
+    ]
+  }
+}

@@ -5,7 +5,7 @@ import { createAdventurePreset } from '../editor/adventure-presets';
 import type { AdventureSize } from '../editor/adventure-presets';
 import { encodeWorld, stageLabel } from '../editor/model';
 import { decodeScenes } from '../codec/scenes';
-import { nfcBudget, defaultPublicBase } from '../codec/nfc-url';
+import { gameUrl, defaultPublicBase } from '../codec/nfc-url';
 import { exitArrival } from '../data/stage-exits';
 
 export function startGalleryPlay(
@@ -22,7 +22,6 @@ export function startGalleryPlay(
   let available: Record<string, SceneData> = normal;
   let names: Record<string, string> = { castle: '城', town: '街', world: '全体マップ', forest: '森', cave: '洞窟', 'demon-castle': '魔王城' };
   const size = root.querySelector<HTMLSelectElement>('#gallery-play-size');
-  const budgetText = root.querySelector<HTMLElement>('#gallery-play-budget');
   const urlLink = root.querySelector<HTMLAnchorElement>('#gallery-play-url');
   let running = false;
   const playView = mountPlayView(view, characters, () => running && isActive(), id => names[Object.entries(available).find(([, scene]) => scene.id === id)?.[0] ?? 'castle']);
@@ -51,7 +50,6 @@ export function startGalleryPlay(
     try {
       const value = (size?.value || 'normal') as AdventureSize, world = createAdventurePreset(value);
       const encoded = encodeWorld(world, true);
-      const budget = nfcBudget(encoded.bytes, defaultPublicBase(window.location), 496, 5);
       const normalKeys = ['castle', 'town', 'world', 'forest', 'cave', 'demon-castle'];
       const previous = map.value;
       available = value === 'normal' ? normal : Object.fromEntries(decodeScenes(encoded.bytes).map(scene => [normalKeys[scene.id] ?? `stage-${scene.id}`, scene]));
@@ -59,8 +57,7 @@ export function startGalleryPlay(
       map.innerHTML = Object.entries(available).map(([key]) => `<option value="${key}"></option>`).join('');
       for (const option of map.querySelectorAll('option')) option.textContent = names[(option as HTMLOptionElement).value] ?? '';
       map.value = previous in available ? previous : Object.keys(available)[0];
-      if (budgetText) budgetText.textContent = `${world.stages.length}マップ・バイナリ ${encoded.bytes.length}B・NFC ${budget.usedBytes}B / 496B（NDEF ${budget.ndefBytes}B＋予約5B）${budget.remainingBytes >= 0 ? `・残り${budget.remainingBytes}B` : '・NTAG215の容量を超えます'}`;
-      if (urlLink) urlLink.href = budget.url;
+      if (urlLink) urlLink.href = gameUrl(encoded.bytes, defaultPublicBase(window.location));
     } catch (error) {
       errorBox.textContent = error instanceof Error ? error.message : '世界を読み込めませんでした。'; errorBox.hidden = false;
     }

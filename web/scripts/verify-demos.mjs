@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { mkdtempSync, writeFileSync, rmSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -29,7 +30,7 @@ try {
     // Strong test stats isolate map/event correctness from the separately tested combat balance.
     const game = createWorldGame(scenes, 0, () => 0.999999, { player: { ...playerConfig, stats: { hp: 999, attack: 40, defense: 99 } } });
     const drain = () => { for (let n = 0; game.message && !game.encounter; n++) { assert.ok(n < 20); game.interact(); } };
-    const sceneAt = id => id === game.scene.id ? { ...game.scene, entities: game.visibleEntities } : scenes.find(s => s.id === id);
+    const sceneAt = id => id === game.scene.id ? { ...game.scene, entities: game.visibleEntities } : game.stages.find(s => s.id === id);
     function travel(goal) {
       const queue = [{ id: game.scene.id, ...game.position, parent: -1 }], seen = new Set();
       for (let i = 0; i < queue.length; i++) {
@@ -60,6 +61,49 @@ try {
       assert.fail(`${size}: no playable route to the target`);
     }
     for (const scene of scenes) travel(p => p.id === scene.id && 'front');
+    function winBattle() {
+      const expectedAttacks = Math.ceil(game.battle.enemyHp / Math.max(1, game.battle.player.stats.attack - game.battle.enemy.stats.defense));
+      for (let turn = 0; game.battle.phase !== 'victory'; turn++) {
+        assert.ok(turn < expectedAttacks); game.battle.attack();
+        if (game.battle.phase !== 'victory') { game.battle.advance(); game.battle.advance(); }
+      }
+      game.finishEncounter('victory');
+    }
+    if (size === 'large') {
+      const bridge = scenes.find(scene => scene.id === 15);
+      const guard = bridge.entities.find(entity => entity.kind === 'demon-guard');
+      assert.equal(guard.battleEvent.clear, false);
+      assert.equal(canStand(bridge, guard), false, 'the guard blocks the central bridge until defeated');
+      assert.equal(canStand(bridge, { x: 25 * 16, y: 15 * 16 }), true, 'the eastern bridge provides a peaceful detour');
+      const weak = createWorldGame(scenes.map(scene => scene.id === 15
+        ? { ...scene, spawn: { x: 15 * 16, y: 16 * 16 } } : scene), 15, () => 0.999999,
+        { player: { ...playerConfig, stats: { hp: 1, attack: 0, defense: 0 } } });
+      assert.equal(weak.move('back'), false); weak.interact(); weak.interact();
+      assert.equal(weak.encounter.enemyId, 8);
+      weak.battle.guard(); weak.battle.advance(); assert.equal(weak.battle.phase, 'defeat');
+      weak.finishEncounter('defeat');
+      assert.equal(weak.cleared, false); assert.ok(weak.visibleEntities.some(entity => entity.kind === 'demon-guard'), 'defeat leaves the child boss available for a rematch');
+      const faceGuard = () => travel((p, visible) => p.id === bridge.id && steps.find(([direction]) => {
+        const target = interactionTarget(visible, p, direction);
+        return target !== undefined && visible.entities[target].kind === 'demon-guard';
+      })?.[0]);
+      let facing = faceGuard();
+      assert.equal(game.move(facing), false); game.interact(); drain();
+      assert.equal(game.encounter.enemyId, 8); assert.equal(game.battle.enemy.canEscape, true);
+      game.battle.escape(); game.finishEncounter('escape');
+      assert.equal(game.cleared, false); assert.ok(game.visibleEntities.some(entity => entity.kind === 'demon-guard'));
+      facing = faceGuard(); assert.equal(game.move(facing), false); game.interact(); drain();
+      const gold = game.status.gold, experience = game.status.experience;
+      winBattle(); drain();
+      assert.equal(game.cleared, false, 'the child boss does not replace the final demon lord');
+      assert.equal(game.status.gold, gold + 180); assert.equal(game.status.experience, experience + 180);
+      assert.ok(!game.visibleEntities.some(entity => entity.kind === 'demon-guard'));
+      assert.equal(canStand({ ...bridge, entities: game.visibleEntities }, guard), true, 'victory opens the short bridge');
+      assert.equal(game.inventory.find(item => item.itemId === 19)?.count, 2);
+      assert.equal(game.inventory.find(item => item.itemId === 2)?.count, 1);
+      travel(p => p.id === 16 && 'front'); travel(p => p.id === 15 && 'front');
+      assert.ok(!game.visibleEntities.some(entity => entity.kind === 'demon-guard'), 'the bridge guard does not respawn on return');
+    }
     function talk(role) {
       const matches = e => e.dialogue?.type === 'template' && (typeof role === 'number' ? e.dialogue.id === role : dialogueTemplates[e.dialogue.id].storyRole === role);
       const scene = scenes.find(s => s.entities.some(matches));
@@ -74,7 +118,8 @@ try {
       assert.equal(game.message.speaker, dialogueTemplates[entity.dialogue.id].speaker ?? '');
       drain();
     }
-    assert.match(game.story.objective, /森の妖精と洞窟の魔女/);
+    assert.match(game.story.objective, /王様に挨拶/);
+    talk('departure'); assert.match(game.story.objective, /森の妖精と洞窟の魔女/);
     if (size === 'large') {
       for (const id of [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]) talk(id);
       assert.match(game.story.objective, /森の妖精と洞窟の魔女/, 'optional conversations do not skip the main story');
@@ -100,22 +145,21 @@ try {
     facing = travel((p, scene) => p.id === bossScene.id && steps.find(([direction]) => interactionTarget(scene, p, direction) === boss)?.[0]);
     assert.equal(game.move(facing), false); game.interact(); assert.ok(game.message); drain();
     assert.equal(game.encounter.enemyId, 4);
-    const expectedAttacks = Math.ceil(game.battle.enemyHp / Math.max(1, game.battle.player.stats.attack - game.battle.enemy.stats.defense));
-    for (let turn = 0; game.battle.phase !== 'victory'; turn++) {
-      assert.ok(turn < expectedAttacks); game.battle.attack();
-      if (game.battle.phase !== 'victory') { game.battle.advance(); game.battle.advance(); }
-    }
-    game.finishEncounter('victory'); assert.equal(game.cleared, true); assert.match(game.message.text, /灯火が空へ昇る/); drain();
+    winBattle(); assert.equal(game.cleared, true); assert.match(game.message.text, /灯火が空へ昇る/); drain();
     assert.ok(!game.visibleEntities.some(e => e.battleEvent?.clear));
     talk('forest'); if (size === 'large') { talk('north-king'); talk(60); talk(63); }
     assert.match(game.story.objective, /灯火は戻った/);
     travel(p => p.id === 0 && 'front'); assert.equal(game.cleared, true, 'the cleared world remains explorable');
     game.reset(); assert.equal(game.cleared, false); assert.equal(game.scene.id, 0); assert.deepEqual(game.inventory, []);
-    assert.match(game.story.objective, /森の妖精と洞窟の魔女/);
+    assert.match(game.story.objective, /王様に挨拶/);
+    if (size === 'large') {
+      travel(p => p.id === 15 && 'front');
+      assert.ok(game.visibleEntities.some(entity => entity.kind === 'demon-guard'), 'reset restores the optional bridge battle');
+    }
   }
   const sizes = ['normal', 'large', 'small'], worlds = sizes.map(createAdventurePreset);
   assert.deepEqual(worlds[0], createAdventureWorld(), 'the existing adventure stays the normal sample');
-  assert.deepEqual(worlds.map(w => w.stages.length), [6, 15, 6]);
+  assert.deepEqual(worlds.map(w => w.stages.length), [6, 18, 6]);
   const cells = world => world.stages.reduce((sum, stage) => sum + stage.width * stage.height, 0);
   assert.ok(cells(worlds[1]) > cells(worlds[0]) * 2, 'large is a bigger connected world, not just a renamed copy');
   assert.ok(cells(worlds[2]) < cells(worlds[0]));
@@ -170,10 +214,27 @@ try {
       execFileSync('python3', [join(root, 'compiler/build.py'), '--maps', file, ...(compact ? ['--compact'] : []), '--out', join(out, 'world.bin')], { stdio: 'pipe' });
       assert.deepEqual(Buffer.from(encoded.bytes), readFileSync(join(out, 'world.bin')), `${size}: Python/Web parity`);
       const budget = nfcBudget(encoded.bytes, defaultPublicBase(), 496, 5), scenes = readGameHash(new URL(budget.url).hash);
-      assert.equal(scenes[0].encounter.rate, size === 'small' ? 1 : 0.1, `${size}: the king's configured rate survives URL replay`);
+      assert.equal(scenes[0].encounter.rate, size === 'small' ? 1 : 0.01, `${size}: the king's configured rate survives URL replay`);
+      for (const id of size === 'large' ? [3, 8, 16] : [3]) {
+        assert.equal(scenes.find(scene => scene.id === id).encounter.rate, size === 'small' ? 12 : 6,
+          `${size}: forest exploration uses the configured reduced rate without changing the NFC small world`);
+      }
+      for (const id of size === 'large' ? [4, 9] : [4]) {
+        assert.equal(scenes.find(scene => scene.id === id).encounter.rate, size === 'small' ? 14 : 8,
+          `${size}: cave exploration uses the configured reduced rate without changing the NFC small world`);
+      }
       assert.equal(scenes.length, world.stages.length);
+      assert.equal(scenes.flatMap(s => s.entities).filter(e => e.kind === 'treasure-chest').length, size === 'small' ? 2 : size === 'large' ? 45 : 12);
+      if (size !== 'small') {
+        for (const id of size === 'large' ? [1, 7, 13] : [1]) {
+          const town = scenes.find(s => s.id === id);
+          assert.equal(town.width, 29);
+          assert.equal(town.entities.filter(e => ['house-red', 'house-slate'].includes(e.kind)).length, 4);
+          assert.deepEqual(town.entities.filter(e => e.x === 416).map(e => e.dialogue?.id), [72, 73], 'new homes use dedicated templates');
+        }
+      }
       const expectedNames = size === 'large'
-        ? ['お城', '街', 'フィールド', '森', '洞窟', '魔王城', '北の大陸', '北の市場', '奥深い森', '水晶の洞窟', '東の大陸', '古城の遺跡', '北の城', '海辺の集落', '妖精の花園']
+        ? ['お城', '街', 'フィールド', '森', '洞窟', '魔王城', '北の大陸', '北の市場', '奥深い森', '水晶の洞窟', '東の大陸', '古城の遺跡', '北の城', '海辺の集落', '妖精の花園', '辺境の大陸', '風渡りの森', '忘れられた砦']
         : ['お城', '街', 'フィールド', '森', '洞窟', '魔王城'];
       assert.deepEqual(scenes.map(inferLocationName), expectedNames, 'location names survive URL decoding without serialized names');
       for (const scene of scenes) assert.equal(inferLocationName({ ...scene, id: 230 }), inferLocationName(scene), 'location inference ignores stage IDs');
@@ -227,6 +288,8 @@ try {
         playThrough(scenes, size);
       }
       if (size === 'small' && compact) {
+        assert.equal(createHash('sha256').update(encoded.bytes).digest('hex'), '183209444663027a9a3e0308fac0513ada6a0cfa1775f7dcacd8db08cba2950c',
+          'normal/large exploration changes must preserve the small world verified on a real NTAG215');
         assert.equal(encoded.bytes[2], 14, 'integer encounters no longer require v15');
         assert.ok(encoded.bytes.length <= 310);
         assert.ok(budget.urlBytes <= 450, 'small public URLs leave room for real tag metadata');

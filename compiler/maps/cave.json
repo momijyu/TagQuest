@@ -68,6 +68,34 @@
         "y": 16,
         "width": 1,
         "height": 1
+      },
+      {
+        "tile": "cave-floor",
+        "x": 1,
+        "y": 11,
+        "width": 4,
+        "height": 4
+      },
+      {
+        "tile": "cave-floor",
+        "x": 4,
+        "y": 12,
+        "width": 4,
+        "height": 2
+      },
+      {
+        "tile": "cave-floor",
+        "x": 14,
+        "y": 11,
+        "width": 3,
+        "height": 4
+      },
+      {
+        "tile": "cave-floor",
+        "x": 11,
+        "y": 12,
+        "width": 4,
+        "height": 2
       }
     ]
   },

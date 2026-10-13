@@ -10,8 +10,8 @@ export interface ItemDefinition {
   readonly description: string;
   readonly price: number;
   readonly sellPrice: number;
-  readonly effect?: { readonly type: 'heal-hp' | 'heal-mp'; readonly amount: number } | { readonly type: 'cure-poison' };
-  readonly equipment?: { readonly slot: EquipmentSlot; readonly hp?: number; readonly mp?: number; readonly attack: number; readonly defense: number; readonly requiredLevel?: number };
+  readonly effect?: { readonly type: 'heal-hp' | 'heal-mp' | 'boost-attack' | 'boost-hp'; readonly amount: number } | { readonly type: 'cure-poison' };
+  readonly equipment?: { readonly slot: EquipmentSlot; readonly hp?: number; readonly mp?: number; readonly magic?: number; readonly attack: number; readonly defense: number; readonly requiredLevel?: number };
 }
 export const equipmentSlots = ['weapon', 'armor', 'shield', 'accessory', 'head'] as const;
 export type EquipmentSlot = typeof equipmentSlots[number];
@@ -30,14 +30,14 @@ export function parseItemCatalog(value: unknown): readonly ItemDefinition[] {
     if (data.effect !== undefined && data.equipment !== undefined) throw new Error('使用効果と装備は同時に設定できません。');
     if (data.effect !== undefined) {
       const effect = record(data.effect);
-      if (effect.type === 'heal-hp' || effect.type === 'heal-mp') item.effect = { type: effect.type, amount: whole(effect.amount, 1, 9999) };
+      if (['heal-hp', 'heal-mp', 'boost-attack', 'boost-hp'].includes(String(effect.type))) item.effect = { type: effect.type as 'heal-hp' | 'heal-mp' | 'boost-attack' | 'boost-hp', amount: whole(effect.amount, 1, 9999) };
       else if (effect.type === 'cure-poison') item.effect = { type: 'cure-poison' };
       else throw new Error('アイテムの効果が不明です。');
     }
     if (data.equipment !== undefined) {
       const gear = record(data.equipment);
       if (!equipmentSlots.includes(gear.slot as EquipmentSlot)) throw new Error('装備部位が不明です。');
-      item.equipment = { slot: gear.slot as EquipmentSlot, hp: whole(gear.hp ?? 0, 0, 9999), mp: whole(gear.mp ?? 0, 0, 9999), attack: whole(gear.attack, 0, 9999), defense: whole(gear.defense, 0, 9999), requiredLevel: whole(gear.requiredLevel ?? 1, 1, 99) };
+      item.equipment = { slot: gear.slot as EquipmentSlot, hp: whole(gear.hp ?? 0, 0, 9999), mp: whole(gear.mp ?? 0, 0, 9999), magic: whole(gear.magic ?? 0, 0, 9999), attack: whole(gear.attack, 0, 9999), defense: whole(gear.defense, 0, 9999), requiredLevel: whole(gear.requiredLevel ?? 1, 1, 99) };
     }
     return item;
   });
