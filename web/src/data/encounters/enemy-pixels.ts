@@ -2,6 +2,7 @@ import type { PixelSprite } from '../objects/types';
 
 import { pixelCanvas } from '../characters/pixel-canvas';
 import { demonLordBattle } from '../characters/demon-lord';
+import { caveEnemyPixels } from './cave-enemy-pixels';
 
 function leafGel(): PixelSprite {
   const art = pixelCanvas(48, 48, [
@@ -132,6 +133,7 @@ function forestWolf(): PixelSprite {
 
 /** 原案のイラストはassets/enemiesに保持。ゲームではこちらのドットを使う。 */
 export const enemyPixelSprites: Readonly<Record<string, PixelSprite>> = {
+  ...caveEnemyPixels,
   'leaf-gel': leafGel(),
   'ghost-mushroom': ghostMushroom(),
   'forest-wolf': forestWolf(),

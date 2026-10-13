@@ -11,8 +11,17 @@
   },
   "reward": {
     "gold": 8,
-    "experience": 14,
-    "items": []
+    "experience": 28,
+    "items": [
+      {
+        "itemId": 14,
+        "quantity": 1
+      },
+      {
+        "itemId": 1,
+        "quantity": 1
+      }
+    ]
   },
   "patterns": {
     "beforeAttacked": [

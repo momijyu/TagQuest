@@ -82,6 +82,20 @@ try {
     boundary.move('right'); assert.equal(Boolean(boundary.encounter), hit); assert.equal(count, 1);
   }
   const guaranteed = stage(0); guaranteed.encounter.rate = 100;
+  for (const [value, hit] of [[0.004999, true], [0.005, false], [0.5, false]]) {
+    const rare = stage(0); rare.encounter.rate = 0.5;
+    const game = createWorldGame(scenes(rare), 0, () => value);
+    game.move('right'); assert.equal(Boolean(game.encounter), hit, 'half-percent rate uses the exact probability boundary');
+  }
+  assert.equal(initialWorld().stages[0].encounter.rate, 0.1);
+  for (const [value, hit] of [[0, true], [0.00099999, true], [0.001, false], [0.999999, false]]) {
+    const rare = stage(0); rare.encounter.rate = 0.1;
+    for (const compact of [false, true]) {
+      const restored = decodeScenes(encodeWorld(parseWorld(rare), compact).bytes);
+      const game = createWorldGame(restored, 0, () => value);
+      game.move('right'); assert.equal(Boolean(game.encounter), hit, '0.1% king uses the exact one-in-a-thousand boundary after URL-format encoding');
+    }
+  }
   const always = createWorldGame(scenes(guaranteed), 0, () => 0.999999); always.move('right'); assert.ok(always.encounter);
   for (const outcome of ['escape']) {
     const retry = createWorldGame(scenes(guaranteed), 0, () => 0, { enemies: [escapableKing] });
@@ -134,17 +148,18 @@ try {
   const json = join(temporary, 'input.json'), binary = join(temporary, 'out.bin');
   for (const settings of [undefined, { enabled: true, enemyId: 0, rate: 0 }, { enabled: false, enemyId: 0, rate: 37 },
     { enabled: true, enemyId: 0, rate: 1 }, { enabled: true, enemyId: 0, rate: 100 },
+    { enabled: true, enemyId: 0, rate: 0.5 }, { enabled: false, enemyId: 0, rate: 0.01 }, { enabled: true, enemyId: 1, rate: 99.99 },
     ...[1, 2, 3].map(enemyId => ({ enabled: true, enemyId, rate: 25 }))]) {
     const input = stage(0); if (settings) input.encounter = settings; else delete input.encounter;
     const world = parseWorld(input), encoded = encodeWorld(world);
     writeFileSync(json, JSON.stringify(world)); execFileSync('python3', ['compiler/build.py', '--maps', json, '--out', binary], { cwd: root });
     assert.deepEqual(Buffer.from(encoded.bytes), readFileSync(binary));
     assert.deepEqual(decodeScenes(encoded.bytes)[0].encounter, settings);
-    assert.equal(encoded.reports[0].encounterBytes, settings ? 2 : 1);
+    assert.equal(encoded.reports[0].encounterBytes, settings ? Number.isInteger(settings.rate) ? 2 : 7 : 1);
   }
   for (const bad of [null, [], {}, { enabled: 1, enemyId: 0, rate: 10 }, { enabled: true, enemyId: true, rate: 10 },
     { enabled: true, enemyId: 255, rate: 10 }, { enabled: true, enemyId: 0, rate: -1 },
-    { enabled: true, enemyId: 0, rate: 101 }, { enabled: true, enemyId: 0, rate: 1.5 }, { enabled: true, enemyId: 0, rate: true }]) {
+    { enabled: true, enemyId: 0, rate: 101 }, { enabled: true, enemyId: 0, rate: 0.001 }, { enabled: true, enemyId: 0, rate: true }]) {
     const input = stage(0); input.encounter = bad; assert.throws(() => parseWorld(input));
     writeFileSync(json, JSON.stringify(input));
     assert.throws(() => execFileSync('python3', ['compiler/build.py', '--maps', json, '--out', binary], { cwd: root, stdio: 'pipe' }));

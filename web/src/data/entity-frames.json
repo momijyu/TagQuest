@@ -178,5 +178,29 @@
     "y": 0,
     "width": 16,
     "height": 32
+  },
+  "world-ruins": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "signpost": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "cave-crystal": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "stone-tablet": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
   }
 }

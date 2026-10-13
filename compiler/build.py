@@ -1,8 +1,9 @@
-"""Experimental TQ scene compiler (v8-v14 output). Python standard library only."""
+"""Experimental TQ scene compiler (v8-v15 output). Python standard library only."""
 
 import argparse
 import base64
 import json
+import math
 import re
 import struct
 from collections import Counter
@@ -254,13 +255,18 @@ def encode_exits(stage, stage_ids=None):
     return bytes(result)
 
 
-def encode_encounter(stage):
+def encode_encounter(stage, version=15):
     if 'encounter' not in stage:
         return b'\x00'
     data = stage['encounter']
     if not isinstance(data, dict) or type(data.get('enabled')) is not bool:
         raise ValueError('invalid encounter settings')
-    rate = integer(data.get('rate'), 0, 100, 'encounter rate')
+    rate = data.get('rate')
+    if type(rate) not in (int, float) or not math.isfinite(rate) or not 0 <= rate <= 100 or abs(rate * 100 - round(rate * 100)) > 1e-8:
+        raise ValueError('encounter rate must be 0..100 in 0.01 percent steps')
+    fractional = rate != int(rate)
+    if fractional and version < 15:
+        raise ValueError('fractional encounter rate requires v15')
     entries = data.get('enemies')
     if entries is not None:
         if not isinstance(entries, list) or not 1 <= len(entries) <= 255:
@@ -276,14 +282,18 @@ def encode_encounter(stage):
                 raise ValueError('unknown or duplicate encounter enemy')
             seen.add(enemy)
             payload.extend([enemy, weight])
+        if fractional:
+            return bytes([126 | (128 if data['enabled'] else 0)]) + struct.pack('<H', round(rate * 100)) + bytes([len(entries), *payload])
         if len(entries) > 1:
-            return bytes([127 | (128 if data['enabled'] else 0), rate, len(entries), *payload])
+            return bytes([127 | (128 if data['enabled'] else 0), int(rate), len(entries), *payload])
         enemy = entries[0]['enemyId']
     else:
         enemy = integer(data.get('enemyId'), 0, 255, 'enemy id')
     if enemy not in ENEMIES:
         raise ValueError('unknown encounter enemy')
-    return bytes([(rate + 1) | (128 if data['enabled'] else 0), enemy])
+    if fractional:
+        return bytes([126 | (128 if data['enabled'] else 0)]) + struct.pack('<H', round(rate * 100)) + bytes([1, enemy, 1])
+    return bytes([(int(rate) + 1) | (128 if data['enabled'] else 0), enemy])
 
 
 def normalize_buildings(stage):
@@ -384,7 +394,7 @@ def compile_stage(stage, force_codec=None, version=9, compact=False, stage_ids=N
     interactions = encode_interactions(stage['entities'])
     extra = struct.pack('<H', len(interactions)) + interactions
     exits = encode_exits(stage, stage_ids if version >= 13 else None)
-    encounter = encode_encounter(stage)
+    encounter = encode_encounter(stage, version)
     events = encode_battle_events(stage['entities']) if version >= 10 else b''
     report = {
         'id': stage['id'], 'name': stage['name'], 'width': width, 'height': height,
@@ -417,6 +427,11 @@ def compile_game(stages, force_codec=None, compact=False):
         version = 13
     if any(e['kind'] in BUILDING_OVERHANGS for stage in stages for e in stage['entities']):
         version = 14
+    for stage in stages:
+        encounter = stage.get('encounter')
+        rate = encounter.get('rate') if isinstance(encounter, dict) else None
+        if type(rate) in (int, float) and math.isfinite(rate) and rate != int(rate):
+            version = 15
     binary = bytearray(b'TQ' + bytes([version, len(stages)]))
     reports = []
     for stage in stages:

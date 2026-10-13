@@ -1,0 +1,413 @@
+{
+  "format": "TQ v15 experimental",
+  "binary_bytes": 1804,
+  "base64url_chars": 2406,
+  "base_url": "https://tag-quest-kappa.vercel.app/",
+  "final_url_bytes": 2442,
+  "binary_target_bytes": 300,
+  "remaining_to_binary_target_bytes": -1504,
+  "includes_ndef_overhead": true,
+  "ndef_tlv_bytes": 2447,
+  "ntag215_ndef_capacity_bytes": 496,
+  "remaining_ntag215_bytes": -1951,
+  "stages": [
+    {
+      "id": 0,
+      "name": "castle",
+      "width": 13,
+      "height": 12,
+      "floor_bytes": {
+        "RAW": 78,
+        "RLE": 40,
+        "RECT": 23
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 7,
+      "entity_bytes": 15,
+      "interaction_bytes": 9,
+      "exit_bytes": 5,
+      "encounter_bytes": 7,
+      "stage_bytes": 68,
+      "tile_counts": {
+        "marble": 75,
+        "carpet": 26,
+        "wall-top": 43,
+        "empty": 12
+      }
+    },
+    {
+      "id": 1,
+      "name": "town",
+      "width": 25,
+      "height": 21,
+      "floor_bytes": {
+        "RAW": 263,
+        "RLE": 88,
+        "RECT": 47
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 17,
+      "entity_bytes": 57,
+      "interaction_bytes": 35,
+      "exit_bytes": 8,
+      "encounter_bytes": 2,
+      "stage_bytes": 158,
+      "tile_counts": {
+        "grass": 367,
+        "dirt": 9,
+        "brick": 101,
+        "water": 23,
+        "bridge": 1,
+        "empty": 24
+      }
+    },
+    {
+      "id": 2,
+      "name": "南の大陸",
+      "width": 32,
+      "height": 24,
+      "floor_bytes": {
+        "RAW": 393,
+        "RLE": 162,
+        "RECT": 251
+      },
+      "selected_codec": "RLE",
+      "header_bytes": 9,
+      "entity_count": 4,
+      "entity_bytes": 8,
+      "interaction_bytes": 6,
+      "exit_bytes": 14,
+      "encounter_bytes": 2,
+      "stage_bytes": 201,
+      "tile_counts": {
+        "grass": 110,
+        "dirt": 6,
+        "bridge": 1,
+        "forest-ground": 1,
+        "sea": 517,
+        "sand": 67,
+        "world-mountain": 41,
+        "world-forest": 25
+      }
+    },
+    {
+      "id": 3,
+      "name": "forest",
+      "width": 19,
+      "height": 17,
+      "floor_bytes": {
+        "RAW": 162,
+        "RLE": 48,
+        "RECT": 26
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 19,
+      "entity_bytes": 39,
+      "interaction_bytes": 15,
+      "exit_bytes": 5,
+      "encounter_bytes": 10,
+      "stage_bytes": 104,
+      "tile_counts": {
+        "grass": 19,
+        "dirt": 17,
+        "empty": 18,
+        "forest-ground": 263,
+        "sea": 6
+      }
+    },
+    {
+      "id": 4,
+      "name": "cave",
+      "width": 19,
+      "height": 17,
+      "floor_bytes": {
+        "RAW": 166,
+        "RLE": 46,
+        "RECT": 33
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 4,
+      "entity_bytes": 8,
+      "interaction_bytes": 15,
+      "exit_bytes": 5,
+      "encounter_bytes": 10,
+      "stage_bytes": 80,
+      "tile_counts": {
+        "empty": 18,
+        "cave-floor": 103,
+        "cave-wall": 202
+      }
+    },
+    {
+      "id": 5,
+      "name": "demon-castle",
+      "width": 17,
+      "height": 19,
+      "floor_bytes": {
+        "RAW": 167,
+        "RLE": 105,
+        "RECT": 40
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 11,
+      "entity_bytes": 22,
+      "interaction_bytes": 15,
+      "exit_bytes": 5,
+      "encounter_bytes": 5,
+      "stage_bytes": 96,
+      "tile_counts": {
+        "empty": 99,
+        "demon-floor": 123,
+        "demon-carpet": 46,
+        "demon-wall-top": 55
+      }
+    },
+    {
+      "id": 6,
+      "name": "北の大陸",
+      "width": 32,
+      "height": 32,
+      "floor_bytes": {
+        "RAW": 520,
+        "RLE": 317,
+        "RECT": 55
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 3,
+      "entity_bytes": 6,
+      "interaction_bytes": 6,
+      "exit_bytes": 14,
+      "encounter_bytes": 2,
+      "stage_bytes": 92,
+      "tile_counts": {
+        "grass": 434,
+        "dirt": 49,
+        "bridge": 3,
+        "sea": 269,
+        "sand": 162,
+        "world-mountain": 36,
+        "world-forest": 71
+      }
+    },
+    {
+      "id": 7,
+      "name": "北の市場",
+      "width": 25,
+      "height": 21,
+      "floor_bytes": {
+        "RAW": 271,
+        "RLE": 102,
+        "RECT": 64
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 17,
+      "entity_bytes": 57,
+      "interaction_bytes": 35,
+      "exit_bytes": 8,
+      "encounter_bytes": 2,
+      "stage_bytes": 175,
+      "tile_counts": {
+        "grass": 355,
+        "dirt": 9,
+        "brick": 102,
+        "water": 23,
+        "empty": 24,
+        "meadow-flowers": 12
+      }
+    },
+    {
+      "id": 8,
+      "name": "奥深い森",
+      "width": 32,
+      "height": 30,
+      "floor_bytes": {
+        "RAW": 486,
+        "RLE": 135,
+        "RECT": 44
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 26,
+      "entity_bytes": 54,
+      "interaction_bytes": 21,
+      "exit_bytes": 8,
+      "encounter_bytes": 10,
+      "stage_bytes": 146,
+      "tile_counts": {
+        "dirt": 68,
+        "empty": 62,
+        "forest-ground": 761,
+        "sea": 42,
+        "meadow-flowers": 27
+      }
+    },
+    {
+      "id": 9,
+      "name": "水晶の洞窟",
+      "width": 31,
+      "height": 29,
+      "floor_bytes": {
+        "RAW": 455,
+        "RLE": 144,
+        "RECT": 85
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 13,
+      "entity_bytes": 27,
+      "interaction_bytes": 27,
+      "exit_bytes": 5,
+      "encounter_bytes": 10,
+      "stage_bytes": 163,
+      "tile_counts": {
+        "empty": 30,
+        "sea": 12,
+        "cave-floor": 335,
+        "cave-wall": 522
+      }
+    },
+    {
+      "id": 10,
+      "name": "東の大陸",
+      "width": 32,
+      "height": 32,
+      "floor_bytes": {
+        "RAW": 520,
+        "RLE": 335,
+        "RECT": 64
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 6,
+      "entity_bytes": 12,
+      "interaction_bytes": 9,
+      "exit_bytes": 18,
+      "encounter_bytes": 2,
+      "stage_bytes": 114,
+      "tile_counts": {
+        "grass": 317,
+        "dirt": 65,
+        "bridge": 4,
+        "sea": 371,
+        "sand": 149,
+        "world-mountain": 72,
+        "world-forest": 46
+      }
+    },
+    {
+      "id": 11,
+      "name": "古城の遺跡",
+      "width": 21,
+      "height": 19,
+      "floor_bytes": {
+        "RAW": 205,
+        "RLE": 79,
+        "RECT": 34
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 8,
+      "entity_bytes": 24,
+      "interaction_bytes": 21,
+      "exit_bytes": 5,
+      "encounter_bytes": 2,
+      "stage_bytes": 95,
+      "tile_counts": {
+        "wall-top": 83,
+        "dirt": 17,
+        "empty": 20,
+        "ruins-floor": 279
+      }
+    },
+    {
+      "id": 12,
+      "name": "北の城",
+      "width": 13,
+      "height": 12,
+      "floor_bytes": {
+        "RAW": 78,
+        "RLE": 40,
+        "RECT": 23
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 7,
+      "entity_bytes": 15,
+      "interaction_bytes": 9,
+      "exit_bytes": 5,
+      "encounter_bytes": 2,
+      "stage_bytes": 63,
+      "tile_counts": {
+        "marble": 75,
+        "carpet": 26,
+        "wall-top": 43,
+        "empty": 12
+      }
+    },
+    {
+      "id": 13,
+      "name": "海辺の集落",
+      "width": 25,
+      "height": 21,
+      "floor_bytes": {
+        "RAW": 270,
+        "RLE": 114,
+        "RECT": 33
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 17,
+      "entity_bytes": 53,
+      "interaction_bytes": 44,
+      "exit_bytes": 5,
+      "encounter_bytes": 2,
+      "stage_bytes": 146,
+      "tile_counts": {
+        "grass": 332,
+        "brick": 57,
+        "empty": 24,
+        "sea": 60,
+        "sand": 40,
+        "meadow-flowers": 12
+      }
+    },
+    {
+      "id": 14,
+      "name": "妖精の花園",
+      "width": 23,
+      "height": 19,
+      "floor_bytes": {
+        "RAW": 225,
+        "RLE": 67,
+        "RECT": 23
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 18,
+      "entity_bytes": 36,
+      "interaction_bytes": 24,
+      "exit_bytes": 5,
+      "encounter_bytes": 2,
+      "stage_bytes": 99,
+      "tile_counts": {
+        "dirt": 18,
+        "empty": 22,
+        "forest-ground": 174,
+        "sea": 20,
+        "meadow-flowers": 203
+      }
+    }
+  ],
+  "binary_bytes_by_floor_codec": {
+    "RAW": 5307,
+    "RLE": 2870,
+    "RECT": 1893
+  }
+}

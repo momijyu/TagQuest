@@ -87,7 +87,7 @@ try {
   const references=await modules.references.loadEnemyIllustrations();assert.equal(references['demon-lord'],undefined);assert.equal(Object.keys(references).length,3);
   const bossWorld=parseWorld({...base,spawn:{x:16,y:32},entities:[{kind:'demon-lord',x:16,y:0,parameters:[],dialogue:{type:'template',id:9},battleEvent:{enemyId:4,once:true,clear:true}}]});
   const royal=createPlayerState();royal.grantReward(enemyCatalog[0].reward);royal.equipRoyalSet();
-  const eventPlayer={...playerConfig,stats:{hp:300,attack:40,defense:10}};
+  const eventPlayer={...playerConfig,stats:{hp:600,attack:40,defense:10}};
   for (const compact of [false,true]) {
     const bytes=encodeWorld(bossWorld,compact).bytes, scenes=decodeScenes(bytes);
     assert.deepEqual(scenes[0].entities[0].battleEvent,{enemyId:4,once:true,clear:true});
@@ -98,7 +98,7 @@ try {
     const hpBeforeEscape=boss.battle.playerHp;boss.battle.escape();assert.equal(boss.battle.phase,'commands');assert.match(boss.battle.text,/逃げられない/);boss.battle.advance();assert.equal(boss.battle.playerHp,hpBeforeEscape);assert.equal(boss.cleared,false);assert.ok(boss.visibleEntities.some(e=>e.kind==='demon-lord'));
     let hits=0;
     while(boss.battle.phase!=='victory') {assert.notEqual(boss.battle.phase,'defeat');if(boss.battle.phase==='commands'){hits++;boss.battle.attack();}else boss.battle.advance();}
-    assert.equal(hits,4);assert.ok(boss.battle.playerHp>0);boss.finishEncounter('victory');assert.equal(boss.cleared,true);assert.ok(!boss.visibleEntities.some(e=>e.kind==='demon-lord'));assert.equal(boss.move('right'),false);
+    assert.equal(hits,13);assert.ok(boss.battle.playerHp>0);boss.finishEncounter('victory');assert.equal(boss.cleared,true);assert.ok(!boss.visibleEntities.some(e=>e.kind==='demon-lord'));assert.equal(boss.move('right'),false);
     boss.reset();assert.equal(boss.cleared,false);assert.ok(boss.visibleEntities.some(e=>e.kind==='demon-lord'));
     const weak=createWorldGame(scenes,0);weak.move('back');weak.interact();weak.interact();while(weak.battle.phase!=='defeat'){if(weak.battle.phase==='commands')weak.battle.guard();else weak.battle.advance();}assert.equal(weak.battle.phase,'defeat');weak.finishEncounter('defeat');assert.equal(weak.cleared,false);assert.ok(weak.visibleEntities.some(e=>e.kind==='demon-lord'));
   }
@@ -134,7 +134,21 @@ try {
   function raster(scene) {const data=new Uint32Array(scene.width*scene.height*256);modules.renderer.drawCompiledScene({fillStyle:'',fillRect(x,y,w,h){const c=parseInt(this.fillStyle.slice(1),16);for(let row=y;row<y+h;row++)for(let col=x;col<x+w;col++)data[row*scene.width*16+col]=c;}},scene);return data;}
   const modernPixels = raster(modern), legacyPixels = raster(legacy); const differences = [...modernPixels.keys()].filter(i=>modernPixels[i]!==legacyPixels[i]); if(differences.length) console.log('pixel differences', differences.length, differences.slice(0,10).map(i=>[i%(modern.width*16),Math.floor(i/(modern.width*16)),modernPixels[i].toString(16),legacyPixels[i].toString(16)])); assert.equal(differences.length,0);
   for(let y=0;y<modern.height;y++)for(let x=0;x<modern.width;x++)assert.equal(modules.walking.canStand(modern,{x:x*16,y:y*16-16}),modules.walking.canStand(legacy,{x:x*16,y:y*16-16}));
-  const demon=enemyCatalog.find(e=>e.id===4), emptyGear={weapon:null,armor:null,shield:null,accessory:null,head:null};
+  const liveDemon=enemyCatalog.find(e=>e.id===4), emptyGear={weapon:null,armor:null,shield:null,accessory:null,head:null};
+  assert.deepEqual(liveDemon.stats,{hp:360,attack:36,defense:12});
+  assert.equal(liveDemon.royalEquipmentAttack,undefined);
+  assert.equal(liveDemon.royalEquipmentPlayerAttackMultiplier,undefined);
+  assert.equal(royal.battleDefinition(liveDemon).stats.attack,328, 'the production boss preserves royal attack bonuses');
+  const liveBattle=modules.battle.createBattle(liveDemon,{player:royal.battleDefinition(liveDemon),equipment:royal.equipment});
+  assert.equal(liveBattle.enemyAttackMultiplier,1);liveBattle.guard();liveBattle.advance();assert.equal(liveBattle.feedback.amount,1, 'royal gear does not multiply the production boss attack');
+  const liveWorld=createWorldGame([{...toSceneData(parseWorld(base).stages[0]),encounter:{enemyId:4,enabled:true,rate:100}}],0,()=>0,{player:{...playerConfig,initialExperience:900,initialItems:[{itemId:9,quantity:1},{itemId:10,quantity:1},{itemId:12,quantity:1}]}});
+  liveWorld.equip(9);liveWorld.equip(10);liveWorld.equip(12);liveWorld.move('right');
+  assert.equal(liveWorld.status.attack,328);assert.equal(liveWorld.battle.enemyAttackMultiplier,1);
+  liveWorld.battle.attack();assert.equal(liveWorld.battle.feedback.amount,316);assert.equal(liveWorld.battle.enemyHp,44);assert.equal(liveWorld.battle.phase,'player-action');
+  liveWorld.battle.advance();assert.equal(liveWorld.battle.phase,'enemy-action');liveWorld.battle.advance();liveWorld.battle.attack();assert.equal(liveWorld.battle.phase,'victory');
+  liveWorld.finishEncounter('victory');assert.equal(liveWorld.status.attack,328);
+  // Optional combat modifiers remain available for author-defined enemies; these are explicit test fixtures.
+  const demon={...liveDemon,stats:{hp:120,attack:12,defense:4},royalEquipmentAttack:{multiplier:100,match:'any'},royalEquipmentPlayerAttackMultiplier:0};
   function probe(equipment,enemy=demon){const battle=modules.battle.createBattle(enemy,{player:royal.definition,equipment});battle.guard();battle.advance();return battle;}
   assert.equal(probe(emptyGear).enemyAttackMultiplier,1);
   for(const [slot,id] of [['head',9],['armor',10],['weapon',11],['weapon',12]]) {
@@ -154,8 +168,7 @@ try {
   assert.equal(sealed.stats.defense,royal.definition.stats.defense);
   assert.equal(sealed.maxMp,royal.definition.maxMp);
   const attack = modules.battle.createBattle(demon,{player:sealed,equipment:royal.equipment});
-  assert.match(attack.text,/王の装備の攻撃力が弱められた/);
-  assert.match(attack.text,/100倍/);assert.match(attack.text,/装備を外/);
+  assert.doesNotMatch(attack.text,/王の装備|100倍|装備を外/);
   attack.attack();assert.deepEqual(attack.feedback,{id:1,target:'enemy',amount:24});assert.equal(attack.enemyHp,96);assert.equal(attack.phase,'player-action');
   const physical = modules.battle.createBattle(demon,{player:sealed,equipment:royal.equipment});
   physical.useSkill(0);assert.equal(physical.enemyHp,82);

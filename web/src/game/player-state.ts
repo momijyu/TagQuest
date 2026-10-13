@@ -7,6 +7,7 @@ import { findSkill } from '../data/skills';
 import { levelForExperience, progressionConfig, maximumExperience } from '../data/progression';
 import type { ProgressionDefinition } from '../data/progression';
 import { royalAutoEquipIds, wearsRoyalSet, isRoyalEquipment } from '../data/royal-equipment';
+import { findExchangeRecipe } from '../data/exchanges';
 
 export interface ActionResult { readonly ok: boolean; readonly message: string }
 export interface Vitals { readonly hp: number; readonly mp: number; readonly poisoned: boolean }
@@ -26,6 +27,7 @@ export function recoverItem(item: ItemDefinition, vitals: Vitals, maxHp: number,
 /** 所持品は装備中の1個も含む。装備の切り替えで個数を増減させない。 */
 export function createPlayerState(definition: PlayerDefinition = playerConfig, progression: ProgressionDefinition = progressionConfig) {
   const base = structuredClone(definition);
+  const defeatGoldLossPercent = whole(base.defeatGoldLossPercent ?? 50, 0, 100);
   let experience = base.initialExperience ?? 0;
   let level = levelForExperience(experience, progression);
   function grownStats() {
@@ -37,12 +39,13 @@ export function createPlayerState(definition: PlayerDefinition = playerConfig, p
   let gold = base.initialGold ?? 0;
   let vitals: Vitals = { hp: grownStats().hp, mp: grownStats().mp, poisoned: false };
   const inventory = new Map<number, number>();
+  const discovered = new Set<number>();
   const equipment: Record<EquipmentSlot, number | null> = { weapon: null, armor: null, shield: null, accessory: null, head: null };
   function addItem(itemId: number, quantity: number): void {
     if (!findItem(itemId)) throw new Error('アイテムIDが不明です。');
     whole(quantity, 1, Number.MAX_SAFE_INTEGER);
     const count = (inventory.get(itemId) ?? 0) + quantity;
-    whole(count, 1, Number.MAX_SAFE_INTEGER); inventory.set(itemId, count);
+    whole(count, 1, Number.MAX_SAFE_INTEGER); inventory.set(itemId, count); discovered.add(itemId);
   }
   function consume(itemId: number): boolean {
     const count = inventory.get(itemId) ?? 0;
@@ -96,7 +99,15 @@ export function createPlayerState(definition: PlayerDefinition = playerConfig, p
     get equipment() { return { ...equipment }; },
     get appearance(): 'hero' | 'king' { return wearsRoyalSet(equipment) ? 'king' : 'hero'; },
     get inventory() { return [...inventory].map(([itemId, count]) => ({ itemId, count })); },
+    get discoveredItems() { return [...discovered].sort((a, b) => a - b); },
     addItem, consume, gainExperience,
+    applyDefeatPenalty(): number {
+      const percent = defeatGoldLossPercent;
+      // Split before multiplication to remain exact even at the safe-integer gold cap.
+      const lost = Math.floor(gold / 100) * percent + Math.ceil(gold % 100 * percent / 100);
+      gold -= lost;
+      return lost;
+    },
     setVitals(next: Vitals): void {
       const stats = effectiveStats();
       whole(next.hp, 0, stats.hp); whole(next.mp, 0, stats.mp);
@@ -123,6 +134,25 @@ export function createPlayerState(definition: PlayerDefinition = playerConfig, p
       if (!Number.isSafeInteger((inventory.get(itemId) ?? 0) + 1)) return { ok: false, message: 'これ以上持てない。' };
       addItem(itemId, 1); gold -= item.price;
       return { ok: true, message: `${item.name}を買った！` };
+    },
+    exchange(recipeId: number): ActionResult {
+      const recipe = findExchangeRecipe(recipeId);
+      if (!recipe) return { ok: false, message: '交換レシピが見つからない。' };
+      // 全条件を確認してからまとめて更新し、失敗時は何も消費しない。
+      for (const { itemId, quantity } of recipe.ingredients) {
+        const count = inventory.get(itemId) ?? 0, equipped = Object.values(equipment).includes(itemId) ? 1 : 0;
+        if (count < quantity) return { ok: false, message: `${findItem(itemId)!.name}が${quantity - count}個足りない。` };
+        if (count - equipped < quantity) return { ok: false, message: `${findItem(itemId)!.name}を装備から外してから交換してください。` };
+      }
+      if (gold < recipe.gold) return { ok: false, message: '交換のお金が足りない。' };
+      const result = recipe.result, usedResult = recipe.ingredients.find(entry => entry.itemId === result.itemId)?.quantity ?? 0;
+      if (!Number.isSafeInteger((inventory.get(result.itemId) ?? 0) - usedResult + result.quantity)) return { ok: false, message: 'これ以上持てない。' };
+      for (const { itemId, quantity } of recipe.ingredients) {
+        const count = inventory.get(itemId)! - quantity;
+        if (count) inventory.set(itemId, count); else inventory.delete(itemId);
+      }
+      gold -= recipe.gold; addItem(result.itemId, result.quantity);
+      return { ok: true, message: `${findItem(result.itemId)!.name}を${result.quantity}個手に入れた！` };
     },
     sell(itemId: number): ActionResult {
       const item = findItem(itemId), count = inventory.get(itemId) ?? 0;

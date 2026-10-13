@@ -7,10 +7,10 @@ import { drawSprite } from '../renderer/sprite';
 import { createWorldGame } from './world';
 import type { Direction } from './walking';
 import type { EncounterEvent, WorldGameOptions } from './world';
-import { findItem } from '../data/items';
 import { mountBattleView } from './battle-view';
 import { mountPlayerMenus } from './player-menu';
 import { updateResourceBar } from './resource-bars';
+import { inferLocationName } from './location-names';
 import type { EnemyIllustrations } from '../data/encounters/enemy-illustrations';
 
 export interface PlayCharacters {
@@ -24,14 +24,15 @@ const directions: Record<string, Direction> = {
   w: 'back', s: 'front', a: 'left', d: 'right',
 };
 
-export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isActive = () => true, stageName = (id: number) => `マップ ${id}`) {
+export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isActive = () => true, stageName?: (id: number) => string) {
   root.innerHTML = `<div class="play-console" data-play-console>
+  <p class="play-objective" data-play-objective role="status" hidden><strong>次の目的</strong><span data-play-objective-text></span></p>
   <div class="play-screen" data-play-screen>
   <span class="play-stage" data-play-stage></span>
   <div class="play-status"><div class="resource-meter"><span data-field-hp></span><progress class="resource-bar" data-field-hp-bar></progress></div>
     <div class="resource-meter"><span data-field-mp></span><progress class="resource-bar resource-mp" data-field-mp-bar></progress></div><span data-play-status></span></div>
   <div class="play-viewport" data-play-viewport>
-    <canvas data-play-canvas tabindex="0" aria-label="矢印キーまたはWASDで移動、E・Enter・Spaceで話す・調べる">歩行プレビュー</canvas>
+    <canvas data-play-canvas tabindex="0" aria-label="画面スワイプ・矢印キー・WASDで移動、E・Enter・Spaceで話す・調べる">歩行プレビュー</canvas>
   </div>
   <div class="play-message game-window" data-play-message role="status" aria-live="polite" hidden>
     <strong data-play-speaker></strong><p data-play-text></p>
@@ -48,13 +49,14 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
     </div>
     <button class="btn btn-primary play-interact" data-play-interact>はなす・しらべる</button>
     <div class="play-menu">
-      <details class="play-inventory" data-play-inventory><summary class="btn btn-sm btn-soft">どうぐ</summary>
+      <details class="play-inventory" data-play-inventory><summary class="btn btn-sm btn-soft">メニュー</summary>
         <div class="play-inventory-window game-window" data-play-inventory-window><strong>どうぐ</strong><p data-play-items>なし</p>
           <button class="btn btn-sm" data-play-close-items>とじる</button>
         </div>
       </details>
       <button class="btn btn-sm btn-soft" data-play-reset>最初から</button>
     </div>
+    <span class="play-touch-hint">画面をスワイプして移動。そのまま押さえると歩き続けます。</span>
     <span class="play-key-hint">移動：矢印 / WASD　決定：E / Enter / Space　キャンセル / やめる：Esc</span>
     <p class="play-clear game-window" data-play-clear role="status" hidden>クリアおめでとう！<br>自由に冒険を続けられます。「最初から」でやり直せます。</p>
   </div>
@@ -77,6 +79,7 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
   const context = canvas.getContext('2d');
   if (!context) throw new Error('Canvas 2Dを利用できません。');
   let game: ReturnType<typeof createWorldGame> | undefined;
+  let locationNames = new Map<number, string>();
   let request: number | undefined;
   let previousLoot = -1;
   let nextStep = 0;
@@ -84,6 +87,7 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
   let seenEncounter: EncounterEvent | null = null;
   let transition: { elapsed: number; previousTime?: number; reduced: boolean } | undefined;
   const held = new Map<string, Direction>();
+  let swipe: { id: number; x: number; y: number } | undefined;
   const active = () => Boolean(game && !document.hidden && isActive());
   const battle = mountBattleView(battleElement, characters.king, () => active() && !transition, outcome => {
     if (!active()) return;
@@ -91,7 +95,11 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
   }, { inventory: () => game?.inventory ?? [], gold: () => game?.status.gold ?? 0, illustrations: characters.enemyIllustrations });
   const menus = mountPlayerMenus(root.querySelector<HTMLElement>('[data-play-inventory-window]')!, root.querySelector<HTMLElement>('[data-play-shop]')!,
     () => game, active, () => { clearInput(); draw(performance.now()); if (!game?.shop && !inventory.open) canvas.focus({ preventScroll: true }); }, closeItems);
-  function clearInput(): void { held.clear(); nextStep = 0; }
+  function clearInput(): void {
+    const id = swipe?.id; swipe = undefined;
+    held.clear(); nextStep = 0;
+    if (id !== undefined && viewport.hasPointerCapture?.(id)) viewport.releasePointerCapture(id);
+  }
   function pauseInput(): void {
     clearInput();
     if (transition) transition.previousTime = undefined;
@@ -161,7 +169,10 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
       if (element.textContent !== text) element.textContent = text;
     }
     setText('[data-play-speaker]', message?.speaker ?? '');
-    setText('[data-play-stage]', stageName(scene.id));
+    setText('[data-play-stage]', stageName?.(scene.id) ?? locationNames.get(scene.id) ?? '冒険の地');
+    const objective = game.story?.objective;
+    root.querySelector<HTMLElement>('[data-play-objective]')!.hidden = battleReady || !objective;
+    setText('[data-play-objective-text]', objective ?? '');
     root.querySelector<HTMLElement>('[data-play-clear]')!.hidden = !game.cleared;
     const status = game.status;
     setText('[data-play-status]', `Lv ${status.level}　${status.gold}G${status.poisoned ? '　毒' : ''}`);
@@ -172,7 +183,6 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
     setText('[data-play-text]', message?.text ?? '');
     setText('[data-play-advance]', message?.battleEntityIndex === undefined ? 'つづける' : '戦う');
     root.querySelector<HTMLElement>('[data-play-cancel-battle]')!.hidden = message?.battleEntityIndex === undefined;
-    setText('[data-play-items]', game.inventory.map(({ itemId, count }) => `${findItem(itemId)!.name} ×${count}`).join('\n') || 'なし');
     menus.sync();
   }
   function follow(): void {
@@ -186,7 +196,7 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
     const scene = game.scene;
     canvas.width = scene.width * 16 * 4; canvas.height = scene.height * 16 * 4;
     // 小さなマップは整数倍率で画面幅に収め、大きな街はカメラで追う。
-    displayScale = scene.width <= 8 ? Math.max(1, Math.min(4, Math.floor(viewport.clientWidth / (scene.width * 16)))) : 2;
+    displayScale = scene.width <= 10 ? Math.max(1, Math.min(4, Math.floor(viewport.clientWidth / (scene.width * 16)))) : 2;
     canvas.style.width = `${scene.width * 16 * displayScale}px`;
     canvas.style.height = `${scene.height * 16 * displayScale}px`;
     draw(); follow();
@@ -268,6 +278,24 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
   window.addEventListener('resize', resize);
   canvas.addEventListener('blur', clearInput);
   document.addEventListener('visibilitychange', pauseInput);
+  viewport.addEventListener('pointerdown', event => {
+    if (!active() || event.pointerType === 'mouse' || event.button !== 0 || swipe || game!.encounter || game!.message || game!.shop || inventory.open) return;
+    event.preventDefault(); clearInput(); canvas.focus({ preventScroll: true });
+    swipe = { id: event.pointerId, x: event.clientX, y: event.clientY };
+    viewport.setPointerCapture(event.pointerId);
+  });
+  viewport.addEventListener('pointermove', event => {
+    if (!active() || swipe?.id !== event.pointerId) return;
+    event.preventDefault();
+    const dx = event.clientX - swipe.x, dy = event.clientY - swipe.y;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 16) { held.delete('swipe'); return; }
+    const direction: Direction = Math.abs(dx) >= Math.abs(dy) ? dx < 0 ? 'left' : 'right' : dy < 0 ? 'back' : 'front';
+    if (held.get('swipe') === direction) return;
+    held.set('swipe', direction); move(direction, performance.now());
+  });
+  for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) viewport.addEventListener(name, event => {
+    if (swipe?.id === (event as PointerEvent).pointerId) clearInput();
+  });
   root.querySelectorAll<HTMLButtonElement>('[data-direction]').forEach(button => {
     button.addEventListener('pointerdown', event => {
       if (!active() || event.button !== 0) return;
@@ -304,6 +332,7 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
     clearTransition(); seenEncounter = null; menus.reset();
     battle.sync(null, []);
     root.querySelector<HTMLElement>('[data-play-clear]')!.hidden = true;
+    root.querySelector<HTMLElement>('[data-play-objective]')!.hidden = true;
     root.querySelector<HTMLElement>('[data-play-screen]')!.hidden = false;
     root.querySelector<HTMLElement>('[data-play-controls]')!.hidden = false;
     root.querySelector<HTMLElement>('[data-play-screen]')!.inert = false;
@@ -313,6 +342,7 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
     start(scene: SceneData, focus = true, world: readonly SceneData[] = [scene], options: WorldGameOptions = {}): void {
       const nextGame = createWorldGame(world.map(candidate => candidate.id === scene.id ? scene : candidate), scene.id, undefined, options);
       stop(); game = nextGame;
+      locationNames = new Map(world.map(candidate => [candidate.id, inferLocationName(candidate.id === scene.id ? scene : candidate)]));
       resize(); draw();
       if (focus) canvas.focus({ preventScroll: true });
       request = window.requestAnimationFrame(tick);

@@ -108,9 +108,29 @@ try {
   game.finishEncounter('defeat'); assert.equal(game.battle, null); assert.equal(game.playerHp, 40);
   assert.deepEqual(game.position, scenes[0].spawn); assert.equal(game.revision, revision + 1);
   assert.ok(game.visibleEntities.some(e => e.kind === 'king'));
+  assert.match(game.message.text, /Gを失った/); game.interact();
   game.move('left'); assert.equal(game.battle.wasAttacked, true);
   game.reset(); game.move('left'); assert.equal(game.battle.wasAttacked, false); assert.equal(game.playerHp, 40);
   assert.deepEqual(scenes, source);
+  const previousExperience = new Map([[1, 8], [2, 14], [3, 22], [4, 0], [5, 12], [6, 26], [7, 38]]);
+  assert.equal(king.reward.experience, 900, 'the hidden king reward stays unchanged');
+  for (const enemy of enemyCatalog.filter(enemy => enemy.id !== 0)) assert.equal(enemy.reward.experience, previousExperience.get(enemy.id) * 2);
+  const demon = enemyCatalog.find(enemy => enemy.id === 4);
+  assert.deepEqual(demon.stats, { hp: 360, attack: 36, defense: 12 });
+  const bossPower = createBattle(demon, { player: { ...playerConfig, stats: { hp: 400, attack: 10, defense: 0 } } });
+  bossPower.guard(); bossPower.advance(); assert.equal(bossPower.feedback.amount, 18);
+  bossPower.advance(); bossPower.guard(); bossPower.advance(); assert.equal(bossPower.feedback.amount, 25, 'dark flame keeps its 1.4x pattern power after the base-stat increase');
+  // A normally grown hero can defeat the stronger boss with learned spells and no royal gear.
+  const bossWorld = createWorldGame([{ ...manaScene, encounter: { enemyId: 4, enabled: true, rate: 100 } }], 0, () => 0,
+    { player: { ...playerConfig, initialExperience: 5520 } });
+  assert.equal(bossWorld.status.level, 24); bossWorld.move('right');
+  for (let cast = 0; cast < 3; cast++) {
+    assert.equal(bossWorld.battle.useSkill(8).ok, true);
+    bossWorld.battle.advance(); assert.notEqual(bossWorld.battle.phase, 'defeat'); bossWorld.battle.advance();
+  }
+  assert.equal(bossWorld.battle.playerMp, 8); assert.equal(bossWorld.battle.playerHp, 102); assert.equal(bossWorld.battle.enemyHp, 30);
+  bossWorld.battle.attack(); assert.equal(bossWorld.battle.phase, 'victory');
+  bossWorld.finishEncounter('victory'); assert.equal(bossWorld.status.experience, 5520);
   for (const enemy of enemyCatalog.filter(enemy => enemy.id !== 0)) {
     // Every normal monster attacks without provocation and awards repeatable rewards.
     const guarded = createBattle(enemy, { player: { ...playerConfig, stats: { ...playerConfig.stats, hp: 9999 } } }); guarded.guard(); guarded.advance();
@@ -121,7 +141,8 @@ try {
     // Boss artwork/config is also usable from an NFC enemy ID; use a stronger test player for it.
     const loop = createWorldGame([field], 0, () => 0, { player: { ...playerConfig,
       ...(enemy.characterId === 'demon-lord' ? { stats: { hp: 3000, attack: 400, defense: 259 } } : {}),
-      initialItems: [{ itemId: 0, quantity: 6 }] } });
+      initialItems: [{ itemId: 0, quantity: 6 }, ...(enemy.background === 'cave' ? [4, 6, 7].map(itemId => ({ itemId, quantity: 1 })) : [])] },
+      initialEquipment: enemy.background === 'cave' ? [4, 6, 7] : [] });
     for (let round = 1; round <= 2; round++) {
       loop.move(round === 1 ? 'left' : 'right'); assert.equal(loop.battle.enemy.id, enemy.id);
       while (loop.battle.phase !== 'victory') {
@@ -135,6 +156,10 @@ try {
       loop.finishEncounter('victory'); loop.finishEncounter('victory');
       assert.equal(loop.status.experience, enemy.reward.experience * round);
       assert.equal(loop.status.gold, playerConfig.initialGold + enemy.reward.gold * round);
+      for (const drop of enemy.reward.items.filter(drop => drop.itemId >= 13)) {
+        assert.equal(loop.inventory.find(item => item.itemId === drop.itemId).count, drop.quantity * round);
+        assert.ok(loop.discoveredItems.includes(drop.itemId));
+      }
       assert.ok(loop.visibleEntities.some(entity => entity.kind === 'king')); // unrelated NPC is retained
       if (loop.message) loop.interact();
       while (loop.useItem(0).ok) {} // repeated fights start healed; wolf is the stronger early enemy

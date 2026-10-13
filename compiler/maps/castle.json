@@ -85,6 +85,6 @@
   "encounter": {
     "enabled": true,
     "enemyId": 0,
-    "rate": 10
+    "rate": 0.1
   }
 }

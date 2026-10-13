@@ -91,7 +91,7 @@ function makeHouse(roof: 'red' | 'slate'): PixelSprite {
   return { width, height, palette, pixels: pixels.map((row) => row.join('')) };
 }
 
-// 外観専用。入口として扱わず、中央2×4マスを通行不可にする。
+// 外観専用。下側の横4×縦2マスを通行不可にし、屋根の後ろは通れる。
 export const townHouses = {
   red: { sprite: makeHouse('red'), enterable: false, blocksMovement: true },
   slate: { sprite: makeHouse('slate'), enterable: false, blocksMovement: true },

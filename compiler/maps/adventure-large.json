@@ -1,0 +1,4066 @@
+{
+  "format": "tagquest-world-editor-v1",
+  "stages": [
+    {
+      "id": 0,
+      "name": "castle",
+      "width": 13,
+      "height": 12,
+      "spawn": {
+        "x": 96,
+        "y": 128
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "marble",
+            "x": 1,
+            "y": 1,
+            "width": 11,
+            "height": 9
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 0,
+            "width": 13,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 1,
+            "width": 1,
+            "height": 10
+          },
+          {
+            "tile": "wall-top",
+            "x": 12,
+            "y": 1,
+            "width": 1,
+            "height": 10
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 10,
+            "width": 6,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 7,
+            "y": 10,
+            "width": 6,
+            "height": 1
+          },
+          {
+            "tile": "carpet",
+            "x": 5,
+            "y": 2,
+            "width": 3,
+            "height": 8
+          },
+          {
+            "tile": "carpet",
+            "x": 6,
+            "y": 10,
+            "width": 1,
+            "height": 2
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "throne",
+          "x": 92,
+          "y": 32,
+          "parameters": []
+        },
+        {
+          "kind": "king",
+          "x": 96,
+          "y": 48,
+          "parameters": [
+            1
+          ],
+          "dialogue": {
+            "type": "template",
+            "id": 46
+          }
+        },
+        {
+          "kind": "pillar",
+          "x": 48,
+          "y": 56,
+          "parameters": []
+        },
+        {
+          "kind": "pillar",
+          "x": 144,
+          "y": 56,
+          "parameters": []
+        },
+        {
+          "kind": "pillar",
+          "x": 48,
+          "y": 120,
+          "parameters": []
+        },
+        {
+          "kind": "pillar",
+          "x": 144,
+          "y": 120,
+          "parameters": []
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 32,
+          "y": 128,
+          "parameters": [],
+          "itemId": 0
+        }
+      ],
+      "exits": [
+        {
+          "x": 6,
+          "y": 11,
+          "targetStageId": 1,
+          "targetX": 12,
+          "targetY": 7,
+          "direction": "front"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "enemyId": 0,
+        "rate": 0.1
+      }
+    },
+    {
+      "id": 1,
+      "name": "town",
+      "width": 25,
+      "height": 21,
+      "spawn": {
+        "x": 192,
+        "y": 288
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "grass",
+            "x": 0,
+            "y": 0,
+            "width": 25,
+            "height": 20
+          },
+          {
+            "tile": "water",
+            "x": 9,
+            "y": 1,
+            "width": 7,
+            "height": 7
+          },
+          {
+            "tile": "grass",
+            "x": 10,
+            "y": 2,
+            "width": 5,
+            "height": 5
+          },
+          {
+            "tile": "dirt",
+            "x": 11,
+            "y": 8,
+            "width": 3,
+            "height": 12
+          },
+          {
+            "tile": "brick",
+            "x": 12,
+            "y": 6,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "bridge",
+            "x": 12,
+            "y": 7,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 9,
+            "y": 10,
+            "width": 7,
+            "height": 6
+          },
+          {
+            "tile": "brick",
+            "x": 2,
+            "y": 6,
+            "width": 6,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 17,
+            "y": 6,
+            "width": 6,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 4,
+            "y": 6,
+            "width": 1,
+            "height": 3
+          },
+          {
+            "tile": "brick",
+            "x": 21,
+            "y": 6,
+            "width": 1,
+            "height": 4
+          },
+          {
+            "tile": "brick",
+            "x": 4,
+            "y": 8,
+            "width": 18,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 4,
+            "y": 13,
+            "width": 6,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 15,
+            "y": 15,
+            "width": 7,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 4,
+            "y": 19,
+            "width": 9,
+            "height": 1
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "moat-outer-bank",
+          "x": 144,
+          "y": 16,
+          "parameters": [
+            56,
+            56
+          ]
+        },
+        {
+          "kind": "moat-inner-bank",
+          "x": 158,
+          "y": 30,
+          "parameters": [
+            42,
+            42
+          ]
+        },
+        {
+          "kind": "castle",
+          "x": 184,
+          "y": 32,
+          "parameters": []
+        },
+        {
+          "kind": "house-red",
+          "x": 48,
+          "y": 32,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 44
+          },
+          "itemId": 8
+        },
+        {
+          "kind": "house-slate",
+          "x": 320,
+          "y": 32,
+          "parameters": []
+        },
+        {
+          "kind": "item-shop",
+          "x": 56,
+          "y": 128,
+          "parameters": []
+        },
+        {
+          "kind": "item-merchant",
+          "x": 64,
+          "y": 158,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 4
+          }
+        },
+        {
+          "kind": "weapon-shop",
+          "x": 56,
+          "y": 224,
+          "parameters": []
+        },
+        {
+          "kind": "weapon-merchant",
+          "x": 64,
+          "y": 254,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 2
+          }
+        },
+        {
+          "kind": "armor-shop",
+          "x": 312,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "armor-merchant",
+          "x": 320,
+          "y": 190,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 3
+          }
+        },
+        {
+          "kind": "well",
+          "x": 272,
+          "y": 248,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 43
+          },
+          "itemId": 2
+        },
+        {
+          "kind": "resident",
+          "x": 112,
+          "y": 64,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 48
+          }
+        },
+        {
+          "kind": "traveler",
+          "x": 272,
+          "y": 144,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 47
+          }
+        },
+        {
+          "kind": "elder",
+          "x": 320,
+          "y": 272,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 52
+          }
+        },
+        {
+          "kind": "loot",
+          "x": 128,
+          "y": 96,
+          "parameters": [
+            0
+          ],
+          "itemId": 0
+        },
+        {
+          "kind": "loot",
+          "x": 352,
+          "y": 272,
+          "parameters": [
+            4
+          ],
+          "itemId": 1
+        }
+      ],
+      "exits": [
+        {
+          "x": 12,
+          "y": 6,
+          "targetStageId": 0,
+          "targetX": 6,
+          "targetY": 9,
+          "direction": "back"
+        },
+        {
+          "x": 12,
+          "y": 20,
+          "targetStageId": 2,
+          "targetX": 8,
+          "targetY": 16,
+          "direction": "front"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "南の大陸",
+      "width": 32,
+      "height": 24,
+      "spawn": {
+        "x": 128,
+        "y": 240
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "sea",
+        "rectangles": [
+          {
+            "tile": "sand",
+            "x": 16,
+            "y": 2,
+            "width": 5,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 22,
+            "y": 2,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 14,
+            "y": 3,
+            "width": 2,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 16,
+            "y": 3,
+            "width": 4,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 20,
+            "y": 3,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 22,
+            "y": 3,
+            "width": 1,
+            "height": 2
+          },
+          {
+            "tile": "grass",
+            "x": 23,
+            "y": 3,
+            "width": 1,
+            "height": 2
+          },
+          {
+            "tile": "sand",
+            "x": 24,
+            "y": 3,
+            "width": 1,
+            "height": 2
+          },
+          {
+            "tile": "sand",
+            "x": 13,
+            "y": 4,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 14,
+            "y": 4,
+            "width": 5,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 19,
+            "y": 4,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 11,
+            "y": 5,
+            "width": 2,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 13,
+            "y": 5,
+            "width": 4,
+            "height": 1
+          },
+          {
+            "tile": "forest-ground",
+            "x": 17,
+            "y": 5,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 18,
+            "y": 5,
+            "width": 1,
+            "height": 2
+          },
+          {
+            "tile": "sand",
+            "x": 21,
+            "y": 5,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 9,
+            "y": 6,
+            "width": 2,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 11,
+            "y": 6,
+            "width": 4,
+            "height": 1
+          },
+          {
+            "tile": "forest-ground",
+            "x": 15,
+            "y": 6,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "bridge",
+            "x": 19,
+            "y": 6,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 20,
+            "y": 6,
+            "width": 2,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 7,
+            "y": 7,
+            "width": 2,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 9,
+            "y": 7,
+            "width": 6,
+            "height": 1
+          },
+          {
+            "tile": "forest-ground",
+            "x": 15,
+            "y": 7,
+            "width": 2,
+            "height": 2
+          },
+          {
+            "tile": "sand",
+            "x": 17,
+            "y": 7,
+            "width": 1,
+            "height": 3
+          },
+          {
+            "tile": "sand",
+            "x": 20,
+            "y": 7,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 5,
+            "y": 8,
+            "width": 2,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 7,
+            "y": 8,
+            "width": 8,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 19,
+            "y": 8,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 3,
+            "y": 9,
+            "width": 2,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 5,
+            "y": 9,
+            "width": 11,
+            "height": 1
+          },
+          {
+            "tile": "forest-ground",
+            "x": 16,
+            "y": 9,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 19,
+            "y": 9,
+            "width": 2,
+            "height": 2
+          },
+          {
+            "tile": "sand",
+            "x": 2,
+            "y": 10,
+            "width": 1,
+            "height": 5
+          },
+          {
+            "tile": "grass",
+            "x": 3,
+            "y": 10,
+            "width": 13,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 16,
+            "y": 10,
+            "width": 1,
+            "height": 2
+          },
+          {
+            "tile": "grass",
+            "x": 3,
+            "y": 11,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "forest-ground",
+            "x": 6,
+            "y": 11,
+            "width": 4,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 10,
+            "y": 11,
+            "width": 6,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 3,
+            "y": 12,
+            "width": 2,
+            "height": 2
+          },
+          {
+            "tile": "forest-ground",
+            "x": 5,
+            "y": 12,
+            "width": 5,
+            "height": 2
+          },
+          {
+            "tile": "grass",
+            "x": 10,
+            "y": 12,
+            "width": 7,
+            "height": 2
+          },
+          {
+            "tile": "sand",
+            "x": 17,
+            "y": 12,
+            "width": 1,
+            "height": 3
+          },
+          {
+            "tile": "grass",
+            "x": 3,
+            "y": 14,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "forest-ground",
+            "x": 6,
+            "y": 14,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 9,
+            "y": 14,
+            "width": 8,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 1,
+            "y": 15,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 2,
+            "y": 15,
+            "width": 14,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 16,
+            "y": 15,
+            "width": 1,
+            "height": 3
+          },
+          {
+            "tile": "sand",
+            "x": 2,
+            "y": 16,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 3,
+            "y": 16,
+            "width": 13,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 3,
+            "y": 17,
+            "width": 1,
+            "height": 2
+          },
+          {
+            "tile": "grass",
+            "x": 4,
+            "y": 17,
+            "width": 12,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 4,
+            "y": 18,
+            "width": 11,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 15,
+            "y": 18,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 4,
+            "y": 19,
+            "width": 2,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 6,
+            "y": 19,
+            "width": 7,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 13,
+            "y": 19,
+            "width": 2,
+            "height": 1
+          },
+          {
+            "tile": "sand",
+            "x": 6,
+            "y": 20,
+            "width": 7,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 16,
+            "y": 3,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 17,
+            "y": 3,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 18,
+            "y": 3,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 19,
+            "y": 3,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 15,
+            "y": 4,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 16,
+            "y": 4,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 17,
+            "y": 4,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 18,
+            "y": 4,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 14,
+            "y": 5,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 15,
+            "y": 5,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 16,
+            "y": 5,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 13,
+            "y": 6,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 14,
+            "y": 6,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 12,
+            "y": 7,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 13,
+            "y": 7,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 13,
+            "y": 8,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 14,
+            "y": 8,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 14,
+            "y": 9,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 15,
+            "y": 9,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 14,
+            "y": 10,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 15,
+            "y": 10,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 13,
+            "y": 11,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 14,
+            "y": 11,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 15,
+            "y": 11,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 13,
+            "y": 12,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 14,
+            "y": 12,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 15,
+            "y": 12,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 13,
+            "y": 13,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 14,
+            "y": 13,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 12,
+            "y": 14,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 13,
+            "y": 14,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 14,
+            "y": 14,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 11,
+            "y": 15,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 12,
+            "y": 15,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 13,
+            "y": 15,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 10,
+            "y": 16,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 11,
+            "y": 16,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 12,
+            "y": 16,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 9,
+            "y": 17,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 10,
+            "y": 17,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-mountain",
+            "x": 11,
+            "y": 17,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 17,
+            "y": 5,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 15,
+            "y": 6,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 16,
+            "y": 6,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 17,
+            "y": 6,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 15,
+            "y": 7,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 16,
+            "y": 7,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 15,
+            "y": 8,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 16,
+            "y": 8,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 16,
+            "y": 9,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 6,
+            "y": 11,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 7,
+            "y": 11,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 8,
+            "y": 11,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 9,
+            "y": 11,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 5,
+            "y": 12,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 6,
+            "y": 12,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 7,
+            "y": 12,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 8,
+            "y": 12,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 9,
+            "y": 12,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 5,
+            "y": 13,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 6,
+            "y": 13,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 8,
+            "y": 13,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 9,
+            "y": 13,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 6,
+            "y": 14,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 7,
+            "y": 14,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "world-forest",
+            "x": 8,
+            "y": 14,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "grass",
+            "x": 23,
+            "y": 4,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 20,
+            "y": 6,
+            "width": 2,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 21,
+            "y": 5,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 23,
+            "y": 4,
+            "width": 1,
+            "height": 1
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "world-town",
+          "x": 128,
+          "y": 240,
+          "parameters": []
+        },
+        {
+          "kind": "world-forest-entrance",
+          "x": 112,
+          "y": 208,
+          "parameters": []
+        },
+        {
+          "kind": "world-cave",
+          "x": 192,
+          "y": 192,
+          "parameters": []
+        },
+        {
+          "x": 352,
+          "y": 64,
+          "dialogue": {
+            "type": "template",
+            "id": 70
+          },
+          "kind": "signpost",
+          "parameters": []
+        }
+      ],
+      "exits": [
+        {
+          "x": 8,
+          "y": 15,
+          "targetStageId": 1,
+          "targetX": 12,
+          "targetY": 19,
+          "direction": "back"
+        },
+        {
+          "x": 7,
+          "y": 13,
+          "targetStageId": 3,
+          "targetX": 9,
+          "targetY": 15,
+          "direction": "back"
+        },
+        {
+          "x": 12,
+          "y": 12,
+          "targetStageId": 4,
+          "targetX": 9,
+          "targetY": 15,
+          "direction": "back"
+        },
+        {
+          "x": 23,
+          "y": 4,
+          "targetStageId": 6,
+          "targetX": 1,
+          "targetY": 16,
+          "direction": "back"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "forest",
+      "width": 19,
+      "height": 17,
+      "spawn": {
+        "x": 144,
+        "y": 224
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "forest-ground",
+            "x": 0,
+            "y": 0,
+            "width": 19,
+            "height": 16
+          },
+          {
+            "tile": "grass",
+            "x": 7,
+            "y": 3,
+            "width": 6,
+            "height": 4
+          },
+          {
+            "tile": "dirt",
+            "x": 9,
+            "y": 11,
+            "width": 1,
+            "height": 6
+          },
+          {
+            "tile": "dirt",
+            "x": 9,
+            "y": 10,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 11,
+            "y": 7,
+            "width": 1,
+            "height": 4
+          },
+          {
+            "tile": "dirt",
+            "x": 9,
+            "y": 6,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 9,
+            "y": 4,
+            "width": 1,
+            "height": 3
+          },
+          {
+            "tile": "sea",
+            "x": 13,
+            "y": 4,
+            "width": 3,
+            "height": 2
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 64,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 128,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 192,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 240,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 240,
+          "y": 112,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 240,
+          "y": 192,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 48,
+          "y": 16,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 80,
+          "y": 96,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 48,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 64,
+          "y": 208,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 96,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 160,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 176,
+          "y": 144,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 192,
+          "y": 208,
+          "parameters": []
+        },
+        {
+          "kind": "loot",
+          "x": 128,
+          "y": 64,
+          "parameters": [
+            0
+          ],
+          "itemId": 0
+        },
+        {
+          "kind": "forest-fairy",
+          "x": 112,
+          "y": 64,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 49
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 192,
+          "y": 96,
+          "parameters": [],
+          "itemId": 7
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 224,
+          "y": 128,
+          "parameters": [],
+          "itemId": 2
+        }
+      ],
+      "exits": [
+        {
+          "x": 9,
+          "y": 16,
+          "targetStageId": 2,
+          "targetX": 7,
+          "targetY": 14,
+          "direction": "front"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "enemyId": 1,
+        "rate": 12,
+        "enemies": [
+          {
+            "enemyId": 1,
+            "weight": 5
+          },
+          {
+            "enemyId": 2,
+            "weight": 3
+          },
+          {
+            "enemyId": 3,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "name": "cave",
+      "width": 19,
+      "height": 17,
+      "spawn": {
+        "x": 144,
+        "y": 224
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "cave-wall",
+            "x": 0,
+            "y": 0,
+            "width": 19,
+            "height": 16
+          },
+          {
+            "tile": "cave-floor",
+            "x": 7,
+            "y": 12,
+            "width": 5,
+            "height": 4
+          },
+          {
+            "tile": "cave-floor",
+            "x": 8,
+            "y": 8,
+            "width": 3,
+            "height": 5
+          },
+          {
+            "tile": "cave-floor",
+            "x": 5,
+            "y": 8,
+            "width": 6,
+            "height": 2
+          },
+          {
+            "tile": "cave-floor",
+            "x": 5,
+            "y": 6,
+            "width": 2,
+            "height": 4
+          },
+          {
+            "tile": "cave-floor",
+            "x": 2,
+            "y": 2,
+            "width": 6,
+            "height": 5
+          },
+          {
+            "tile": "cave-floor",
+            "x": 6,
+            "y": 4,
+            "width": 7,
+            "height": 2
+          },
+          {
+            "tile": "cave-floor",
+            "x": 12,
+            "y": 3,
+            "width": 4,
+            "height": 6
+          },
+          {
+            "tile": "cave-floor",
+            "x": 9,
+            "y": 16,
+            "width": 1,
+            "height": 1
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "cave-witch",
+          "x": 48,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 50
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 32,
+          "y": 80,
+          "parameters": [],
+          "itemId": 6
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 224,
+          "y": 112,
+          "parameters": [],
+          "itemId": 4
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 192,
+          "y": 128,
+          "parameters": [],
+          "itemId": 1
+        }
+      ],
+      "exits": [
+        {
+          "x": 9,
+          "y": 16,
+          "targetStageId": 2,
+          "targetX": 12,
+          "targetY": 13,
+          "direction": "front"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "enemyId": 5,
+        "rate": 14,
+        "enemies": [
+          {
+            "enemyId": 5,
+            "weight": 5
+          },
+          {
+            "enemyId": 6,
+            "weight": 3
+          },
+          {
+            "enemyId": 7,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "name": "demon-castle",
+      "width": 17,
+      "height": 19,
+      "spawn": {
+        "x": 128,
+        "y": 256
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "demon-floor",
+            "x": 2,
+            "y": 2,
+            "width": 13,
+            "height": 11
+          },
+          {
+            "tile": "demon-wall-top",
+            "x": 1,
+            "y": 1,
+            "width": 15,
+            "height": 1
+          },
+          {
+            "tile": "demon-wall-top",
+            "x": 1,
+            "y": 2,
+            "width": 1,
+            "height": 12
+          },
+          {
+            "tile": "demon-wall-top",
+            "x": 15,
+            "y": 2,
+            "width": 1,
+            "height": 12
+          },
+          {
+            "tile": "demon-wall-top",
+            "x": 1,
+            "y": 13,
+            "width": 5,
+            "height": 1
+          },
+          {
+            "tile": "demon-wall-top",
+            "x": 11,
+            "y": 13,
+            "width": 5,
+            "height": 1
+          },
+          {
+            "tile": "demon-floor",
+            "x": 6,
+            "y": 13,
+            "width": 5,
+            "height": 5
+          },
+          {
+            "tile": "demon-wall-top",
+            "x": 5,
+            "y": 14,
+            "width": 1,
+            "height": 4
+          },
+          {
+            "tile": "demon-wall-top",
+            "x": 11,
+            "y": 14,
+            "width": 1,
+            "height": 4
+          },
+          {
+            "tile": "demon-carpet",
+            "x": 7,
+            "y": 3,
+            "width": 3,
+            "height": 15
+          },
+          {
+            "tile": "demon-carpet",
+            "x": 8,
+            "y": 18,
+            "width": 1,
+            "height": 1
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "demon-throne",
+          "x": 124,
+          "y": 48,
+          "parameters": []
+        },
+        {
+          "kind": "demon-lord",
+          "x": 128,
+          "y": 64,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 51
+          },
+          "battleEvent": {
+            "enemyId": 4,
+            "once": true,
+            "clear": true
+          }
+        },
+        {
+          "kind": "demon-pillar",
+          "x": 48,
+          "y": 72,
+          "parameters": []
+        },
+        {
+          "kind": "demon-pillar",
+          "x": 208,
+          "y": 72,
+          "parameters": []
+        },
+        {
+          "kind": "demon-pillar",
+          "x": 48,
+          "y": 136,
+          "parameters": []
+        },
+        {
+          "kind": "demon-pillar",
+          "x": 208,
+          "y": 136,
+          "parameters": []
+        },
+        {
+          "kind": "demon-pillar",
+          "x": 48,
+          "y": 184,
+          "parameters": []
+        },
+        {
+          "kind": "demon-pillar",
+          "x": 208,
+          "y": 184,
+          "parameters": []
+        },
+        {
+          "kind": "elder",
+          "x": 64,
+          "y": 160,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 59
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 64,
+          "y": 96,
+          "parameters": [],
+          "itemId": 0
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 192,
+          "y": 96,
+          "parameters": [],
+          "itemId": 2
+        }
+      ],
+      "exits": [
+        {
+          "x": 8,
+          "y": 18,
+          "targetStageId": 10,
+          "targetX": 24,
+          "targetY": 6,
+          "direction": "front"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "北の大陸",
+      "width": 32,
+      "height": 32,
+      "spawn": {
+        "x": 112,
+        "y": 256
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "sea",
+        "rectangles": [
+          {
+            "tile": "sand",
+            "x": 4,
+            "y": 1,
+            "width": 24,
+            "height": 30
+          },
+          {
+            "tile": "sand",
+            "x": 1,
+            "y": 6,
+            "width": 30,
+            "height": 20
+          },
+          {
+            "tile": "grass",
+            "x": 5,
+            "y": 2,
+            "width": 22,
+            "height": 28
+          },
+          {
+            "tile": "grass",
+            "x": 2,
+            "y": 7,
+            "width": 28,
+            "height": 18
+          },
+          {
+            "tile": "sand",
+            "x": 13,
+            "y": 2,
+            "width": 5,
+            "height": 28
+          },
+          {
+            "tile": "sea",
+            "x": 14,
+            "y": 1,
+            "width": 3,
+            "height": 30
+          },
+          {
+            "tile": "world-forest",
+            "x": 3,
+            "y": 8,
+            "width": 3,
+            "height": 5
+          },
+          {
+            "tile": "world-forest",
+            "x": 18,
+            "y": 4,
+            "width": 5,
+            "height": 4
+          },
+          {
+            "tile": "world-forest",
+            "x": 18,
+            "y": 21,
+            "width": 6,
+            "height": 6
+          },
+          {
+            "tile": "world-mountain",
+            "x": 10,
+            "y": 3,
+            "width": 3,
+            "height": 8
+          },
+          {
+            "tile": "world-mountain",
+            "x": 25,
+            "y": 21,
+            "width": 3,
+            "height": 4
+          },
+          {
+            "tile": "dirt",
+            "x": 7,
+            "y": 4,
+            "width": 1,
+            "height": 13
+          },
+          {
+            "tile": "dirt",
+            "x": 24,
+            "y": 8,
+            "width": 1,
+            "height": 9
+          },
+          {
+            "tile": "dirt",
+            "x": 0,
+            "y": 16,
+            "width": 32,
+            "height": 1
+          },
+          {
+            "tile": "bridge",
+            "x": 14,
+            "y": 16,
+            "width": 3,
+            "height": 1
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "world-town",
+          "x": 112,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "world-forest-entrance",
+          "x": 384,
+          "y": 144,
+          "parameters": []
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 64,
+          "y": 336,
+          "parameters": [],
+          "itemId": 22
+        }
+      ],
+      "exits": [
+        {
+          "x": 0,
+          "y": 16,
+          "targetStageId": 2,
+          "targetX": 23,
+          "targetY": 5,
+          "direction": "front"
+        },
+        {
+          "x": 7,
+          "y": 10,
+          "targetStageId": 7,
+          "targetX": 12,
+          "targetY": 19,
+          "direction": "back"
+        },
+        {
+          "x": 24,
+          "y": 9,
+          "targetStageId": 8,
+          "targetX": 15,
+          "targetY": 28,
+          "direction": "back"
+        },
+        {
+          "x": 31,
+          "y": 16,
+          "targetStageId": 10,
+          "targetX": 1,
+          "targetY": 16,
+          "direction": "back"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "北の市場",
+      "width": 25,
+      "height": 21,
+      "spawn": {
+        "x": 192,
+        "y": 288
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "grass",
+            "x": 0,
+            "y": 0,
+            "width": 25,
+            "height": 20
+          },
+          {
+            "tile": "water",
+            "x": 9,
+            "y": 1,
+            "width": 7,
+            "height": 7
+          },
+          {
+            "tile": "grass",
+            "x": 10,
+            "y": 2,
+            "width": 5,
+            "height": 5
+          },
+          {
+            "tile": "dirt",
+            "x": 11,
+            "y": 8,
+            "width": 3,
+            "height": 12
+          },
+          {
+            "tile": "brick",
+            "x": 12,
+            "y": 6,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "bridge",
+            "x": 12,
+            "y": 7,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 9,
+            "y": 10,
+            "width": 7,
+            "height": 6
+          },
+          {
+            "tile": "brick",
+            "x": 2,
+            "y": 6,
+            "width": 6,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 17,
+            "y": 6,
+            "width": 6,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 4,
+            "y": 6,
+            "width": 1,
+            "height": 3
+          },
+          {
+            "tile": "brick",
+            "x": 21,
+            "y": 6,
+            "width": 1,
+            "height": 4
+          },
+          {
+            "tile": "brick",
+            "x": 4,
+            "y": 8,
+            "width": 18,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 4,
+            "y": 13,
+            "width": 6,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 15,
+            "y": 15,
+            "width": 7,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 4,
+            "y": 19,
+            "width": 9,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 12,
+            "y": 6,
+            "width": 1,
+            "height": 2
+          },
+          {
+            "tile": "meadow-flowers",
+            "x": 10,
+            "y": 2,
+            "width": 2,
+            "height": 3
+          },
+          {
+            "tile": "meadow-flowers",
+            "x": 13,
+            "y": 2,
+            "width": 2,
+            "height": 3
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "moat-outer-bank",
+          "x": 144,
+          "y": 16,
+          "parameters": [
+            56,
+            56
+          ]
+        },
+        {
+          "kind": "moat-inner-bank",
+          "x": 158,
+          "y": 30,
+          "parameters": [
+            42,
+            42
+          ]
+        },
+        {
+          "kind": "castle",
+          "x": 184,
+          "y": 32,
+          "parameters": []
+        },
+        {
+          "kind": "house-red",
+          "x": 48,
+          "y": 32,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 44
+          },
+          "itemId": 19
+        },
+        {
+          "kind": "house-slate",
+          "x": 320,
+          "y": 32,
+          "parameters": []
+        },
+        {
+          "kind": "item-shop",
+          "x": 56,
+          "y": 128,
+          "parameters": []
+        },
+        {
+          "kind": "item-merchant",
+          "x": 64,
+          "y": 158,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 4
+          }
+        },
+        {
+          "kind": "weapon-shop",
+          "x": 56,
+          "y": 224,
+          "parameters": []
+        },
+        {
+          "kind": "weapon-merchant",
+          "x": 64,
+          "y": 254,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 2
+          }
+        },
+        {
+          "kind": "armor-shop",
+          "x": 312,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "armor-merchant",
+          "x": 320,
+          "y": 190,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 3
+          }
+        },
+        {
+          "kind": "well",
+          "x": 272,
+          "y": 248,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 43
+          },
+          "itemId": 2
+        },
+        {
+          "kind": "resident",
+          "x": 112,
+          "y": 64,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 53
+          }
+        },
+        {
+          "kind": "traveler",
+          "x": 272,
+          "y": 144,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 54
+          }
+        },
+        {
+          "kind": "elder",
+          "x": 320,
+          "y": 272,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 52
+          }
+        },
+        {
+          "kind": "loot",
+          "x": 128,
+          "y": 96,
+          "parameters": [
+            0
+          ],
+          "itemId": 0
+        },
+        {
+          "kind": "loot",
+          "x": 352,
+          "y": 272,
+          "parameters": [
+            4
+          ],
+          "itemId": 1
+        }
+      ],
+      "exits": [
+        {
+          "x": 12,
+          "y": 20,
+          "targetStageId": 6,
+          "targetX": 7,
+          "targetY": 11,
+          "direction": "front"
+        },
+        {
+          "x": 12,
+          "y": 6,
+          "targetStageId": 12,
+          "targetX": 6,
+          "targetY": 9,
+          "direction": "back"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "奥深い森",
+      "width": 32,
+      "height": 30,
+      "spawn": {
+        "x": 240,
+        "y": 432
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "forest-ground",
+            "x": 0,
+            "y": 0,
+            "width": 32,
+            "height": 29
+          },
+          {
+            "tile": "dirt",
+            "x": 15,
+            "y": 17,
+            "width": 1,
+            "height": 13
+          },
+          {
+            "tile": "dirt",
+            "x": 5,
+            "y": 17,
+            "width": 23,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 5,
+            "y": 6,
+            "width": 1,
+            "height": 12
+          },
+          {
+            "tile": "dirt",
+            "x": 27,
+            "y": 8,
+            "width": 1,
+            "height": 10
+          },
+          {
+            "tile": "sea",
+            "x": 12,
+            "y": 4,
+            "width": 7,
+            "height": 6
+          },
+          {
+            "tile": "empty",
+            "x": 0,
+            "y": 0,
+            "width": 32,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 15,
+            "y": 0,
+            "width": 1,
+            "height": 4
+          },
+          {
+            "tile": "dirt",
+            "x": 15,
+            "y": 3,
+            "width": 5,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 19,
+            "y": 3,
+            "width": 1,
+            "height": 9
+          },
+          {
+            "tile": "meadow-flowers",
+            "x": 4,
+            "y": 10,
+            "width": 4,
+            "height": 3
+          },
+          {
+            "tile": "meadow-flowers",
+            "x": 23,
+            "y": 20,
+            "width": 5,
+            "height": 3
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "forest-fairy",
+          "x": 112,
+          "y": 128,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 56
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 64,
+          "y": 80,
+          "parameters": [],
+          "itemId": 21
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 448,
+          "y": 96,
+          "parameters": [],
+          "itemId": 2
+        },
+        {
+          "kind": "loot",
+          "x": 384,
+          "y": 336,
+          "parameters": [
+            0
+          ],
+          "itemId": 13
+        },
+        {
+          "kind": "loot",
+          "x": 48,
+          "y": 368,
+          "parameters": [
+            0
+          ],
+          "itemId": 0
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 16,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 64,
+          "y": 16,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 128,
+          "y": 16,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 336,
+          "y": 16,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 400,
+          "y": 16,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 464,
+          "y": 16,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 128,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 208,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 304,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 128,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 320,
+          "y": 176,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 464,
+          "y": 192,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 128,
+          "y": 320,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 192,
+          "y": 336,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 288,
+          "y": 336,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 448,
+          "y": 336,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 64,
+          "y": 400,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 144,
+          "y": 400,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 320,
+          "y": 400,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 416,
+          "y": 400,
+          "parameters": []
+        },
+        {
+          "kind": "signpost",
+          "x": 256,
+          "y": 32,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 66
+          }
+        }
+      ],
+      "exits": [
+        {
+          "x": 15,
+          "y": 29,
+          "targetStageId": 6,
+          "targetX": 24,
+          "targetY": 10,
+          "direction": "front"
+        },
+        {
+          "x": 15,
+          "y": 0,
+          "targetStageId": 14,
+          "targetX": 11,
+          "targetY": 16,
+          "direction": "back"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "enemyId": 1,
+        "rate": 12,
+        "enemies": [
+          {
+            "enemyId": 1,
+            "weight": 5
+          },
+          {
+            "enemyId": 2,
+            "weight": 3
+          },
+          {
+            "enemyId": 3,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "name": "水晶の洞窟",
+      "width": 31,
+      "height": 29,
+      "spawn": {
+        "x": 240,
+        "y": 416
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "cave-wall",
+            "x": 0,
+            "y": 0,
+            "width": 31,
+            "height": 28
+          },
+          {
+            "tile": "cave-floor",
+            "x": 2,
+            "y": 2,
+            "width": 9,
+            "height": 7
+          },
+          {
+            "tile": "cave-floor",
+            "x": 19,
+            "y": 2,
+            "width": 9,
+            "height": 7
+          },
+          {
+            "tile": "cave-floor",
+            "x": 2,
+            "y": 16,
+            "width": 9,
+            "height": 9
+          },
+          {
+            "tile": "cave-floor",
+            "x": 19,
+            "y": 16,
+            "width": 9,
+            "height": 9
+          },
+          {
+            "tile": "cave-floor",
+            "x": 6,
+            "y": 8,
+            "width": 2,
+            "height": 9
+          },
+          {
+            "tile": "cave-floor",
+            "x": 23,
+            "y": 8,
+            "width": 2,
+            "height": 9
+          },
+          {
+            "tile": "cave-floor",
+            "x": 10,
+            "y": 5,
+            "width": 10,
+            "height": 2
+          },
+          {
+            "tile": "cave-floor",
+            "x": 10,
+            "y": 20,
+            "width": 10,
+            "height": 2
+          },
+          {
+            "tile": "cave-floor",
+            "x": 15,
+            "y": 20,
+            "width": 1,
+            "height": 9
+          },
+          {
+            "tile": "cave-wall",
+            "x": 2,
+            "y": 2,
+            "width": 2,
+            "height": 1
+          },
+          {
+            "tile": "cave-wall",
+            "x": 9,
+            "y": 2,
+            "width": 2,
+            "height": 2
+          },
+          {
+            "tile": "cave-wall",
+            "x": 2,
+            "y": 7,
+            "width": 2,
+            "height": 2
+          },
+          {
+            "tile": "cave-wall",
+            "x": 19,
+            "y": 2,
+            "width": 2,
+            "height": 1
+          },
+          {
+            "tile": "cave-wall",
+            "x": 26,
+            "y": 2,
+            "width": 2,
+            "height": 1
+          },
+          {
+            "tile": "cave-wall",
+            "x": 26,
+            "y": 7,
+            "width": 2,
+            "height": 2
+          },
+          {
+            "tile": "cave-wall",
+            "x": 2,
+            "y": 16,
+            "width": 2,
+            "height": 2
+          },
+          {
+            "tile": "cave-wall",
+            "x": 2,
+            "y": 23,
+            "width": 2,
+            "height": 2
+          },
+          {
+            "tile": "cave-wall",
+            "x": 9,
+            "y": 23,
+            "width": 2,
+            "height": 2
+          },
+          {
+            "tile": "cave-wall",
+            "x": 19,
+            "y": 16,
+            "width": 2,
+            "height": 2
+          },
+          {
+            "tile": "cave-wall",
+            "x": 26,
+            "y": 16,
+            "width": 2,
+            "height": 2
+          },
+          {
+            "tile": "cave-wall",
+            "x": 26,
+            "y": 23,
+            "width": 2,
+            "height": 2
+          },
+          {
+            "tile": "sea",
+            "x": 4,
+            "y": 18,
+            "width": 3,
+            "height": 2
+          },
+          {
+            "tile": "sea",
+            "x": 21,
+            "y": 3,
+            "width": 3,
+            "height": 2
+          },
+          {
+            "tile": "cave-floor",
+            "x": 12,
+            "y": 10,
+            "width": 7,
+            "height": 4
+          },
+          {
+            "tile": "cave-floor",
+            "x": 15,
+            "y": 13,
+            "width": 1,
+            "height": 8
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "cave-witch",
+          "x": 64,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 57
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 112,
+          "y": 64,
+          "parameters": [],
+          "itemId": 24
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 384,
+          "y": 64,
+          "parameters": [],
+          "itemId": 18
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 64,
+          "y": 320,
+          "parameters": [],
+          "itemId": 6
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 416,
+          "y": 336,
+          "parameters": [],
+          "itemId": 2
+        },
+        {
+          "kind": "loot",
+          "x": 336,
+          "y": 304,
+          "parameters": [
+            0
+          ],
+          "itemId": 17
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 80,
+          "y": 80,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 68
+          }
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 384,
+          "y": 80,
+          "parameters": []
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 128,
+          "y": 288,
+          "parameters": []
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 352,
+          "y": 336,
+          "parameters": []
+        },
+        {
+          "x": 208,
+          "y": 160,
+          "kind": "cave-crystal",
+          "parameters": []
+        },
+        {
+          "x": 272,
+          "y": 160,
+          "kind": "cave-crystal",
+          "parameters": []
+        },
+        {
+          "x": 240,
+          "y": 176,
+          "itemId": 18,
+          "kind": "treasure-chest",
+          "parameters": []
+        }
+      ],
+      "exits": [
+        {
+          "x": 15,
+          "y": 28,
+          "targetStageId": 10,
+          "targetX": 7,
+          "targetY": 9,
+          "direction": "front"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "enemyId": 5,
+        "rate": 14,
+        "enemies": [
+          {
+            "enemyId": 5,
+            "weight": 5
+          },
+          {
+            "enemyId": 6,
+            "weight": 3
+          },
+          {
+            "enemyId": 7,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "name": "東の大陸",
+      "width": 32,
+      "height": 32,
+      "spawn": {
+        "x": 112,
+        "y": 256
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "sea",
+        "rectangles": [
+          {
+            "tile": "sand",
+            "x": 3,
+            "y": 2,
+            "width": 26,
+            "height": 28
+          },
+          {
+            "tile": "sand",
+            "x": 1,
+            "y": 12,
+            "width": 30,
+            "height": 11
+          },
+          {
+            "tile": "grass",
+            "x": 4,
+            "y": 3,
+            "width": 24,
+            "height": 26
+          },
+          {
+            "tile": "grass",
+            "x": 2,
+            "y": 13,
+            "width": 28,
+            "height": 9
+          },
+          {
+            "tile": "sand",
+            "x": 12,
+            "y": 3,
+            "width": 6,
+            "height": 26
+          },
+          {
+            "tile": "sea",
+            "x": 13,
+            "y": 2,
+            "width": 4,
+            "height": 28
+          },
+          {
+            "tile": "world-mountain",
+            "x": 4,
+            "y": 3,
+            "width": 7,
+            "height": 3
+          },
+          {
+            "tile": "world-mountain",
+            "x": 9,
+            "y": 6,
+            "width": 3,
+            "height": 5
+          },
+          {
+            "tile": "world-mountain",
+            "x": 18,
+            "y": 5,
+            "width": 3,
+            "height": 8
+          },
+          {
+            "tile": "world-mountain",
+            "x": 21,
+            "y": 3,
+            "width": 6,
+            "height": 2
+          },
+          {
+            "tile": "world-forest",
+            "x": 4,
+            "y": 19,
+            "width": 6,
+            "height": 5
+          },
+          {
+            "tile": "world-forest",
+            "x": 20,
+            "y": 25,
+            "width": 7,
+            "height": 3
+          },
+          {
+            "tile": "sea",
+            "x": 25,
+            "y": 10,
+            "width": 4,
+            "height": 3
+          },
+          {
+            "tile": "dirt",
+            "x": 7,
+            "y": 7,
+            "width": 1,
+            "height": 10
+          },
+          {
+            "tile": "dirt",
+            "x": 24,
+            "y": 5,
+            "width": 1,
+            "height": 19
+          },
+          {
+            "tile": "dirt",
+            "x": 0,
+            "y": 16,
+            "width": 31,
+            "height": 1
+          },
+          {
+            "tile": "bridge",
+            "x": 13,
+            "y": 16,
+            "width": 4,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 8,
+            "y": 17,
+            "width": 1,
+            "height": 11
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "world-cave",
+          "x": 112,
+          "y": 128,
+          "parameters": []
+        },
+        {
+          "kind": "world-demon-castle",
+          "x": 384,
+          "y": 80,
+          "parameters": []
+        },
+        {
+          "kind": "world-ruins",
+          "x": 384,
+          "y": 352,
+          "parameters": []
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 80,
+          "y": 384,
+          "parameters": [],
+          "itemId": 19
+        },
+        {
+          "kind": "world-town",
+          "x": 128,
+          "y": 432,
+          "parameters": []
+        },
+        {
+          "kind": "signpost",
+          "x": 368,
+          "y": 256,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 65
+          }
+        }
+      ],
+      "exits": [
+        {
+          "x": 0,
+          "y": 16,
+          "targetStageId": 6,
+          "targetX": 30,
+          "targetY": 16,
+          "direction": "front"
+        },
+        {
+          "x": 7,
+          "y": 8,
+          "targetStageId": 9,
+          "targetX": 15,
+          "targetY": 27,
+          "direction": "back"
+        },
+        {
+          "x": 24,
+          "y": 22,
+          "targetStageId": 11,
+          "targetX": 10,
+          "targetY": 17,
+          "direction": "back"
+        },
+        {
+          "x": 24,
+          "y": 5,
+          "targetStageId": 5,
+          "targetX": 8,
+          "targetY": 17,
+          "direction": "back"
+        },
+        {
+          "x": 8,
+          "y": 27,
+          "targetStageId": 13,
+          "targetX": 12,
+          "targetY": 19,
+          "direction": "back"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "古城の遺跡",
+      "width": 21,
+      "height": 19,
+      "spawn": {
+        "x": 160,
+        "y": 256
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "ruins-floor",
+            "x": 1,
+            "y": 1,
+            "width": 19,
+            "height": 16
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 0,
+            "width": 21,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 1,
+            "width": 1,
+            "height": 17
+          },
+          {
+            "tile": "wall-top",
+            "x": 20,
+            "y": 1,
+            "width": 1,
+            "height": 17
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 17,
+            "width": 10,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 11,
+            "y": 17,
+            "width": 10,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 4,
+            "y": 5,
+            "width": 5,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 12,
+            "y": 10,
+            "width": 5,
+            "height": 1
+          },
+          {
+            "tile": "dirt",
+            "x": 10,
+            "y": 2,
+            "width": 1,
+            "height": 17
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "elder",
+          "x": 80,
+          "y": 192,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 58
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 80,
+          "y": 48,
+          "parameters": [],
+          "itemId": 23
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 240,
+          "y": 64,
+          "parameters": [],
+          "itemId": 18
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 240,
+          "y": 208,
+          "parameters": [],
+          "itemId": 22
+        },
+        {
+          "kind": "pillar",
+          "x": 48,
+          "y": 128,
+          "parameters": []
+        },
+        {
+          "kind": "pillar",
+          "x": 272,
+          "y": 128,
+          "parameters": []
+        },
+        {
+          "kind": "stone-tablet",
+          "x": 144,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 67
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 64,
+          "y": 224,
+          "parameters": [],
+          "itemId": 19
+        }
+      ],
+      "exits": [
+        {
+          "x": 10,
+          "y": 18,
+          "targetStageId": 10,
+          "targetX": 24,
+          "targetY": 23,
+          "direction": "front"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "北の城",
+      "width": 13,
+      "height": 12,
+      "spawn": {
+        "x": 96,
+        "y": 128
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "marble",
+            "x": 1,
+            "y": 1,
+            "width": 11,
+            "height": 9
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 0,
+            "width": 13,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 1,
+            "width": 1,
+            "height": 10
+          },
+          {
+            "tile": "wall-top",
+            "x": 12,
+            "y": 1,
+            "width": 1,
+            "height": 10
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 10,
+            "width": 6,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 7,
+            "y": 10,
+            "width": 6,
+            "height": 1
+          },
+          {
+            "tile": "carpet",
+            "x": 5,
+            "y": 2,
+            "width": 3,
+            "height": 8
+          },
+          {
+            "tile": "carpet",
+            "x": 6,
+            "y": 10,
+            "width": 1,
+            "height": 2
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "throne",
+          "x": 92,
+          "y": 32,
+          "parameters": []
+        },
+        {
+          "kind": "king",
+          "x": 96,
+          "y": 48,
+          "parameters": [
+            0
+          ],
+          "dialogue": {
+            "type": "template",
+            "id": 55
+          }
+        },
+        {
+          "kind": "pillar",
+          "x": 48,
+          "y": 56,
+          "parameters": []
+        },
+        {
+          "kind": "pillar",
+          "x": 144,
+          "y": 56,
+          "parameters": []
+        },
+        {
+          "kind": "pillar",
+          "x": 48,
+          "y": 120,
+          "parameters": []
+        },
+        {
+          "kind": "pillar",
+          "x": 144,
+          "y": 120,
+          "parameters": []
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 32,
+          "y": 128,
+          "parameters": [],
+          "itemId": 2
+        }
+      ],
+      "exits": [
+        {
+          "x": 6,
+          "y": 11,
+          "targetStageId": 7,
+          "targetX": 12,
+          "targetY": 7,
+          "direction": "front"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "海辺の集落",
+      "width": 25,
+      "height": 21,
+      "spawn": {
+        "x": 192,
+        "y": 288
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "grass",
+            "x": 3,
+            "y": 0,
+            "width": 22,
+            "height": 20
+          },
+          {
+            "tile": "sea",
+            "x": 0,
+            "y": 0,
+            "width": 3,
+            "height": 20
+          },
+          {
+            "tile": "sand",
+            "x": 3,
+            "y": 0,
+            "width": 2,
+            "height": 20
+          },
+          {
+            "tile": "meadow-flowers",
+            "x": 10,
+            "y": 2,
+            "width": 5,
+            "height": 3
+          },
+          {
+            "tile": "brick",
+            "x": 12,
+            "y": 2,
+            "width": 1,
+            "height": 19
+          },
+          {
+            "tile": "brick",
+            "x": 5,
+            "y": 7,
+            "width": 18,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 5,
+            "y": 13,
+            "width": 18,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 11,
+            "y": 18,
+            "width": 3,
+            "height": 2
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "house-red",
+          "x": 80,
+          "y": 32,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 44
+          },
+          "itemId": 19
+        },
+        {
+          "kind": "house-slate",
+          "x": 320,
+          "y": 32,
+          "parameters": []
+        },
+        {
+          "kind": "item-shop",
+          "x": 88,
+          "y": 128,
+          "parameters": []
+        },
+        {
+          "kind": "item-merchant",
+          "x": 96,
+          "y": 158,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 4
+          }
+        },
+        {
+          "kind": "weapon-shop",
+          "x": 88,
+          "y": 224,
+          "parameters": []
+        },
+        {
+          "kind": "weapon-merchant",
+          "x": 96,
+          "y": 254,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 2
+          }
+        },
+        {
+          "kind": "armor-shop",
+          "x": 312,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "armor-merchant",
+          "x": 320,
+          "y": 190,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 3
+          }
+        },
+        {
+          "kind": "well",
+          "x": 272,
+          "y": 248,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 43
+          },
+          "itemId": 2
+        },
+        {
+          "kind": "resident",
+          "x": 144,
+          "y": 64,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 61
+          }
+        },
+        {
+          "kind": "traveler",
+          "x": 272,
+          "y": 144,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 60
+          }
+        },
+        {
+          "kind": "elder",
+          "x": 320,
+          "y": 272,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 62
+          }
+        },
+        {
+          "kind": "loot",
+          "x": 128,
+          "y": 96,
+          "parameters": [
+            0
+          ],
+          "itemId": 0
+        },
+        {
+          "kind": "loot",
+          "x": 352,
+          "y": 272,
+          "parameters": [
+            4
+          ],
+          "itemId": 1
+        },
+        {
+          "kind": "signpost",
+          "x": 208,
+          "y": 288,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 69
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 352,
+          "y": 96,
+          "parameters": [],
+          "itemId": 20
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 240,
+          "y": 256,
+          "parameters": [],
+          "itemId": 2
+        }
+      ],
+      "exits": [
+        {
+          "x": 12,
+          "y": 20,
+          "targetStageId": 10,
+          "targetX": 8,
+          "targetY": 28,
+          "direction": "front"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "妖精の花園",
+      "width": 23,
+      "height": 19,
+      "spawn": {
+        "x": 176,
+        "y": 240
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "forest-ground",
+            "x": 0,
+            "y": 0,
+            "width": 23,
+            "height": 18
+          },
+          {
+            "tile": "meadow-flowers",
+            "x": 3,
+            "y": 2,
+            "width": 17,
+            "height": 14
+          },
+          {
+            "tile": "sea",
+            "x": 9,
+            "y": 6,
+            "width": 5,
+            "height": 4
+          },
+          {
+            "tile": "dirt",
+            "x": 11,
+            "y": 14,
+            "width": 1,
+            "height": 5
+          },
+          {
+            "tile": "dirt",
+            "x": 5,
+            "y": 12,
+            "width": 13,
+            "height": 1
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "forest-fairy",
+          "x": 96,
+          "y": 80,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 63
+          }
+        },
+        {
+          "kind": "traveler",
+          "x": 272,
+          "y": 192,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 64
+          }
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 256,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 68
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 64,
+          "y": 144,
+          "parameters": [],
+          "itemId": 19
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 288,
+          "y": 128,
+          "parameters": [],
+          "itemId": 22
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 272,
+          "y": 240,
+          "parameters": [],
+          "itemId": 2
+        },
+        {
+          "kind": "signpost",
+          "x": 160,
+          "y": 224,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 71
+          }
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 80,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 240,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 320,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 80,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 320,
+          "y": 80,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 320,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 224,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 320,
+          "y": 224,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 96,
+          "y": 224,
+          "parameters": []
+        }
+      ],
+      "exits": [
+        {
+          "x": 11,
+          "y": 18,
+          "targetStageId": 8,
+          "targetX": 15,
+          "targetY": 1,
+          "direction": "front"
+        }
+      ]
+    }
+  ]
+}

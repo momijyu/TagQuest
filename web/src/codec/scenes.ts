@@ -99,7 +99,7 @@ export function decodeScenes(bytes: Uint8Array): readonly SceneData[] {
     throw new Error('Unsupported scene format');
   }
   const version = reader.byte();
-  if (version < 1 || version > 14) throw new Error('Unsupported scene format');
+  if (version < 1 || version > 15) throw new Error('Unsupported scene format');
   const count = reader.byte();
   if (!count) throw new Error('No stages');
   const readerStageCount = count;
@@ -178,7 +178,9 @@ export function decodeScenes(bytes: Uint8Array): readonly SceneData[] {
       parseExits(exits, width, height);
     }
     const control = version >= 7 ? reader.byte() : 0;
-    const encounter = version >= 12 && (control & 127) === 127
+    const encounter = version >= 15 && (control & 127) === 126
+      ? decodeEncounter(control, undefined, { rate: reader.uint16() / 100, enemies: Array.from({ length: reader.byte() }, () => ({ enemyId: reader.byte(), weight: reader.byte() })) })
+      : version >= 12 && (control & 127) === 127
       ? decodeEncounter(control, undefined, { rate: reader.byte(), enemies: Array.from({ length: reader.byte() }, () => ({ enemyId: reader.byte(), weight: reader.byte() })) })
       : decodeEncounter(control, control ? reader.byte() : undefined);
     if (version >= 10) {

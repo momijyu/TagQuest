@@ -107,12 +107,30 @@ function demonCastle(): PixelSprite {
   return sprite();
 }
 
+function ruins(): PixelSprite {
+  const { rect, sprite } = canvas(['#42483f', '#777c68', '#a3a58e', '#d0cdb1', '#4d663c', '#75924b', '#292e2a', '#bba16e']);
+  rect(2, 27, 28, 4, '1'); rect(4, 27, 24, 1, '2');
+  // 崩れた左右の塔。屋根を描かず、欠けた石壁と暗いアーチで城の遺跡を示す。
+  rect(4, 10, 6, 18, '0'); rect(5, 11, 4, 16, '2'); rect(5, 11, 1, 14, '3');
+  rect(4, 7, 2, 4, '0'); rect(8, 8, 2, 3, '0'); rect(5, 7, 1, 2, '3');
+  rect(23, 15, 5, 13, '0'); rect(24, 16, 3, 11, '1'); rect(24, 16, 1, 9, '2');
+  rect(23, 12, 2, 4, '0'); rect(27, 14, 1, 3, '0');
+  rect(9, 17, 15, 11, '0'); rect(10, 18, 13, 9, '2'); rect(10, 18, 13, 1, '3');
+  rect(10, 15, 3, 3, '0'); rect(15, 16, 4, 2, '1'); rect(22, 16, 2, 3, '0');
+  rect(13, 23, 8, 6, '6'); rect(14, 21, 6, 2, '6'); rect(15, 20, 4, 1, '6');
+  rect(11, 22, 2, 1, '1'); rect(21, 24, 2, 1, '1'); rect(6, 20, 3, 1, '1');
+  rect(5, 23, 2, 5, '4'); rect(6, 24, 2, 2, '5'); rect(23, 23, 3, 5, '4');
+  rect(2, 28, 4, 2, '4'); rect(26, 28, 4, 2, '5');
+  rect(14, 29, 6, 3, '7'); rect(15, 29, 3, 1, '3');
+  return sprite();
+}
+
 export const worldLocations: Readonly<Record<string, PixelSprite>> = {
   'world-town': town(), 'world-forest-entrance': forestEntrance(),
-  'world-cave': cave(), 'world-demon-castle': demonCastle(),
+  'world-cave': cave(), 'world-demon-castle': demonCastle(), 'world-ruins': ruins(),
 };
 export const worldLocationNames: Readonly<Record<string, string>> = {
-  'world-town': '街', 'world-forest-entrance': '森の入口', 'world-cave': '洞窟', 'world-demon-castle': '魔王城',
+  'world-town': '街', 'world-forest-entrance': '森の入口', 'world-cave': '洞窟', 'world-demon-castle': '魔王城', 'world-ruins': '古城の遺跡',
 };
 export const isWorldLocation = (kind: string): boolean => Object.hasOwn(worldLocations, kind);
 /** 保存・入口枠は1マス。絵は中央に揃え、足元より上へはみ出す。 */

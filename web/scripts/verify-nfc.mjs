@@ -54,12 +54,16 @@ try {
     { kind: 'resident', x: 32, y: 16, parameters: [], dialogue: { type: 'template', id: 39 } }];
   custom.exits = [{ x: 31, y: 31, targetStageId: 201, targetX: 0, targetY: 1, direction: 'front' }];
   cases.push(parseWorld([custom]));
+  for (const rate of [0.01, 0.5, 99.99]) for (const enabled of [false, true]) {
+    const s = stage(207); s.encounter = { ...custom.encounter, rate, enabled }; s.exits = custom.exits.map(e => ({ ...e, targetStageId: 207 }));
+    cases.push(parseWorld([s]));
+  }
   writeFileSync(join(out, 'cases.json'), JSON.stringify(cases));
   const python = `import sys,json,base64\nsys.path.insert(0,sys.argv[1])\nfrom build import compile_game\nfor w in json.load(open(sys.argv[2])):\n b,r=compile_game(w['stages'],compact=True)\n print(json.dumps({'bytes':base64.b64encode(b).decode(),'exits':[s['exit_bytes'] for s in r]}))`;
   const outputs = execFileSync('python3', ['-c', python, join(root, 'compiler'), join(out, 'cases.json')], { encoding: 'utf8', maxBuffer: 5 * 1024 * 1024 }).trim().split('\n').map(line => JSON.parse(line));
   for (const [i, world] of cases.entries()) {
     const before = structuredClone(world), encoded = encodeWorld(world, true), decoded = decodeScenes(encoded.bytes);
-    if (world.stages.some(s => s.exits?.length)) assert.equal(encoded.bytes[2], world.stages.some(s => s.entities.some(e => ['castle', 'weapon-shop', 'armor-shop', 'item-shop', 'house-red', 'house-slate'].includes(e.kind))) ? 14 : 13);
+    if (world.stages.some(s => s.exits?.length)) assert.equal(encoded.bytes[2], world.stages.some(s => s.encounter && !Number.isInteger(s.encounter.rate)) ? 15 : world.stages.some(s => s.entities.some(e => ['castle', 'weapon-shop', 'armor-shop', 'item-shop', 'house-red', 'house-slate'].includes(e.kind))) ? 14 : 13);
     assert.deepEqual(world, before, 'export must not mutate editable data');
     assert.deepEqual(encoded.bytes, Uint8Array.from(Buffer.from(outputs[i].bytes, 'base64')), `Python/TS parity ${i}`);
     assert.deepEqual(encoded.reports.map(r => r.exitBytes), outputs[i].exits);
@@ -88,7 +92,7 @@ try {
   const adventure = encodeWorld(cases[1], true).bytes;
   for (let i = 0; i < adventure.length; i++) assert.throws(() => decodeScenes(adventure.subarray(0, i)), `truncated at ${i}`);
   assert.throws(() => decodeScenes(Uint8Array.from([...adventure, 0])), /Trailing/);
-  assert.equal(dialogueTemplates.length, 46); assert.equal(dialogueTemplates[0].text, 'こんにちは。よい旅を！'); assert.equal(dialogueTemplates[9].name, '魔王');
+  assert.ok(dialogueTemplates.length >= 60); assert.equal(dialogueTemplates[0].text, 'こんにちは。よい旅を！'); assert.equal(dialogueTemplates[9].name, '魔王');
   for (const [text, bytes] of [['A', 1], ['あ', 3], ['😀', 4], ['Aあ😀\n', 9]]) {
     assert.equal(dialogueByteLength(text), bytes); validateCustomDialogue(text);
     assert.equal(encodeInteractions([{ kind: 'resident', dialogue: { type: 'custom', text } }]).length, bytes + 5);

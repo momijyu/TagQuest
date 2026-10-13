@@ -24,6 +24,7 @@ import { exitDirections } from '../data/stage-exits';
 import { canStand } from '../game/walking';
 import worldSource from '../../../compiler/maps/world.json';
 import { appendAdventureSample } from './adventure';
+import { appendAdventurePreset } from './adventure-presets';
 import { enemyCatalog, parseEncounter } from '../data/encounters/settings';
 
 const STORAGE_KEY = 'tagquest.world-editor.v1';
@@ -35,7 +36,7 @@ type Category = 'floor' | 'object' | 'npc' | 'effect';
 const categories: Record<Category, readonly string[]> = {
   floor: catalog.tiles.filter(name => canonicalTile(name) === name),
   object: ['castle', 'weapon-shop', 'armor-shop', 'item-shop', 'house-red', 'house-slate', 'well', 'throne', 'pillar', 'demon-throne', 'demon-pillar', 'treasure-chest', 'tree', 'world-mountain',
-    'world-town', 'world-forest-entrance', 'world-cave', 'world-demon-castle'],
+    'world-town', 'world-forest-entrance', 'world-cave', 'world-demon-castle', 'world-ruins', 'signpost', 'cave-crystal', 'stone-tablet'],
   npc: npcKinds,
   effect: ['loot', 'moat-outer-bank', 'moat-inner-bank', 'world-forest'],
 };
@@ -177,7 +178,7 @@ export function startEditor(root: HTMLElement, characters: PlayCharacters & { pl
       for (const entity of s.entities) {
         const frame = entityFrame(entity), feet = entityCollisionFrame(entity);
         context.strokeStyle = '#50caff'; context.strokeRect(frame.x, frame.y, frame.width, frame.height);
-        if (entity.kind !== 'loot' && !entity.kind.startsWith('moat-') && !['world-forest', 'world-town', 'world-forest-entrance', 'world-cave', 'world-demon-castle'].includes(entity.kind)) { context.strokeStyle = '#ff6875'; context.strokeRect(feet.x, feet.y, feet.width, feet.height); }
+        if (entity.kind !== 'loot' && !entity.kind.startsWith('moat-') && !['world-forest', 'world-town', 'world-forest-entrance', 'world-cave', 'world-demon-castle', 'world-ruins'].includes(entity.kind)) { context.strokeStyle = '#ff6875'; context.strokeRect(feet.x, feet.y, feet.width, feet.height); }
       }
       if (s.spawn) { const f = playerCollisionFrame(s.spawn); context.strokeStyle = '#ff6875'; context.strokeRect(f.x, f.y, f.width, f.height); }
     }
@@ -380,7 +381,7 @@ export function startEditor(root: HTMLElement, characters: PlayCharacters & { pl
     get('encounter-settings').innerHTML = `<form id="editor-encounter-form" class="editor-form">
       <label>出現する敵<select id="editor-encounter-enemy"><option value="">なし</option><option value="mixed">複数の敵（出現割合）</option>${enemyCatalog.map(enemy => `<option value="${enemy.id}">${escapeHtml(enemy.name)}</option>`).join('')}</select></label>
       <label class="editor-check"><input id="editor-encounter-enabled" type="checkbox" ${settings?.enabled ? 'checked' : ''} /> このステージで出現させる</label>
-      <label>1歩ごとの確率（%）<input id="editor-encounter-rate" type="number" min="0" max="100" step="1" value="${settings?.rate ?? 10}" required /></label>
+      <label>1歩ごとの確率（%）<input id="editor-encounter-rate" type="number" min="0" max="100" step="0.01" value="${settings?.rate ?? 10}" required /></label>
       <div id="editor-encounter-table" hidden><p>0は出現なし。60・30・10なら60%・30%・10%です。</p>${enemyCatalog.map(enemy => `<label>${escapeHtml(enemy.name)}<input data-encounter-weight="${enemy.id}" type="number" min="0" max="255" step="1" value="${settings?.enemies?.find(e => e.enemyId === enemy.id)?.weight ?? 0}"></label>`).join('')}</div>
       <button class="btn btn-sm" type="submit">エンカウントを反映</button>
     </form>`;
@@ -736,8 +737,20 @@ export function startEditor(root: HTMLElement, characters: PlayCharacters & { pl
     history.world.stages.push(sample);
     active = id; selection = -1; exitSelection = -1; playerSelected = false;
   }));
+  function discardEmptyPlaceholder(): void {
+    const [stage] = history.world.stages;
+    if (history.world.stages.length === 1 && stage.name === '空のマップ' && stage.width === 16 && stage.height === 16
+      && !stage.spawn && stage.floor.default === 'empty' && !stage.floor.rectangles.length
+      && !stage.entities.length && !stage.exits.length && !stage.encounter) history.world.stages = [];
+  }
   get('add-adventure-sample').addEventListener('click', () => mutate(() => {
+    discardEmptyPlaceholder();
     active = appendAdventureSample(history.world);
+    selection = -1; exitSelection = -1; playerSelected = false;
+  }));
+  for (const size of ['large', 'small'] as const) get(`add-${size}-sample`).addEventListener('click', () => mutate(() => {
+    discardEmptyPlaceholder();
+    active = appendAdventurePreset(history.world, size);
     selection = -1; exitSelection = -1; playerSelected = false;
   }));
   get('clear-world').addEventListener('click', () => {

@@ -1,0 +1,48 @@
+{
+  "id": 6,
+  "name": "岩ヤドカリ",
+  "characterId": "rock-hermit",
+  "battleImage": "rock-hermit",
+  "background": "cave",
+  "stats": {
+    "hp": 48,
+    "attack": 9,
+    "defense": 5
+  },
+  "reward": {
+    "gold": 14,
+    "experience": 52,
+    "items": [
+      {
+        "itemId": 17,
+        "quantity": 1
+      }
+    ]
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "attack",
+        "text": "岩ヤドカリがはさみを振り上げた！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "岩ヤドカリが岩の殻で体当たりした！",
+        "power": 1.4
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "attack",
+        "text": "岩ヤドカリがはさみを振り上げた！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "岩ヤドカリが岩の殻で体当たりした！",
+        "power": 1.4
+      }
+    ]
+  }
+}

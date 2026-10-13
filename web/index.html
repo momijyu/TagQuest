@@ -43,9 +43,12 @@
         <div class="card-body tile-card">
           <div class="play-heading">
             <h2 id="walking-title" class="card-title">歩いてみる</h2>
+            <label>世界 <select id="gallery-play-size"><option value="normal">通常の世界</option><option value="large">巨大な世界</option><option value="small">NFC用の小さな世界</option></select></label>
             <label><span class="sr-only">マップ</span><select id="gallery-play-map"><option value="castle">城</option><option value="town">街</option><option value="world">全体マップ</option><option value="forest">森</option><option value="cave">洞窟</option><option value="demon-castle">魔王城</option></select></label>
             <button id="gallery-play-toggle" class="btn btn-sm btn-primary">▶ プレイ</button>
           </div>
+          <p id="gallery-play-budget"></p>
+          <a id="gallery-play-url" class="link" target="_blank" rel="noopener">この世界の起動URL</a>
           <div id="gallery-play-view" class="play-session" hidden></div>
           <p id="gallery-play-error" class="alert alert-error" role="alert" hidden></p>
         </div>
@@ -121,7 +124,7 @@
         </div>
       </section>
       <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="items-title">
-        <div class="card-body tile-card"><h2 id="items-title" class="card-title">アイテム</h2><ul id="item-catalog" class="item-catalog"></ul></div>
+        <div class="card-body tile-card"><h2 id="items-title" class="card-title">アイテム</h2><div id="item-catalog" class="item-catalog"></div></div>
       </section>
       <section class="card bg-base-200 border border-base-300 shadow-sm" aria-labelledby="castle-exterior-title">
         <div class="card-body tile-card">

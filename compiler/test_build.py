@@ -2,7 +2,7 @@ import copy
 import json
 import unittest
 
-from build import ROOT, NPCS, RESIDENTS, BUILDING_OVERHANGS, FRAMES, compile_game, encode_floor, normalize_buildings
+from build import ROOT, NPCS, RESIDENTS, BUILDING_OVERHANGS, FRAMES, compile_game, encode_floor, encode_encounter, normalize_buildings
 
 
 class CompilerTests(unittest.TestCase):
@@ -13,9 +13,9 @@ class CompilerTests(unittest.TestCase):
     def test_size_reports_match_binary(self):
         binary, reports = compile_game(self.stages)
         self.assertEqual(len(binary), 4 + sum(stage['stage_bytes'] for stage in reports))
-        self.assertEqual(len(binary), 202)
+        self.assertEqual(len(binary), 206)
         self.assertEqual([stage['exit_bytes'] for stage in reports], [4, 4])
-        self.assertEqual([stage['encounter_bytes'] for stage in reports], [3, 2])
+        self.assertEqual([stage['encounter_bytes'] for stage in reports], [7, 2])
         self.assertEqual([stage['interaction_bytes'] for stage in reports], [6, 27])
         self.assertEqual([stage['selected_codec'] for stage in reports], ['RECT', 'RECT'])
 
@@ -23,6 +23,23 @@ class CompilerTests(unittest.TestCase):
         for codec in ('RAW', 'RLE', 'RECT'):
             _, reports = compile_game(self.stages, codec)
             self.assertTrue(all(stage['selected_codec'] == codec for stage in reports))
+
+    def test_fractional_encounter_rates_preserve_probability(self):
+        stages = copy.deepcopy(self.stages)
+        stages[0]['encounter']['rate'] = 0.5
+        original = copy.deepcopy(stages)
+        for compact in (False, True):
+            binary, reports = compile_game(stages, compact=compact)
+            self.assertEqual(binary[2], 15)
+            self.assertEqual(reports[0]['encounter_bytes'], 7)
+        self.assertEqual(stages, original)
+        self.assertEqual(encode_encounter(stages[0]), bytes([254, 50, 0, 1, 0, 1]))
+        with self.assertRaises(ValueError):
+            encode_encounter(stages[0], version=14)
+        for invalid in (0.001, float('inf'), float('nan'), True, -0.5, 100.01):
+            stages[0]['encounter']['rate'] = invalid
+            with self.assertRaises(ValueError):
+                compile_game(stages)
 
     def test_invalid_dimensions_and_coordinates_are_rejected(self):
         for value in (0, 33, True):
@@ -118,6 +135,8 @@ class CompilerTests(unittest.TestCase):
 
     def test_battle_event_config_and_compact_counts(self):
         stage = copy.deepcopy(self.stages[0])
+        # Keep coverage of v10/v11 independently of the sample's fractional rate.
+        stage['encounter']['rate'] = 10
         stage['exits'] = []
         king = next(e for e in stage['entities'] if e['kind'] == 'king')
         king['battleEvent'] = {'enemyId': 4, 'once': True, 'clear': True}
@@ -135,7 +154,7 @@ class CompilerTests(unittest.TestCase):
     def test_compact_exit_version_and_reports(self):
         before = copy.deepcopy(self.stages)
         binary, reports = compile_game(self.stages, compact=True)
-        self.assertEqual(binary[2], 14)
+        self.assertEqual(binary[2], 15)
         self.assertEqual([r['exit_bytes'] for r in reports], [4, 4])
         self.assertEqual(len(binary), 4 + sum(r['stage_bytes'] for r in reports))
         self.assertEqual(self.stages, before)

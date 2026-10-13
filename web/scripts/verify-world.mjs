@@ -19,7 +19,7 @@ try {
   const { createWorldGame } = await import(pathToFileURL(join(temporary, 'world.mjs')).href);
   const { canStand } = await import(pathToFileURL(join(temporary, 'walking.mjs')).href);
   const world = initialWorld(), encoded = encodeWorld(world), scenes = decodeScenes(encoded.bytes);
-  assert.equal(encoded.bytes.length, 202); assert.deepEqual(encoded.reports.map(r => r.exitBytes), [4, 4]);
+  assert.equal(encoded.bytes.length, 206); assert.deepEqual(encoded.reports.map(r => r.exitBytes), [4, 4]);
   const snapshot = structuredClone(scenes);
   const objectScenes = structuredClone(scenes);
   const objectCastle = objectScenes[0];
@@ -32,7 +32,7 @@ try {
   objectGame.move('front'); objectGame.move('front'); assert.equal(objectGame.scene.id, 1);
   objectGame.move('back'); assert.equal(objectGame.scene.id, 0);
   objectGame.move('back'); objectGame.move('back'); objectGame.move('back'); objectGame.interact();
-  assert.equal(objectGame.message.text, '座面を調べた。'); objectGame.interact(); assert.equal(objectGame.message, null);
+  assert.equal(objectGame.message.text, 'もうここには何もないようだ。'); objectGame.interact(); assert.equal(objectGame.message, null);
   assert.deepEqual(objectGame.inventory, [{ itemId: 1, count: 1 }]);
   assert.ok(objectGame.visibleEntities.some(e => e.kind === 'throne'));
   objectGame.reset(); assert.deepEqual(objectGame.inventory, []);

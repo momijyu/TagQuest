@@ -7,7 +7,8 @@ export function parseEncounter(value: unknown): EncounterSettings | undefined {
   if (value === undefined) return undefined;
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('エンカウントの形式が違います。');
   const data = value as Record<string, unknown>;
-  if (typeof data.enabled !== 'boolean' || !integer(data.rate, 0, 100)) throw new Error('出現のON/OFFと、1歩ごとの確率（0〜100の整数）を設定してください。');
+  if (typeof data.enabled !== 'boolean' || typeof data.rate !== 'number' || !Number.isFinite(data.rate)
+    || data.rate < 0 || data.rate > 100 || Math.abs(data.rate * 100 - Math.round(data.rate * 100)) > 1e-8) throw new Error('出現のON/OFFと、1歩ごとの確率（0〜100%、0.01%刻み）を設定してください。');
   let enemies: EncounterEntry[] | undefined;
   if (data.enemies !== undefined) {
     if (!Array.isArray(data.enemies) || data.enemies.length < 1 || data.enemies.length > 255) throw new Error('出現表は1〜255種類で設定してください。');
@@ -24,10 +25,14 @@ export function parseEncounter(value: unknown): EncounterSettings | undefined {
 export function encounterEntries(settings: EncounterSettings): readonly EncounterEntry[] {
   return settings.enemies ?? [{ enemyId: settings.enemyId, weight: 1 }];
 }
-/** 1種類は従来の2B。複数はv12で制御・確率・件数・(敵ID,割合)を保存。 */
+/** 整数確率は単一2B・複数v12。小数確率はv15で百分率×100のuint16と出現表を保存。 */
 export function encodeEncounter(value: EncounterSettings | undefined): number[] {
   const data = parseEncounter(value);
   if (!data) return [0];
+  if (!Number.isInteger(data.rate)) {
+    const rate = Math.round(data.rate * 100), entries = encounterEntries(data);
+    return [126 | (data.enabled ? 128 : 0), rate & 255, rate >> 8, entries.length, ...entries.flatMap(e => [e.enemyId, e.weight])];
+  }
   if (data.enemies) return [127 | (data.enabled ? 128 : 0), data.rate, data.enemies.length, ...data.enemies.flatMap(e => [e.enemyId, e.weight])];
   return [(data.rate + 1) | (data.enabled ? 128 : 0), data.enemyId];
 }

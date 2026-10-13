@@ -14,6 +14,8 @@ import type { ActionResult } from './player-state';
 import type { EquipmentSlot } from '../data/items';
 import { findShop } from '../data/shops';
 import { findSkill } from '../data/skills';
+import { dialogueText, dialogueTemplates } from '../data/interactions';
+import { createStory } from './story';
 
 export interface EncounterEvent { readonly enemyId: number; readonly name: string; readonly stageId: number; readonly entityIndex?: number }
 export interface WorldGameOptions { player?: PlayerDefinition; enemies?: readonly EnemyDefinition[]; initialEquipment?: readonly number[] }
@@ -36,6 +38,10 @@ export function createWorldGame(source: readonly SceneData[], initialId: number,
   const initial = scenes.find(scene => scene.id === initialId);
   if (!initial) throw new Error('開始マップがありません。');
   const games = new Map<number, ReturnType<typeof createWalkingGame>>();
+  const story = createStory(scenes);
+  // The northern guide reuses the king artwork without being the hidden combat king.
+  const encounterCharacter = (entity: SceneData['entities'][number]) => !(entity.kind === 'king'
+    && entity.dialogue?.type === 'template' && dialogueTemplates[entity.dialogue.id].storyRole === 'north-king');
   let current = createWalkingGame(initial);
   games.set(initial.id, current);
   let revision = 0;
@@ -116,7 +122,7 @@ export function createWorldGame(source: readonly SceneData[], initialId: number,
     if (existing) { existing.enter(arrival, exit.direction); current = existing; }
     else {
       current = createWalkingGame(target, { position: arrival, direction: exit.direction });
-      for (const kind of removedCharacters) current.removeCharacter(kind);
+      for (const kind of removedCharacters) current.removeCharacter(kind, encounterCharacter);
       games.set(target.id, current);
     }
     ignored = tileKey(); // 到着した出口は一度離れるまで発動させない。
@@ -125,6 +131,7 @@ export function createWorldGame(source: readonly SceneData[], initialId: number,
   }
   return {
     get cleared() { return cleared; },
+    get story() { return story.summary(cleared); },
     get scene() { return current.scene; },
     get position() { return current.position; },
     get direction() { return current.direction; },
@@ -142,7 +149,8 @@ export function createWorldGame(source: readonly SceneData[], initialId: number,
         level: player.level, experience: player.experience, nextLevelExperience: player.nextLevelExperience };
     },
     get message() {
-      const message = current.message;
+      const source = current.message;
+      const message = source?.dialogue ? { ...source, text: dialogueText(source.dialogue, cleared) } : source;
       if (message?.battleEntityIndex !== undefined) {
         const event = current.scene.entities[message.battleEntityIndex].battleEvent!;
         const warning = royalEquipmentWarning(enemyDefinition(event.enemyId), player.equipment);
@@ -155,6 +163,7 @@ export function createWorldGame(source: readonly SceneData[], initialId: number,
     get inventory() {
       syncLoot(); return player.inventory;
     },
+    get discoveredItems() { syncLoot(); return player.discoveredItems; },
     closeShop(): void { shopKind = null; },
     buy(itemId: number): ActionResult {
       if (activeEncounter || current.message || !shopKind || !findShop(shopKind)?.items.includes(itemId)) return blocked();
@@ -163,6 +172,10 @@ export function createWorldGame(source: readonly SceneData[], initialId: number,
     sell(itemId: number): ActionResult {
       if (activeEncounter || current.message || !shopKind) return blocked();
       syncLoot(); return player.sell(itemId);
+    },
+    exchange(recipeId: number): ActionResult {
+      if (activeEncounter || pendingEncounter || current.message || progressionMessage || !shopKind || !findShop(shopKind)?.recipes?.includes(recipeId)) return blocked();
+      syncLoot(); return player.exchange(recipeId);
     },
     equip(itemId: number): ActionResult { if (cannotManage()) return blocked(); syncLoot(); return player.equip(itemId); },
     unequip(slot: EquipmentSlot): ActionResult { return cannotManage() ? blocked() : player.unequip(slot); },
@@ -200,6 +213,7 @@ export function createWorldGame(source: readonly SceneData[], initialId: number,
       const requestedBattle = current.message?.battleEntityIndex;
       const wasMessage = Boolean(current.message);
       current.interact();
+      story.record(current.message?.dialogue);
       if (requestedBattle !== undefined && !current.message) {
         const event = current.scene.entities[requestedBattle].battleEvent!;
         const enemy = enemyDefinition(event.enemyId);
@@ -241,7 +255,7 @@ export function createWorldGame(source: readonly SceneData[], initialId: number,
         defeatCounts.set(enemy.id, (defeatCounts.get(enemy.id) ?? 0) + 1);
         if (enemy.characterId === kingEncounter.characterId && kingEncounter.removeFromStageAfterVictory) {
           removedCharacters.add(enemy.characterId);
-          for (const game of games.values()) game.removeCharacter(enemy.characterId);
+          for (const game of games.values()) game.removeCharacter(enemy.characterId, encounterCharacter);
           const equipped = player.equipRoyalSet();
           if (equipped.ok) {
             const definition = player.definition;
@@ -250,17 +264,19 @@ export function createWorldGame(source: readonly SceneData[], initialId: number,
           }
         }
       }
-      if (outcome === 'victory' && cleared && !wasCleared) progressionMessage = { speaker: '', text: [progressionMessage?.text, 'GAME CLEAR！\n冒険をクリアした！'].filter(Boolean).join('\n') };
+      if (outcome === 'victory' && cleared && !wasCleared) progressionMessage = { speaker: '', text: [progressionMessage?.text, 'GAME CLEAR！\n冒険をクリアした！', story.ending].filter(Boolean).join('\n') };
       activeEncounter = null;
       battle = null;
       if (outcome === 'defeat') {
+        const lostGold = player.applyDefeatPenalty();
         player.setVitals({ hp: player.definition.stats.hp, mp: player.definition.maxMp ?? 0, poisoned: false });
         // 所持品・取得・撃破状態を保ち、現在の開始位置（なければ最初のマップ）へ戻る。
         current = respawn!; ignored = tileKey(); revision++;
+        progressionMessage = { speaker: '', text: `意識を取り戻した…。\n${lostGold}Gを失った。（残り${player.gold}G）\nHP・MPが回復した。もう一度、旅を続けよう。` };
       }
     },
     reset(): void {
-      cleared = false; attackedEvents.clear(); games.clear(); current = createWalkingGame(initial); games.set(initial.id, current);
+      cleared = false; story.reset(); attackedEvents.clear(); games.clear(); current = createWalkingGame(initial); games.set(initial.id, current);
       defeatCounts.clear(); removedCharacters.clear(); activeEncounter = null; pendingEncounter = null;
       attackedEnemies.clear(); battle = null; shopKind = null; progressionMessage = null; credited.clear(); player = newPlayer();
       ignored = tileKey(); revision++;

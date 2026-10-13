@@ -19,7 +19,7 @@ try {
   const { createWorldGame } = await module('world');
   const { createBattle } = await module('battle');
   const { playerConfig, enemyCatalog, parsePlayerDefinition, parseReward } = await module('config');
-  const { progressionConfig, parseProgression, maximumExperience } = await module('progression');
+  const { progressionConfig, parseProgression, maximumExperience, levelForExperience } = await module('progression');
   const { skillCatalog, findSkill, parseSkillCatalog } = await module('skills');
   const { itemCatalog, findItem, parseItemCatalog } = await module('items');
   const player = createPlayerState();
@@ -35,9 +35,49 @@ try {
   assert.deepEqual(player.definition.stats, { hp: 55, attack: 16, defense: 3 });
   const high = createPlayerState({ ...playerConfig, initialExperience: 60 });
   assert.equal(high.level, 3); assert.equal(high.vitals.hp, 50); assert.equal(high.vitals.mp, 14);
-  high.gainExperience(999999); assert.equal(high.level, 10); assert.equal(high.nextLevelExperience, null);
+  high.gainExperience(999999); assert.equal(high.level, 99); assert.equal(high.nextLevelExperience, null);
   for (let index = 0; index < 1000; index++) high.gainExperience(999999);
-  assert.equal(high.experience, maximumExperience); assert.equal(high.level, 10);
+  assert.equal(high.experience, maximumExperience); assert.equal(high.level, 99);
+  assert.equal(progressionConfig.levelThresholds.length, 99);
+  assert.deepEqual(progressionConfig.levelThresholds.slice(0, 10), [0, 20, 60, 120, 200, 300, 420, 560, 720, 900]);
+  for (const [index, threshold] of progressionConfig.levelThresholds.entries()) {
+    assert.equal(levelForExperience(threshold), index + 1);
+    if (index) assert.equal(levelForExperience(threshold - 1), index);
+  }
+  assert.equal(levelForExperience(97020), 99);
+  assert.deepEqual(high.baseStats, { hp: 530, mp: 206, attack: 206, defense: 98 });
+  const veteran = createPlayerState();
+  assert.deepEqual(veteran.gainExperience(97020).learnedSkills, skillCatalog.filter(skill => skill.learnLevel > 1).map(skill => skill.id));
+  assert.deepEqual(veteran.gainExperience(1).learnedSkills, [], 'skills are announced only once');
+  assert.deepEqual(veteran.definition.skills, skillCatalog.map(skill => skill.id));
+  for (const skill of skillCatalog.filter(skill => skill.id >= 3)) {
+    const level = skill.learnLevel;
+    const novice = createPlayerState({ ...playerConfig, initialExperience: progressionConfig.levelThresholds[level - 1] - 1 });
+    const locked = createBattle(enemyCatalog[1], { player: novice.definition });
+    assert.equal(locked.useSkill(skill.id).ok, false); assert.equal(locked.playerMp, novice.vitals.mp); assert.equal(locked.phase, 'commands');
+    assert.deepEqual(novice.gainExperience(1).learnedSkills, [skill.id]);
+    const caster = createPlayerState({ ...playerConfig, initialExperience: progressionConfig.levelThresholds[level - 1] });
+    const definition = caster.definition;
+    const battle = createBattle({ ...enemyCatalog[1], stats: { ...enemyCatalog[1].stats, hp: 9999 } }, { player: definition, playerHp: 1 });
+    assert.equal(battle.useSkill(skill.id).ok, true);
+    assert.equal(battle.playerMp, definition.maxMp - skill.mpCost);
+    assert.equal(battle.phase, 'player-action');
+    if (skill.effect.type === 'magic-damage') {
+      assert.equal(battle.enemyHp, 9999 - skill.effect.amount);
+      assert.equal(caster.useFieldSkill(skill.id).ok, false);
+    } else {
+      assert.equal(battle.playerHp, Math.min(definition.stats.hp, 1 + skill.effect.amount));
+      assert.equal(caster.useFieldSkill(skill.id).ok, false, 'full HP does not consume MP');
+      caster.setVitals({ hp: 1, mp: skill.mpCost - 1, poisoned: false });
+      const insufficient = caster.vitals;
+      assert.equal(caster.useFieldSkill(skill.id).ok, false); assert.deepEqual(caster.vitals, insufficient);
+      caster.setVitals({ hp: 1, mp: definition.maxMp, poisoned: false });
+      assert.equal(caster.useFieldSkill(skill.id).ok, true);
+      assert.deepEqual(caster.vitals, { hp: Math.min(definition.stats.hp, 1 + skill.effect.amount), mp: definition.maxMp - skill.mpCost, poisoned: false });
+    }
+    const dry = createBattle(enemyCatalog[1], { player: definition, playerHp: 1, playerMp: skill.mpCost - 1 });
+    assert.equal(dry.useSkill(skill.id).ok, false); assert.equal(dry.playerMp, skill.mpCost - 1); assert.equal(dry.phase, 'commands');
+  }
   const capped = createPlayerState({ ...playerConfig, stats: { hp: 9998, attack: 9998, defense: 9998 }, maxMp: 9998 });
   capped.gainExperience(900); assert.deepEqual(capped.definition.stats, { hp: 9999, attack: 9999, defense: 9999 });
   assert.equal(capped.vitals.mp, 9999);
@@ -46,7 +86,7 @@ try {
   const oldLearn = skill.learnLevel, oldRequired = gear.requiredLevel;
   try {
     skill.learnLevel = 3; gear.requiredLevel = 3;
-    const gated = createPlayerState();
+    const gated = createPlayerState({ ...playerConfig, skills: [0, 1, 2] });
     assert.deepEqual(gated.definition.skills, [0, 2]);
     assert.deepEqual(gated.skillSchedule.find(s => s.id === 1), { id: 1, learnLevel: 3, learned: false });
     assert.equal(gated.buy(4).ok, true); assert.equal(gated.gold, 20);
@@ -82,6 +122,19 @@ try {
     doomed.move('right'); doomed.battle.attack(); doomed.battle.advance(); assert.equal(doomed.battle.phase, 'defeat');
     doomed.finishEncounter('defeat'); assert.equal(doomed.status.experience, 0); assert.equal(doomed.status.level, 1);
   } finally { skill.learnLevel = oldLearn; gear.requiredLevel = oldRequired; }
+  // Real, unmodified defaults announce new magic after each early milestone.
+  assert.deepEqual(createPlayerState().definition.skills, [0, 1, 2]);
+  for (const [level, skillId, name] of [[3, 3, '氷の矢'], [5, 4, '大きな癒し'], [8, 5, '雷撃']]) {
+    const threshold = progressionConfig.levelThresholds[level - 1];
+    const scene = { id: 0, width: 5, height: 5, spawn: { x: 16, y: 32 }, tiles: new Uint8Array(25).fill(7), entities: [], encounter: { enabled: true, rate: 100, enemyId: 1 } };
+    const enemy = { ...enemyCatalog.find(entry => entry.id === 1), stats: { hp: 1, attack: 0, defense: 0 }, reward: { gold: 0, experience: 1, items: [] } };
+    const session = createWorldGame([scene], 0, () => 0, { player: { ...playerConfig, initialExperience: threshold - 1 }, enemies: [enemy] });
+    session.move('right'); assert.ok(!session.battle.player.skills.includes(skillId));
+    session.battle.attack(); session.finishEncounter('victory');
+    assert.equal(session.status.level, level); assert.ok(session.status.skills.includes(skillId));
+    assert.ok(session.message.text.includes(`${name}を覚えた！`));
+    session.interact(); assert.equal(session.message, null, 'learning is announced only once');
+  }
 
   for (const thresholds of [[], [1, 20], [0, 0], [0, 20, 19], [0, 1.5], [0, maximumExperience + 1], Array(100).fill(0)]) {
     assert.throws(() => parseProgression({ ...progressionConfig, levelThresholds: thresholds }));

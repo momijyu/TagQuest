@@ -1,5 +1,158 @@
 [
-  { "id": 0, "name": "強打", "kind": "technique", "description": "攻撃力の1.5倍で攻撃", "mpCost": 2, "learnLevel": 1, "effect": { "type": "physical-damage", "power": 1.5 } },
-  { "id": 1, "name": "火の玉", "kind": "spell", "description": "敵に12ダメージ", "mpCost": 3, "learnLevel": 1, "effect": { "type": "magic-damage", "amount": 12 } },
-  { "id": 2, "name": "癒し", "kind": "spell", "description": "自分のHPを20回復", "mpCost": 3, "learnLevel": 1, "effect": { "type": "heal-hp", "amount": 20 } }
+  {
+    "id": 0,
+    "name": "強打",
+    "kind": "technique",
+    "description": "攻撃力の1.5倍で攻撃",
+    "mpCost": 2,
+    "learnLevel": 1,
+    "effect": {
+      "type": "physical-damage",
+      "power": 1.5
+    }
+  },
+  {
+    "id": 1,
+    "name": "火の玉",
+    "kind": "spell",
+    "description": "敵に12ダメージ",
+    "mpCost": 3,
+    "learnLevel": 1,
+    "effect": {
+      "type": "magic-damage",
+      "amount": 12
+    }
+  },
+  {
+    "id": 2,
+    "name": "癒し",
+    "kind": "spell",
+    "description": "自分のHPを20回復",
+    "mpCost": 3,
+    "learnLevel": 1,
+    "effect": {
+      "type": "heal-hp",
+      "amount": 20
+    }
+  },
+  {
+    "id": 3,
+    "name": "氷の矢",
+    "kind": "spell",
+    "description": "敵に18ダメージ",
+    "mpCost": 4,
+    "learnLevel": 3,
+    "effect": {
+      "type": "magic-damage",
+      "amount": 18
+    }
+  },
+  {
+    "id": 4,
+    "name": "大きな癒し",
+    "kind": "spell",
+    "description": "自分のHPを50回復",
+    "mpCost": 6,
+    "learnLevel": 5,
+    "effect": {
+      "type": "heal-hp",
+      "amount": 50
+    }
+  },
+  {
+    "id": 5,
+    "name": "雷撃",
+    "kind": "spell",
+    "description": "敵に36ダメージ",
+    "mpCost": 7,
+    "learnLevel": 8,
+    "effect": {
+      "type": "magic-damage",
+      "amount": 36
+    }
+  },
+  {
+    "id": 6,
+    "name": "火炎",
+    "kind": "spell",
+    "description": "敵に60ダメージ",
+    "mpCost": 10,
+    "learnLevel": 12,
+    "effect": {
+      "type": "magic-damage",
+      "amount": 60
+    }
+  },
+  {
+    "id": 7,
+    "name": "深い癒し",
+    "kind": "spell",
+    "description": "自分のHPを120回復",
+    "mpCost": 12,
+    "learnLevel": 16,
+    "effect": {
+      "type": "heal-hp",
+      "amount": 120
+    }
+  },
+  {
+    "id": 8,
+    "name": "氷嵐",
+    "kind": "spell",
+    "description": "敵に110ダメージ",
+    "mpCost": 16,
+    "learnLevel": 24,
+    "effect": {
+      "type": "magic-damage",
+      "amount": 110
+    }
+  },
+  {
+    "id": 9,
+    "name": "雷鳴",
+    "kind": "spell",
+    "description": "敵に170ダメージ",
+    "mpCost": 22,
+    "learnLevel": 32,
+    "effect": {
+      "type": "magic-damage",
+      "amount": 170
+    }
+  },
+  {
+    "id": 10,
+    "name": "命の光",
+    "kind": "spell",
+    "description": "自分のHPを250回復",
+    "mpCost": 20,
+    "learnLevel": 40,
+    "effect": {
+      "type": "heal-hp",
+      "amount": 250
+    }
+  },
+  {
+    "id": 11,
+    "name": "星落とし",
+    "kind": "spell",
+    "description": "敵に300ダメージ",
+    "mpCost": 36,
+    "learnLevel": 60,
+    "effect": {
+      "type": "magic-damage",
+      "amount": 300
+    }
+  },
+  {
+    "id": 12,
+    "name": "奇跡の癒し",
+    "kind": "spell",
+    "description": "自分のHPを600回復",
+    "mpCost": 32,
+    "learnLevel": 80,
+    "effect": {
+      "type": "heal-hp",
+      "amount": 600
+    }
+  }
 ]

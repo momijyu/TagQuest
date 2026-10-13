@@ -55,5 +55,6 @@
       }
     ]
   },
-  "canEscape": false
+  "canEscape": false,
+  "canEscapeBeforeAttacked": true
 }

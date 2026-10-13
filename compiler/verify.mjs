@@ -24,6 +24,8 @@ from pathlib import Path
 sys.path.insert(0, 'compiler')
 from build import compile_stage, encode_floor, normalize_buildings
 stages = [json.loads(Path(f'compiler/maps/{name}.json').read_text()) for name in ('castle','town')]
+# These legacy v8 fixtures predate fractional rates; use an explicit integer rate.
+stages[0]['encounter']['rate'] = 10
 fixtures = []
 def add(source, codec=None):
     # Keep real v8 fixtures for the existing v1-v7 compatibility checks.

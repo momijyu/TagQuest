@@ -27,6 +27,8 @@ try {
   assert.equal(player.equip(8).ok, false);
   player.unequip('weapon'); assert.equal(player.definition.stats.attack, 10);
   assert.equal(player.sell(4).ok, true); assert.equal(player.gold, 60); assert.deepEqual(player.inventory, []);
+  assert.deepEqual(player.discoveredItems, [4], 'sold equipment remains recorded without extra inventory');
+  assert.equal(player.discoveredItems.includes(8), false, 'failed item actions do not reveal undiscovered equipment');
   player.buy(3); player.equip(3); player.equip(3); assert.equal(player.definition.stats.attack, 13);
   player.addItem(4, 1); player.equip(4); assert.equal(player.definition.stats.attack, 17);
   assert.equal(player.inventory.find(i => i.itemId === 3).count, 1); // replaced weapon is retained
@@ -36,6 +38,7 @@ try {
   player.addItem(0, 2); assert.equal(player.useItem(0).ok, false); // full HP does not consume
   player.setVitals({ hp: 35, mp: 0, poisoned: true });
   assert.equal(player.useItem(0).ok, true); assert.equal(player.vitals.hp, 40);
+  assert.ok(player.discoveredItems.includes(0), 'using an item retains its collection record');
   player.addItem(2, 1); player.useItem(2); assert.equal(player.vitals.mp, 10);
   player.addItem(1, 1); player.useItem(1); assert.equal(player.vitals.poisoned, false);
   assert.equal(player.useItem(0).ok, false); assert.equal(player.inventory.find(i => i.itemId === 0).count, 1);
@@ -60,6 +63,7 @@ try {
   game.move('left'); game.move('back'); game.interact(); game.interact(); game.sell(0); game.closeShop();
   assert.deepEqual(game.inventory, []); game.move('right'); assert.deepEqual(game.inventory, []); // sold loot never re-credited
   game.reset(); assert.equal(game.status.gold, 100); assert.deepEqual(game.inventory, []);
+  assert.deepEqual(game.discoveredItems, [], 'a new adventure resets the collection');
   const enemy = structuredClone(enemyCatalog[0]); enemy.canEscape = true; enemy.reward = { gold: 25, items: [{ itemId: 0, quantity: 2 }, { itemId: 3, quantity: 1 }] };
   const rewardWorld = { ...town, entities: [], encounter: { enabled: true, rate: 100, enemyId: 0 } };
   const rich = parsePlayerDefinition({ ...playerConfig, initialItems: [{ itemId: 3, quantity: 1 }, { itemId: 5, quantity: 1 }] });
@@ -185,7 +189,7 @@ try {
   const royalDefeat = createWorldGame([royalScene, royalReturn], 0, () => 0, { player: { ...playerConfig, stats: { hp: 1, attack: 10, defense: 0 } } });
   royalDefeat.move('right'); royalDefeat.battle.attack(); royalDefeat.battle.advance();
   assert.equal(royalDefeat.battle.phase, 'defeat'); royalDefeat.finishEncounter('defeat');
-  assert.equal(royalDefeat.status.experience, 0); assert.equal(royalDefeat.status.gold, 100); assert.deepEqual(royalDefeat.inventory, []);
+  assert.equal(royalDefeat.status.experience, 0); assert.equal(royalDefeat.status.gold, 50); assert.deepEqual(royalDefeat.inventory, []);
   assert.equal(royalDefeat.status.appearance, 'hero'); assert.equal(royalDefeat.status.equipment.head, null);
   // Ordinary victories preserve chosen gear and damage, even when all royal items are owned.
   const ordinaryWin = createWorldGame([{ ...rewardWorld, encounter: { enabled: true, rate: 100, enemyId: 1 } }], 0, () => 0,

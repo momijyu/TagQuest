@@ -1,0 +1,42 @@
+[
+  {
+    "stageId": 3,
+    "enabled": true,
+    "enemyId": 1,
+    "rate": 12,
+    "enemies": [
+      {
+        "enemyId": 1,
+        "weight": 5
+      },
+      {
+        "enemyId": 2,
+        "weight": 3
+      },
+      {
+        "enemyId": 3,
+        "weight": 2
+      }
+    ]
+  },
+  {
+    "stageId": 4,
+    "enabled": true,
+    "enemyId": 5,
+    "rate": 14,
+    "enemies": [
+      {
+        "enemyId": 5,
+        "weight": 5
+      },
+      {
+        "enemyId": 6,
+        "weight": 3
+      },
+      {
+        "enemyId": 7,
+        "weight": 2
+      }
+    ]
+  }
+]

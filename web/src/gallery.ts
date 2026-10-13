@@ -83,7 +83,32 @@ export async function startGallery(characters: PlayCharacters, kingSprites: Awai
 
     const itemList = document.querySelector<HTMLElement>('#item-catalog');
     if (itemList) {
-      for (const item of itemCatalog) { const row = document.createElement('li'); row.textContent = item.name; itemList.append(row); }
+      const groups = [
+        ['recovery', '回復・治療'], ['weapon', '武器'], ['armor', '防具'],
+        ['accessory', '装飾品'], ['material', '素材'],
+      ] as const;
+      const category = (item: typeof itemCatalog[number]) => {
+        if (item.effect) return 'recovery';
+        if (!item.equipment) return 'material';
+        const slot = item.equipment.slot;
+        return slot === 'weapon' || slot === 'accessory' ? slot : 'armor';
+      };
+      for (const [kind, label] of groups) {
+        const items = itemCatalog.filter(item => category(item) === kind);
+        if (!items.length) continue;
+        const section = document.createElement('section'); section.className = 'item-category';
+        const heading = document.createElement('h3'); heading.textContent = label;
+        const count = document.createElement('span'); count.className = 'item-category-count'; count.textContent = `${items.length}種類`;
+        heading.append(count);
+        const list = document.createElement('ul');
+        for (const item of items) {
+          const row = document.createElement('li');
+          const name = document.createElement('strong'); name.textContent = item.name;
+          const description = document.createElement('p'); description.textContent = item.description;
+          row.append(name, description); list.append(row);
+        }
+        section.append(heading, list); itemList.append(section);
+      }
     }
 
     for (const id of ['castle-exterior-preview', 'town-loot-overlay']) {

@@ -20,7 +20,7 @@ try {
   const { decodeScenes } = await import(pathToFileURL(join(temporary, 'decoder.mjs')).href);
   const { createWalkingGame } = await import(pathToFileURL(join(temporary, 'walking.mjs')).href);
   const { createWorldGame } = await import(pathToFileURL(join(temporary, 'world.mjs')).href);
-  const { drawCompiledScene } = await import(pathToFileURL(join(temporary, 'renderer.mjs')).href);
+  const { drawCompiledScene, entityCollisionFrame } = await import(pathToFileURL(join(temporary, 'renderer.mjs')).href);
   const base = { id: 0, name: '会話と取得', width: 6, height: 8, spawn: { x: 16, y: 48 },
     spawnAnchor: 'frame', npcAnchor: 'frame', floor: { default: 'grass', rectangles: [] }, entities: [
       { kind: 'resident', x: 16, y: 32, parameters: [], dialogue: { type: 'template', id: 0 } },
@@ -101,7 +101,7 @@ try {
   throne.interact(); assert.equal(throne.message.text, 'やくそうを手に入れた！');
   throne.interact(); assert.equal(throne.message, null);
   assert.equal(throne.visibleEntities[0].kind, 'throne'); assert.equal(throne.move('back'), false);
-  throne.interact(); assert.equal(throne.message.text, '<宝物>を見つけた！');
+  throne.interact(); assert.equal(throne.message.text, 'もうここには何もないようだ。');
   throne.interact(); assert.equal(throne.message, null); assert.equal(throne.inventory[0].count, 1);
   assert.deepEqual(throne.scene, throneSnapshot);
   throne.reset(); assert.deepEqual(throne.inventory, []); throne.move('back'); throne.interact();
@@ -117,8 +117,33 @@ try {
     ] };
     const prop = createWalkingGame(normalized(parseWorld(propSource))[0]); prop.move('back'); prop.interact();
     assert.equal(prop.message.text, 'どくけしそうを手に入れた！'); prop.interact(); prop.interact();
-    assert.equal(prop.message.text, '何も見つからなかった。'); assert.equal(prop.inventory[0].count, 1);
+    assert.equal(prop.message.text, 'もうここには何もないようだ。'); assert.equal(prop.inventory[0].count, 1);
     assert.equal(prop.visibleEntities.length, 1);
+  }
+  // Defaults live only on the Web: no serialized dialogue/item is required.
+  const inspectable = JSON.parse(readFileSync(join(root, 'web/src/data/inspectable-objects.json'), 'utf8'));
+  const expectedDefaults = { well: 'きれいな水をたたえた井戸だ。', 'house-red': '鍵がかかっているようだ。',
+    'house-slate': '鍵がかかっているようだ。', 'cave-crystal': '澄んだ光を放つ水晶だ。', 'stone-tablet': '風化した石碑だ。' };
+  for (const kind of inspectable) {
+    const entity = { kind, x: 32, y: 32, parameters: [] }, frame = entityCollisionFrame(entity);
+    const position = { x: frame.x, y: frame.y + frame.height - 16 };
+    const scene = { id: 0, width: 12, height: 16, spawn: position, tiles: new Uint8Array(192).fill(7), entities: [entity] };
+    const prop = createWalkingGame(scene, { position, direction: 'back' }); prop.interact();
+    assert.ok(prop.message?.text, `${kind} has a default inspection response`);
+    if (expectedDefaults[kind]) assert.equal(prop.message.text, expectedDefaults[kind]);
+    assert.deepEqual(prop.inventory, []); assert.deepEqual(prop.scene, scene, 'default responses never add data to the scene');
+    prop.interact(); prop.interact(); assert.ok(prop.message?.text, `${kind} responds again`);
+  }
+  for (const [kind, id] of [['well', 43], ['house-red', 44]]) {
+    const entity = { kind, x: 32, y: 32, parameters: [], dialogue: { type: 'template', id }, itemId: 2 };
+    const frame = entityCollisionFrame(entity), position = { x: frame.x, y: frame.y + frame.height - 16 };
+    const scene = { id: 0, width: 12, height: 16, spawn: position, tiles: new Uint8Array(192).fill(7), entities: [entity] };
+    const prop = createWalkingGame(scene, { position, direction: 'back' }); prop.interact();
+    assert.match(prop.message.text, kind === 'well' ? /小さな瓶/ : /お守り/);
+    prop.interact(); assert.match(prop.message.text, /手に入れた/); prop.interact(); prop.interact();
+    assert.equal(prop.message.text, 'もうここには何もないようだ。'); assert.equal(prop.message.dialogue, undefined);
+    assert.deepEqual(prop.inventory, [{ itemId: 2, count: 1 }]);
+    prop.reset(); prop.move('back'); prop.interact(); assert.match(prop.message.text, kind === 'well' ? /小さな瓶/ : /お守り/);
   }
   const chestScene = decodeScenes(encodeWorld(parseWorld(newMaterials)).bytes)[0];
   const chestSnapshot = structuredClone(chestScene);

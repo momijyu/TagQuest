@@ -1,0 +1,52 @@
+{
+  "id": 5,
+  "name": "洞窟コウモリ",
+  "characterId": "cave-bat",
+  "battleImage": "cave-bat",
+  "background": "cave",
+  "stats": {
+    "hp": 24,
+    "attack": 6,
+    "defense": 1
+  },
+  "reward": {
+    "gold": 7,
+    "experience": 24,
+    "items": [
+      {
+        "itemId": 16,
+        "quantity": 1
+      },
+      {
+        "itemId": 0,
+        "quantity": 1
+      }
+    ]
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "attack",
+        "text": "洞窟コウモリがかみついた！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "洞窟コウモリが翼で切りつけた！",
+        "power": 1.2
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "attack",
+        "text": "洞窟コウモリがかみついた！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "洞窟コウモリが翼で切りつけた！",
+        "power": 1.2
+      }
+    ]
+  }
+}

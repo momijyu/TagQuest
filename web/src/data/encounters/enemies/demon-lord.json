@@ -5,9 +5,9 @@
   "battleImage": "demon-lord",
   "background": "castle",
   "stats": {
-    "hp": 120,
-    "attack": 12,
-    "defense": 4
+    "hp": 360,
+    "attack": 36,
+    "defense": 12
   },
   "reward": {
     "gold": 0,
@@ -40,11 +40,5 @@
       }
     ]
   },
-  "royalEquipmentPlayerAttackMultiplier": 0,
-  "royalEquipmentAttack": {
-    "multiplier": 100,
-    "match": "any"
-  },
-  "royalEquipmentWarning": "王の装備を1点でも身につけていると、魔王の攻撃力が100倍になる！ 戦う前に装備を外そう。王の装備の攻撃ボーナスも、この戦いでは封じられる。",
   "canEscape": false
 }

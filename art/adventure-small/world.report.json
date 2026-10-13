@@ -1,0 +1,168 @@
+{
+  "format": "TQ v15 experimental",
+  "binary_bytes": 334,
+  "base64url_chars": 446,
+  "base_url": "https://tag-quest-kappa.vercel.app/",
+  "final_url_bytes": 482,
+  "binary_target_bytes": 300,
+  "remaining_to_binary_target_bytes": -34,
+  "includes_ndef_overhead": true,
+  "ndef_tlv_bytes": 487,
+  "ntag215_ndef_capacity_bytes": 496,
+  "remaining_ntag215_bytes": 9,
+  "stages": [
+    {
+      "id": 0,
+      "name": "小さな城",
+      "width": 7,
+      "height": 7,
+      "floor_bytes": {
+        "RAW": 25,
+        "RLE": 20,
+        "RECT": 20
+      },
+      "selected_codec": "RLE",
+      "header_bytes": 9,
+      "entity_count": 2,
+      "entity_bytes": 5,
+      "interaction_bytes": 6,
+      "exit_bytes": 5,
+      "encounter_bytes": 7,
+      "stage_bytes": 52,
+      "tile_counts": {
+        "marble": 17,
+        "carpet": 5,
+        "wall-top": 21,
+        "empty": 6
+      }
+    },
+    {
+      "id": 1,
+      "name": "小さな街",
+      "width": 17,
+      "height": 11,
+      "floor_bytes": {
+        "RAW": 94,
+        "RLE": 28,
+        "RECT": 11
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 7,
+      "entity_bytes": 21,
+      "interaction_bytes": 6,
+      "exit_bytes": 8,
+      "encounter_bytes": 2,
+      "stage_bytes": 57,
+      "tile_counts": {
+        "grass": 117,
+        "brick": 20,
+        "empty": 50
+      }
+    },
+    {
+      "id": 2,
+      "name": "小さな世界",
+      "width": 16,
+      "height": 16,
+      "floor_bytes": {
+        "RAW": 134,
+        "RLE": 85,
+        "RECT": 23
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 4,
+      "entity_bytes": 8,
+      "interaction_bytes": 2,
+      "exit_bytes": 14,
+      "encounter_bytes": 2,
+      "stage_bytes": 58,
+      "tile_counts": {
+        "grass": 126,
+        "sea": 60,
+        "sand": 52,
+        "world-mountain": 9,
+        "world-forest": 9
+      }
+    },
+    {
+      "id": 3,
+      "name": "小さな森",
+      "width": 9,
+      "height": 9,
+      "floor_bytes": {
+        "RAW": 41,
+        "RLE": 17,
+        "RECT": 8
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 5,
+      "entity_bytes": 10,
+      "interaction_bytes": 9,
+      "exit_bytes": 5,
+      "encounter_bytes": 10,
+      "stage_bytes": 51,
+      "tile_counts": {
+        "dirt": 7,
+        "empty": 8,
+        "forest-ground": 66
+      }
+    },
+    {
+      "id": 4,
+      "name": "小さな洞窟",
+      "width": 9,
+      "height": 9,
+      "floor_bytes": {
+        "RAW": 45,
+        "RLE": 22,
+        "RECT": 21
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 2,
+      "entity_bytes": 4,
+      "interaction_bytes": 9,
+      "exit_bytes": 5,
+      "encounter_bytes": 10,
+      "stage_bytes": 58,
+      "tile_counts": {
+        "empty": 8,
+        "cave-floor": 24,
+        "cave-wall": 49
+      }
+    },
+    {
+      "id": 5,
+      "name": "小さな魔王城",
+      "width": 7,
+      "height": 8,
+      "floor_bytes": {
+        "RAW": 33,
+        "RLE": 29,
+        "RECT": 25
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 2,
+      "entity_bytes": 4,
+      "interaction_bytes": 6,
+      "exit_bytes": 5,
+      "encounter_bytes": 5,
+      "stage_bytes": 54,
+      "tile_counts": {
+        "empty": 6,
+        "demon-floor": 21,
+        "demon-carpet": 6,
+        "demon-wall-top": 23
+      }
+    }
+  ],
+  "binary_bytes_by_floor_codec": {
+    "RAW": 598,
+    "RLE": 427,
+    "RECT": 334
+  }
+}

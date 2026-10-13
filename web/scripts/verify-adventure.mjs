@@ -9,7 +9,7 @@ const root = fileURLToPath(new URL('../..', import.meta.url)), out = mkdtempSync
 try {
   await build({ configFile: false, logLevel: 'silent', build: { lib: { entry: Object.fromEntries([
     ['adventure', 'editor/adventure'], ['model', 'editor/model'], ['validation', 'editor/validation'],
-    ['url', 'codec/nfc-url'], ['walking', 'game/walking'], ['exits', 'data/stage-exits'], ['dialogues', 'data/interactions'],
+    ['url', 'codec/nfc-url'], ['walking', 'game/walking'], ['exits', 'data/stage-exits'], ['dialogues', 'data/interactions'], ['world', 'game/world'],
   ].map(([name, file]) => [name, join(root, `web/src/${file}.ts`)])), formats: ['es'], fileName: (_, name) => `${name}.mjs` }, outDir: out } });
   const read = name => import(pathToFileURL(join(out, `${name}.mjs`)).href);
   const { createAdventureWorld } = await read('adventure');
@@ -19,6 +19,7 @@ try {
   const { canStand, createWalkingGame, interactionTarget } = await read('walking');
   const { exitArrival } = await read('exits');
   const { dialogueText } = await read('dialogues');
+  const { createWorldGame } = await read('world');
   const initial = initialWorld(), before = structuredClone(initial), world = createAdventureWorld();
   assert.deepEqual(initialWorld(), before, 'sample additions do not change the default castle/town');
   assert.equal(world.stages.length, 6);
@@ -81,7 +82,9 @@ try {
       if (entity.itemId !== undefined) { assert.equal(quantity(), beforeQuantity + 1); rewards++; }
       drain();
       if (entity.itemId !== undefined) {
-        game.interact(); drain(); assert.equal(quantity(), beforeQuantity + 1, 'repeating inspection cannot duplicate a reward');
+        game.interact();
+        assert.equal(game.message.text, entity.kind === 'treasure-chest' ? '宝箱は空っぽだった。' : 'もうここには何もないようだ。');
+        drain(); assert.equal(quantity(), beforeQuantity + 1, 'repeating inspection cannot duplicate a reward');
         if (entity.kind === 'treasure-chest') assert.ok(game.openedChests.has(game.scene.entities[index]));
       }
     }
@@ -89,7 +92,23 @@ try {
   }
   assert.equal(rewards, 10, '8 chests + well + hidden house reward');
   assert.ok(conversations >= 10);
-  for (const id of [2, 3, 4]) assert.equal(scenes.find(s => s.id === id).encounter, undefined, 'field enemies are still chosen by NFC authors');
+  assert.equal(castle.encounter.rate, 0.1, 'hidden king is a one-in-a-thousand encounter after URL replay');
+  assert.equal(scenes.find(s => s.id === 2).encounter, undefined, 'overworld remains peaceful');
+  assert.deepEqual(scenes.find(s => s.id === 3).encounter.enemies.map(e => e.enemyId), [1, 2, 3]);
+  assert.deepEqual(scenes.find(s => s.id === 4).encounter.enemies.map(e => e.enemyId), [5, 6, 7]);
+  for (const [stageId, ids] of [[3, [1, 2, 3]], [4, [5, 6, 7]]]) {
+    const scene = scenes.find(s => s.id === stageId);
+    const spawn = exitArrival(scenes.flatMap(s => s.exits ?? []).find(e => e.targetStageId === stageId));
+    for (const [roll, enemyId] of [[0, ids[0]], [0.5, ids[1]], [0.8, ids[2]]]) {
+      const randomValues = [0, roll];
+      const game = createWorldGame(scenes.map(s => s.id === stageId ? { ...s, spawn } : s), stageId, () => randomValues.shift() ?? 0.999999);
+      assert.equal(game.move('back'), true, 'a real step from the sample entry triggers the encounter table');
+      assert.equal(game.encounter?.enemyId, enemyId, 'all three authored enemies can be encountered after Vercel URL replay');
+    }
+  }
+  for (const scene of scenes) for (const entity of scene.entities) if (entity.dialogue) {
+    assert.doesNotMatch(dialogueText(entity.dialogue), /王の装備|百倍|100倍|装備を外/);
+  }
   assert.deepEqual(createAdventureWorld(), world, 'another sample starts fresh');
-  console.log(`Adventure: spacious castle, plaza town, clear projecting exits, unobstructed street, Vercel URL replay, all six connections, ${conversations} reachable dialogues, ${rewards} one-time rewards, eight chests, ordinary gear, royal warning, source isolation and unassigned field enemies passed.`);
+  console.log(`Adventure: spacious castle, plaza town, Vercel URL replay, 0.1% hidden king, three forest/three cave encounters, no boss hints, all six connections, ${conversations} dialogues, ${rewards} one-time rewards and source isolation passed.`);
 } finally { rmSync(out, { recursive: true, force: true }); }

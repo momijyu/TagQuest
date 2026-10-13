@@ -141,6 +141,17 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
         rect('#f2eee2', x - 12, 102, 28, 10);
         rect('#c2c8c7', x - 14, 112, 32, 4);
       }
+    } else if (battle.enemy.background === 'cave') {
+      rect('#171b2b', 0, 0, 320, 192);
+      for (let y = 0; y < 112; y += 16) for (let x = -(y % 32 ? 16 : 0); x < 320; x += 32) {
+        rect('#303442', x + 1, y + 1, 30, 14);
+        rect('#414657', x + 2, y + 2, 27, 2);
+      }
+      rect('#44404d', 0, 112, 320, 80);
+      for (let y = 120; y < 192; y += 16) for (let x = y % 32 ? 8 : 24; x < 320; x += 40) rect('#555161', x, y, 12, 2);
+      for (const x of [25, 277]) {
+        rect('#344554', x, 84, 12, 28); rect('#60969f', x + 3, 88, 6, 23); rect('#98c5c8', x + 3, 88, 2, 18);
+      }
     } else drawBattleOutdoors(context, battle.enemy.background === 'forest');
     if (battle?.phase !== 'victory') {
       const image = battle?.enemy.battleImage ? supplies.illustrations?.[battle.enemy.battleImage] : undefined;

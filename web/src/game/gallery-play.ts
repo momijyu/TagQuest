@@ -1,6 +1,12 @@
 import type { SceneData } from '../codec/scenes';
 import { mountPlayView } from './play-view';
 import type { PlayCharacters } from './play-view';
+import { createAdventurePreset } from '../editor/adventure-presets';
+import type { AdventureSize } from '../editor/adventure-presets';
+import { encodeWorld, stageLabel } from '../editor/model';
+import { decodeScenes } from '../codec/scenes';
+import { nfcBudget, defaultPublicBase } from '../codec/nfc-url';
+import { exitArrival } from '../data/stage-exits';
 
 export function startGalleryPlay(
   root: HTMLElement,
@@ -12,8 +18,12 @@ export function startGalleryPlay(
   const map = root.querySelector<HTMLSelectElement>('#gallery-play-map')!;
   const toggle = root.querySelector<HTMLButtonElement>('#gallery-play-toggle')!;
   const errorBox = root.querySelector<HTMLElement>('#gallery-play-error')!;
-  const available = { castle: scenes.castle, town: scenes.town, ...(scenes.world ? { world: scenes.world } : {}), ...(scenes.forest ? { forest: scenes.forest } : {}), ...(scenes.cave ? { cave: scenes.cave } : {}), ...(scenes.demonCastle ? { 'demon-castle': scenes.demonCastle } : {}) };
-  const names: Record<string, string> = { castle: '城', town: '街', world: '全体マップ', forest: '森', cave: '洞窟', 'demon-castle': '魔王城' };
+  const normal = { castle: scenes.castle, town: scenes.town, ...(scenes.world ? { world: scenes.world } : {}), ...(scenes.forest ? { forest: scenes.forest } : {}), ...(scenes.cave ? { cave: scenes.cave } : {}), ...(scenes.demonCastle ? { 'demon-castle': scenes.demonCastle } : {}) };
+  let available: Record<string, SceneData> = normal;
+  let names: Record<string, string> = { castle: '城', town: '街', world: '全体マップ', forest: '森', cave: '洞窟', 'demon-castle': '魔王城' };
+  const size = root.querySelector<HTMLSelectElement>('#gallery-play-size');
+  const budgetText = root.querySelector<HTMLElement>('#gallery-play-budget');
+  const urlLink = root.querySelector<HTMLAnchorElement>('#gallery-play-url');
   let running = false;
   const playView = mountPlayView(view, characters, () => running && isActive(), id => names[Object.entries(available).find(([, scene]) => scene.id === id)?.[0] ?? 'castle']);
   function stop(): void {
@@ -23,9 +33,10 @@ export function startGalleryPlay(
     if (running) { stop(); return; }
     try {
       errorBox.hidden = true;
-      const scene = available[map.value as keyof typeof available] ?? scenes.castle;
-      // 紹介用の街だけ仮の開始位置を使う。元のマップ・NFCデータは変更しない。
-      const sample = { ...scene, spawn: scene.spawn ?? { x: 96, y: 464 } };
+      const scene = available[map.value] ?? Object.values(available)[0];
+      const entry = Object.values(available).flatMap(scene => scene.exits ?? []).find(exit => exit.targetStageId === scene.id);
+      // 開始位置がないマップも、設定済みの入口から試遊する。
+      const sample = { ...scene, spawn: scene.spawn ?? (entry ? exitArrival(entry) : { x: 96, y: 464 }) };
       view.hidden = false; running = true;
       playView.start(sample, true, Object.values(available));
       toggle.textContent = '停止';
@@ -35,11 +46,33 @@ export function startGalleryPlay(
       errorBox.hidden = false;
     }
   }
+  function changeSize(): void {
+    stop(); errorBox.hidden = true;
+    try {
+      const value = (size?.value || 'normal') as AdventureSize, world = createAdventurePreset(value);
+      const encoded = encodeWorld(world, true);
+      const budget = nfcBudget(encoded.bytes, defaultPublicBase(window.location), 496, 5);
+      const normalKeys = ['castle', 'town', 'world', 'forest', 'cave', 'demon-castle'];
+      const previous = map.value;
+      available = value === 'normal' ? normal : Object.fromEntries(decodeScenes(encoded.bytes).map(scene => [normalKeys[scene.id] ?? `stage-${scene.id}`, scene]));
+      names = Object.fromEntries(world.stages.map(stage => [normalKeys[stage.id] ?? `stage-${stage.id}`, stageLabel(stage)]));
+      map.innerHTML = Object.entries(available).map(([key]) => `<option value="${key}"></option>`).join('');
+      for (const option of map.querySelectorAll('option')) option.textContent = names[(option as HTMLOptionElement).value] ?? '';
+      map.value = previous in available ? previous : Object.keys(available)[0];
+      if (budgetText) budgetText.textContent = `${world.stages.length}マップ・バイナリ ${encoded.bytes.length}B・NFC ${budget.usedBytes}B / 496B（NDEF ${budget.ndefBytes}B＋予約5B）${budget.remainingBytes >= 0 ? `・残り${budget.remainingBytes}B` : '・NTAG215の容量を超えます'}`;
+      if (urlLink) urlLink.href = budget.url;
+    } catch (error) {
+      errorBox.textContent = error instanceof Error ? error.message : '世界を読み込めませんでした。'; errorBox.hidden = false;
+    }
+  }
   toggle.addEventListener('click', togglePlay);
   map.addEventListener('change', stop);
+  size?.addEventListener('change', changeSize);
+  if (size) changeSize();
   return () => {
     playView.dispose();
     toggle.removeEventListener('click', togglePlay);
     map.removeEventListener('change', stop);
+    size?.removeEventListener('change', changeSize);
   };
 }

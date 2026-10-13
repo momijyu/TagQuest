@@ -14,7 +14,7 @@ try {
   const read = name => import(pathToFileURL(join(out, `${name}.mjs`)).href);
   const { parseWorld, initialWorld, makeEntity, encodeWorld, toSceneData } = await read('model');
   const { entityFrame, entityDrawingFrame, entityCollisionFrame, drawCompiledScene } = await read('renderer');
-  const { canStand, interactionTarget } = await read('walking');
+  const { canStand, interactionTarget, createWalkingGame } = await read('walking');
   const { decodeScenes } = await read('codec');
   const playable = stage => { const { name, floor, spawnAnchor, residentAnchor, npcAnchor, buildingAnchor, ...scene } = toSceneData(stage); return scene; };
   const kinds = ['castle', 'weapon-shop', 'armor-shop', 'item-shop', 'house-red', 'house-slate'];
@@ -24,7 +24,9 @@ try {
     const s = base(2, height / 16), e = makeEntity(kind, 0, 0, s); s.entities.push(e);
     const world = parseWorld([s]);
     assert.deepEqual(entityFrame(e), { x: 0, y: 0, width: 32, height });
-    assert.deepEqual(entityCollisionFrame(e), entityFrame(e));
+    const collision = kind.startsWith('house-') ? { x: -16, y: 32, width: 64, height: 32 }
+      : kind.endsWith('-shop') ? { x: -16, y: 16, width: 64, height: 64 } : entityFrame(e);
+    assert.deepEqual(entityCollisionFrame(e), collision);
     assert.deepEqual(entityDrawingFrame(e), { x: -(drawingWidth - 32) / 2, y: 0, width: drawingWidth, height });
     for (const compact of [false, true]) {
       const encoded = encodeWorld(world, compact); assert.equal(encoded.bytes[2], 14);
@@ -43,6 +45,8 @@ import json,base64,sys
 sys.path.insert(0,sys.argv[1])
 from build import ROOT,compile_stage
 stages=[json.loads((ROOT/f'compiler/maps/{name}.json').read_text()) for name in ('castle','town')]
+# Legacy formats require an integer rate, independently of today's editor default.
+stages[0]['encounter']['rate']=10
 result=[]
 for version in (8,11,13):
  b=b'TQ'+bytes([version,len(stages)])
@@ -52,6 +56,7 @@ for version in (8,11,13):
  result.append(base64.b64encode(b).decode())
 print(json.dumps(result))`, join(root, 'compiler')], { encoding: 'utf8' }));
   const expected = initialWorld().stages.map(playable);
+  expected[0].encounter.rate = 10;
   for (const fixture of fixtures) assert.deepEqual(decodeScenes(new Uint8Array(Buffer.from(fixture, 'base64'))), expected);
   const size = 192, heroColor = 0xff00ff, actor = { image: {}, sourceX: 0, sourceY: 0, width: 32, height: 32 };
   function render(scene, position) {
@@ -66,11 +71,14 @@ print(json.dumps(result))`, join(root, 'compiler')], { encoding: 'utf8' }));
   for (const kind of kinds) {
     const s = base(); s.entities = [makeEntity(kind, 48, 16, s)];
     const scene = toSceneData(parseWorld([s]).stages[0]), before = structuredClone(scene);
-    assert.ok(canStand(scene, { x: 32, y: 32 }), 'artwork overhang does not block the adjacent path');
+    const wideCollision = kind !== 'castle';
+    assert.equal(canStand(scene, { x: 32, y: 32 }), !wideCollision, 'house/shop side walls block movement; castle overhangs remain passable');
     assert.ok(!canStand(scene, { x: 48, y: 32 }), 'central two cells block movement');
     const only = render(scene, null), ground = render({ ...scene, entities: [] }, null);
-    const behind = render(scene, { x: 32, y: 32 }); let covered = 0;
-    for (let y = 32; y < 64; y++) for (let x = 24; x < 56; x++) {
+    const sideX = wideCollision ? 16 : 32;
+    assert.ok(canStand(scene, { x: sideX, y: 32 }));
+    const behind = render(scene, { x: sideX, y: 32 }); let covered = 0;
+    for (let y = 32; y < 64; y++) for (let x = sideX - 8; x < sideX + 24; x++) {
       const i = y * size + x;
       if (only[i] !== ground[i]) { assert.equal(behind[i], only[i], `${kind} covers the hero behind it`); covered++; }
     }
@@ -79,6 +87,42 @@ print(json.dumps(result))`, join(root, 'compiler')], { encoding: 'utf8' }));
     const front = render(scene, { x: 32, y: bottom - 16 });
     assert.equal(front[(bottom - 12) * size + 40], heroColor, 'equal depth keeps the hero visible in front');
     assert.deepEqual(scene, before);
+  }
+  for (const kind of kinds.filter(kind => kind !== 'castle')) {
+    const s = base(); s.entities = [{ ...makeEntity(kind, 48, 16, s), dialogue: { type: 'custom', text: '閉じた家だ。' } }];
+    const world = parseWorld([s]);
+    for (const compact of [false, true]) {
+      const scene = decodeScenes(encodeWorld(world, compact).bytes)[0], snapshot = structuredClone(scene);
+      const house = kind.startsWith('house-'), height = house ? 4 : 5, firstBlockedRow = house ? 2 : 1;
+      // Feet can pass behind upper artwork; the lower four columns block movement.
+      for (let row = 0; row < height; row++) for (let col = 0; col < 4; col++) {
+        assert.equal(canStand(scene, { x: 32 + col * 16, y: row * 16 }), row < firstBlockedRow, `${kind} cell ${col},${row}`);
+      }
+      const rearY = (firstBlockedRow - 1) * 16;
+      const rear = createWalkingGame(scene, { position: { x: 16, y: rearY }, direction: 'right' });
+      for (let step = 0; step < 5; step++) assert.equal(rear.move('right'), true, 'upper artwork does not block the rear passage');
+      assert.equal(rear.move('front'), true, 'the rear passage leads back around the side');
+      const upper = render(scene, { x: 48, y: rearY }), only = render(scene, null), ground = render({ ...scene, entities: [] }, null);
+      let covered = 0;
+      for (let y = rearY; y < rearY + 32; y++) for (let x = 40; x < 72; x++) {
+        const i = y * size + x;
+        if (only[i] !== ground[i]) { assert.equal(upper[i], only[i], 'upper artwork hides the hero walking behind it'); covered++; }
+      }
+      assert.ok(covered > 0);
+      for (const [position, direction] of [
+        [{ x: 16, y: 32 }, 'right'], [{ x: 96, y: 32 }, 'left'],
+        [{ x: 48, y: rearY }, 'front'], [{ x: 48, y: height * 16 }, 'back'],
+      ]) {
+        const game = createWalkingGame(scene, { position, direction });
+        assert.equal(game.move(direction), false, `${kind} cannot be entered from ${direction}`);
+        assert.deepEqual(game.position, position, 'blocked movement keeps the player outside');
+        game.interact(); assert.equal(game.message?.text, '閉じた家だ。', 'inspection works from the visible outer wall');
+      }
+      const shifted = { ...scene, entities: [{ ...scene.entities[0], x: 50, y: 18 }] };
+      const game = createWalkingGame(shifted, { position: { x: 16, y: 32 }, direction: 'right' });
+      assert.equal(game.move('right'), false, '2px offsets cannot be crossed mid-step');
+      assert.deepEqual(scene, snapshot);
+    }
   }
   // Shops still show their merchant above the floor and below the counter.
   for (const kind of ['weapon', 'armor', 'item']) {
@@ -91,5 +135,5 @@ print(json.dumps(result))`, join(root, 'compiler')], { encoding: 'utf8' }));
     assert.deepEqual(render({ ...scene, entities: [merchant, shop] }, null), withMerchant, 'placement order does not hide the merchant');
     assert.equal(interactionTarget(scene, { x: 56, y: 80 }, 'back'), 1, 'counter conversation survives narrowing');
   }
-  console.log('Buildings: 2-cell footprints, unchanged artwork/heights, edge overhangs, v8/v11/v13 migration, v14 round trips, foreground pixels and shop counters passed.');
+  console.log('Buildings: 2-cell placement frames, lower 4x2 house/4x4 shop collision, passable rear artwork/occlusion, four-sided inspection, unchanged artwork/heights, v8/v11/v13 migration, v14 round trips, foreground pixels and shop counters passed.');
 } finally { rmSync(out, { recursive: true, force: true }); }

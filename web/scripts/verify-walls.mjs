@@ -75,6 +75,6 @@ try {
   assert.equal(wallShape(upright, 1, 1), 'left');
   const horizontal = { ...filled, tiles: Uint8Array.from([0, 0, 0, 2, 2, 2, 0, 0, 0]) };
   assert.equal(wallShape(horizontal, 1, 1), 'top');
-  assert.equal(encodeWorld(initialWorld()).bytes.length, 202);
+  assert.equal(encodeWorld(initialWorld()).bytes.length, 206);
   console.log('Automatic walls: one ID per material, eight directions/corners, thick regions, isolated/cross/wall lines, neighbor redraw/undo, collision, legacy JSON/binary aliases and Python/Web parity passed.');
 } finally { rmSync(out, { recursive: true, force: true }); }

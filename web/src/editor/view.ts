@@ -42,7 +42,9 @@ export const editorMarkup = `
     <label>新しいマップ <input id="editor-new-name" value="フィールド" maxlength="80" /></label>
     <button id="editor-add-stage" class="btn btn-sm">＋ マップ追加</button>
     <button id="editor-add-world-sample" class="btn btn-sm btn-soft">＋ 全体マップの見本</button>
-    <button id="editor-add-adventure-sample" class="btn btn-sm btn-soft">＋ 接続した冒険の見本</button>
+    <button id="editor-add-adventure-sample" class="btn btn-sm btn-soft">＋ 通常の世界（6マップ）</button>
+    <button id="editor-add-large-sample" class="btn btn-sm btn-soft">＋ 巨大な世界（15マップ）</button>
+    <button id="editor-add-small-sample" class="btn btn-sm btn-soft">＋ NFC用の小さな世界（6マップ）</button>
     <button id="editor-clear-world" class="btn btn-sm btn-soft btn-error">全マップを削除</button>
   </div>
   <div class="editor-layout">

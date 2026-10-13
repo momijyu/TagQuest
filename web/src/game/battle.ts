@@ -26,6 +26,7 @@ export function createBattle(enemy: EnemyDefinition, options: {
   let feedback: BattleFeedback | null = null, feedbackId = 0;
   const emit = (target: BattleFeedback['target'], amount: number) => { feedback = { id: ++feedbackId, target, amount }; };
   let wasAttacked = options.wasAttacked ?? false;
+  const canEscape = () => config.canEscape !== false || config.canEscapeBeforeAttacked === true && !wasAttacked;
   let firstReaction = false, guarding = false;
   let peacefulTurn = 0, angryTurn = 0;
   let phase: BattlePhase = 'commands';
@@ -34,9 +35,9 @@ export function createBattle(enemy: EnemyDefinition, options: {
   const intro = wasAttacked ? config.firstAttackedMessage : firstEntry.type === 'say' ? firstEntry.text : firstEntry.speech;
   let speech: string | null = intro ?? null;
   let text = `${config.name}があらわれた！${intro ? `\n「${intro}」` : ''}`;
-  if ((config.royalEquipmentPlayerAttackMultiplier ?? 1) < 1 && options.equipment && wearsAnyRoyalEquipment(options.equipment)) text += '\n王の装備の攻撃力が弱められた！';
+  if (config.canEscape === false && canEscape()) text += '\n攻撃する前なら「にげる」で立ち去れます。';
   const warning = options.equipment ? royalEquipmentWarning(config, options.equipment) : null;
-  if (warning) text += `\n${warning}${config.canEscape === false ? '\nこの戦いからは逃げられない！' : '\n「にげる」で戻って装備を外せます。'}`;
+  if (warning) text += `\n${warning}${!canEscape() ? '\nこの戦いからは逃げられない！' : '\n「にげる」で戻って装備を外せます。'}`;
   function damageEnemy(damage: number, announcement: string): void {
     enemyHp = Math.max(0, enemyHp - damage); emit('enemy', damage);
     if (!wasAttacked) { wasAttacked = true; firstReaction = true; options.onAttacked?.(); }
@@ -92,6 +93,7 @@ export function createBattle(enemy: EnemyDefinition, options: {
     get speech() { return speech; },
     get action() { return action; },
     get wasAttacked() { return wasAttacked; },
+    get canEscape() { return canEscape(); },
     attack(): void {
       if (phase !== 'commands') return;
       action = 'attack'; guarding = false; speech = null;
@@ -134,7 +136,7 @@ export function createBattle(enemy: EnemyDefinition, options: {
     },
     escape(): void {
       if (phase !== 'commands') return;
-      if (config.canEscape === false) {
+      if (!canEscape()) {
         text = 'この戦いからは逃げられない！'; return;
       }
       phase = 'escape'; speech = null; text = `${player.name}はにげだした！`;

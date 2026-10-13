@@ -10,46 +10,50 @@ const root = fileURLToPath(new URL('../..', import.meta.url));
 const temporary = mkdtempSync(join(tmpdir(), 'tagquest-adventure-'));
 try {
   await build({ configFile: false, logLevel: 'silent', build: {
-    lib: { entry: { adventure: join(root, 'web/src/editor/adventure.ts'), model: join(root, 'web/src/editor/model.ts'),
+    lib: { entry: { adventure: join(root, 'web/src/editor/adventure-presets.ts'), model: join(root, 'web/src/editor/model.ts'),
       renderer: join(root, 'web/src/renderer/compiled-scene.ts'), sparkle: join(root, 'web/src/data/effects/loot-sparkle.ts') },
       formats: ['es'], fileName: (_, name) => `${name}.mjs` },
     outDir: temporary, emptyOutDir: false,
   } });
-  const { createAdventureWorld } = await import(pathToFileURL(join(temporary, 'adventure.mjs')));
+  const { createAdventurePreset } = await import(pathToFileURL(join(temporary, 'adventure.mjs')));
   const { toSceneData } = await import(pathToFileURL(join(temporary, 'model.mjs')));
   const { drawCompiledScene } = await import(pathToFileURL(join(temporary, 'renderer.mjs')));
-  const output = join(root, 'art/adventure'); mkdirSync(output, { recursive: true });
-  const source = join(output, 'world.json');
-  const world = createAdventureWorld();
-  writeFileSync(source, JSON.stringify(world, null, 2) + '\n');
-  execFileSync('python3', [join(root, 'compiler/build.py'), '--maps', source, '--compact', '--out', join(output, 'world.bin')], { stdio: 'inherit' });
-  const king = { image: readPng(join(root, 'web/src/assets/king/king-sheet-64.png')), sourceX: 0, sourceY: 0, width: 64, height: 64 };
-  const player = { image: readPng(join(root, 'web/src/assets/player/hero-sheet-64.png')), sourceX: 0, sourceY: 0, width: 64, height: 64 };
-  const { lootSparkleFrames } = await import(pathToFileURL(join(temporary, 'sparkle.mjs')));
-  for (const stage of world.stages) {
-    const scale = 2, width = stage.width * 16 * scale, height = stage.height * 16 * scale, rgba = Buffer.alloc(width * height * 4);
-    const context = { fillStyle: '', fillRect(x, y, w, h) {
-      const color = [...Buffer.from(this.fillStyle.slice(1), 'hex'), 255];
-      for (let row = Math.max(0, y * scale); row < Math.min(height, (y + h) * scale); row++) for (let col = Math.max(0, x * scale); col < Math.min(width, (x + w) * scale); col++) rgba.set(color, (row * width + col) * 4);
-    }, drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh) {
-      for (let row = Math.max(0, dy * scale); row < Math.min(height, (dy + dh) * scale); row++) for (let col = Math.max(0, dx * scale); col < Math.min(width, (dx + dw) * scale); col++) {
-        const source = (Math.floor(sy + (row / scale - dy) * sh / dh) * image.width + Math.floor(sx + (col / scale - dx) * sw / dw)) * 4;
-        const target = (row * width + col) * 4, alpha = image.rgba[source + 3] / 255;
-        if (!alpha) continue;
-        for (let c = 0; c < 3; c++) rgba[target + c] = Math.round(image.rgba[source + c] * alpha + rgba[target + c] * (1 - alpha));
-        rgba[target + 3] = 255;
+  const requested = process.argv[2] ?? 'normal';
+  if (!['normal', 'large', 'small', '--all'].includes(requested)) throw new Error('Specify normal, large, small or --all');
+  for (const size of requested === '--all' ? ['normal', 'large', 'small'] : [requested]) {
+    const output = join(root, size === 'normal' ? 'art/adventure' : `art/adventure-${size}`); mkdirSync(output, { recursive: true });
+    const source = join(output, 'world.json');
+    const world = createAdventurePreset(size);
+    writeFileSync(source, JSON.stringify(world, null, 2) + '\n');
+    execFileSync('python3', [join(root, 'compiler/build.py'), '--maps', source, '--compact', '--out', join(output, 'world.bin')], { stdio: 'inherit' });
+    const king = { image: readPng(join(root, 'web/src/assets/king/king-sheet-64.png')), sourceX: 0, sourceY: 0, width: 64, height: 64 };
+    const player = { image: readPng(join(root, 'web/src/assets/player/hero-sheet-64.png')), sourceX: 0, sourceY: 0, width: 64, height: 64 };
+    const { lootSparkleFrames } = await import(pathToFileURL(join(temporary, 'sparkle.mjs')));
+    for (const stage of world.stages) {
+      const scale = 2, width = stage.width * 16 * scale, height = stage.height * 16 * scale, rgba = Buffer.alloc(width * height * 4);
+      const context = { fillStyle: '', fillRect(x, y, w, h) {
+        const color = [...Buffer.from(this.fillStyle.slice(1), 'hex'), 255];
+        for (let row = Math.max(0, y * scale); row < Math.min(height, (y + h) * scale); row++) for (let col = Math.max(0, x * scale); col < Math.min(width, (x + w) * scale); col++) rgba.set(color, (row * width + col) * 4);
+      }, drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh) {
+        for (let row = Math.max(0, dy * scale); row < Math.min(height, (dy + dh) * scale); row++) for (let col = Math.max(0, dx * scale); col < Math.min(width, (dx + dw) * scale); col++) {
+          const source = (Math.floor(sy + (row / scale - dy) * sh / dh) * image.width + Math.floor(sx + (col / scale - dx) * sw / dw)) * 4;
+          const target = (row * width + col) * 4, alpha = image.rgba[source + 3] / 255;
+          if (!alpha) continue;
+          for (let c = 0; c < 3; c++) rgba[target + c] = Math.round(image.rgba[source + c] * alpha + rgba[target + c] * (1 - alpha));
+          rgba[target + 3] = 255;
+        }
+      } };
+      drawCompiledScene(context, toSceneData(stage), { king, player });
+      for (const entity of stage.entities) if (entity.kind === 'loot') {
+        const sprite = lootSparkleFrames[2];
+        sprite.pixels.forEach((row, y) => [...row].forEach((code, x) => {
+          if (code === '.') return;
+          context.fillStyle = sprite.palette[parseInt(code, 36)]; context.fillRect(entity.x + x, entity.y + y, 1, 1);
+        }));
       }
-    } };
-    drawCompiledScene(context, toSceneData(stage), { king, player });
-    for (const entity of stage.entities) if (entity.kind === 'loot') {
-      const sprite = lootSparkleFrames[2];
-      sprite.pixels.forEach((row, y) => [...row].forEach((code, x) => {
-        if (code === '.') return;
-        context.fillStyle = sprite.palette[parseInt(code, 36)]; context.fillRect(entity.x + x, entity.y + y, 1, 1);
-      }));
+      const file = ['castle', 'town', 'world', 'forest', 'cave', 'demon-castle', 'north-world', 'north-town', 'deep-forest', 'crystal-cave', 'east-world', 'ruins', 'north-castle', 'seaside-town', 'fairy-garden'][stage.id];
+      png(join(output, `${file}.png`), width, height, rgba);
     }
-    const file = ['castle', 'town', 'world', 'forest', 'cave', 'demon-castle'][stage.id];
-    png(join(output, `${file}.png`), width, height, rgba);
+    console.log(`Exported ${world.stages.length} ${size} adventure previews to ${output}`);
   }
-  console.log('Exported six complete adventure previews to art/adventure/');
 } finally { rmSync(temporary, { recursive: true, force: true }); }

@@ -5,10 +5,31 @@ import inspectableObjects from './inspectable-objects.json';
 
 export type Dialogue = { readonly type: 'template'; readonly id: number } | { readonly type: 'custom'; readonly text: string };
 export interface InteractionData { readonly dialogue?: Dialogue; readonly itemId?: number }
-export const dialogueTemplates = templates;
+export interface DialogueTemplate { readonly name: string; readonly text: string; readonly speaker?: string; readonly afterClear?: string; readonly storyRole?: string }
+export const dialogueTemplates: readonly DialogueTemplate[] = templates;
 export const customDialogueLimit = 1024;
 export const dialogueByteLength = (text: string): number => new TextEncoder().encode(text).length;
 export const isInspectableObject = (kind: string) => inspectableObjects.includes(kind);
+const inspectionMessages: Readonly<Record<string, string>> = {
+  'house-red': '鍵がかかっているようだ。',
+  'house-slate': '鍵がかかっているようだ。',
+  well: 'きれいな水をたたえた井戸だ。',
+  'cave-crystal': '澄んだ光を放つ水晶だ。',
+  'stone-tablet': '風化した石碑だ。',
+  signpost: '道しるべだ。文字はかすれて読めない。',
+  tree: '枝葉を広げた大きな木だ。',
+  pillar: '白い石で作られた柱だ。',
+  'demon-pillar': '黒い石で作られた柱だ。',
+  castle: '堀に囲まれたお城だ。',
+  'weapon-shop': '武器屋の売り場だ。店員に話しかけてみよう。',
+  'armor-shop': '防具屋の売り場だ。店員に話しかけてみよう。',
+  'item-shop': '道具屋の売り場だ。店員に話しかけてみよう。',
+  throne: '赤いクッションと金の装飾がついた玉座だ。',
+  'demon-throne': '紫のクッションと金の装飾がついた玉座だ。',
+  'treasure-chest': '宝箱は空っぽだった。',
+};
+/** 未設定の調査物にもWeb共通の反応を返し、NFCに文章を追加しない。 */
+export const inspectionText = (kind: string): string => inspectionMessages[kind] ?? '特に変わったものはない。';
 export const canHaveDialogue = (kind: string) => isNpc(kind) || isInspectableObject(kind);
 export const canHaveItem = (kind: string) => kind === 'loot' || isInspectableObject(kind);
 export const npcNames: Record<string, string> = {
@@ -44,6 +65,11 @@ export function parseInteraction(kind: string, value: { dialogue?: unknown; item
   return result;
 }
 
-export function dialogueText(dialogue: Dialogue): string {
-  return dialogue.type === 'template' ? dialogueTemplates[dialogue.id].text : dialogue.text;
+export function dialogueText(dialogue: Dialogue, cleared = false): string {
+  if (dialogue.type === 'custom') return dialogue.text;
+  const template = dialogueTemplates[dialogue.id];
+  return cleared ? template.afterClear ?? template.text : template.text;
+}
+export function dialogueSpeaker(dialogue: Dialogue | undefined, fallback: string): string {
+  return dialogue?.type === 'template' ? dialogueTemplates[dialogue.id].speaker ?? fallback : fallback;
 }

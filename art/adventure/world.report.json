@@ -1,15 +1,15 @@
 {
-  "format": "TQ v14 experimental",
-  "binary_bytes": 765,
-  "base64url_chars": 1020,
+  "format": "TQ v15 experimental",
+  "binary_bytes": 706,
+  "base64url_chars": 942,
   "base_url": "https://tag-quest-kappa.vercel.app/",
-  "final_url_bytes": 1056,
+  "final_url_bytes": 978,
   "binary_target_bytes": 300,
-  "remaining_to_binary_target_bytes": -465,
+  "remaining_to_binary_target_bytes": -406,
   "includes_ndef_overhead": true,
-  "ndef_tlv_bytes": 1061,
+  "ndef_tlv_bytes": 983,
   "ntag215_ndef_capacity_bytes": 496,
-  "remaining_ntag215_bytes": -565,
+  "remaining_ntag215_bytes": -487,
   "stages": [
     {
       "id": 0,
@@ -19,7 +19,7 @@
       "floor_bytes": {
         "RAW": 78,
         "RLE": 40,
-        "RECT": 29
+        "RECT": 23
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
@@ -27,12 +27,12 @@
       "entity_bytes": 15,
       "interaction_bytes": 9,
       "exit_bytes": 5,
-      "encounter_bytes": 3,
-      "stage_bytes": 70,
+      "encounter_bytes": 7,
+      "stage_bytes": 68,
       "tile_counts": {
-        "marble": 72,
+        "marble": 75,
         "carpet": 26,
-        "wall-top": 46,
+        "wall-top": 43,
         "empty": 12
       }
     },
@@ -70,8 +70,8 @@
       "height": 24,
       "floor_bytes": {
         "RAW": 392,
-        "RLE": 234,
-        "RECT": 301
+        "RLE": 161,
+        "RECT": 247
       },
       "selected_codec": "RLE",
       "header_bytes": 9,
@@ -80,15 +80,15 @@
       "interaction_bytes": 2,
       "exit_bytes": 14,
       "encounter_bytes": 2,
-      "stage_bytes": 269,
+      "stage_bytes": 196,
       "tile_counts": {
-        "grass": 156,
+        "grass": 111,
         "bridge": 1,
         "forest-ground": 1,
-        "sea": 412,
-        "sand": 111,
+        "sea": 517,
+        "sand": 72,
         "world-mountain": 41,
-        "world-forest": 46
+        "world-forest": 25
       }
     },
     {
@@ -107,8 +107,8 @@
       "entity_bytes": 39,
       "interaction_bytes": 15,
       "exit_bytes": 5,
-      "encounter_bytes": 2,
-      "stage_bytes": 96,
+      "encounter_bytes": 10,
+      "stage_bytes": 104,
       "tile_counts": {
         "grass": 19,
         "dirt": 17,
@@ -133,8 +133,8 @@
       "entity_bytes": 8,
       "interaction_bytes": 15,
       "exit_bytes": 5,
-      "encounter_bytes": 2,
-      "stage_bytes": 72,
+      "encounter_bytes": 10,
+      "stage_bytes": 80,
       "tile_counts": {
         "empty": 18,
         "cave-floor": 103,
@@ -168,8 +168,8 @@
     }
   ],
   "binary_bytes_by_floor_codec": {
-    "RAW": 1584,
-    "RLE": 917,
-    "RECT": 832
+    "RAW": 1604,
+    "RLE": 864,
+    "RECT": 792
   }
 }

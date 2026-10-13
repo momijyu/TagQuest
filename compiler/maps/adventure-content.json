@@ -20,21 +20,21 @@
         "kind": "traveler",
         "dialogue": {
           "type": "template",
-          "id": 40
+          "id": 47
         }
       },
       {
         "kind": "resident",
         "dialogue": {
           "type": "template",
-          "id": 20
+          "id": 48
         }
       },
       {
         "kind": "elder",
         "dialogue": {
           "type": "template",
-          "id": 18
+          "id": 52
         }
       },
       {
@@ -65,7 +65,7 @@
         "parameters": [],
         "dialogue": {
           "type": "template",
-          "id": 41
+          "id": 49
         }
       },
       {
@@ -95,7 +95,7 @@
         "parameters": [],
         "dialogue": {
           "type": "template",
-          "id": 42
+          "id": 50
         }
       },
       {
@@ -132,7 +132,7 @@
         "parameters": [],
         "dialogue": {
           "type": "template",
-          "id": 45
+          "id": 59
         }
       },
       {
@@ -150,6 +150,14 @@
         "itemId": 2
       }
     ],
-    "updates": []
+    "updates": [
+      {
+        "kind": "demon-lord",
+        "dialogue": {
+          "type": "template",
+          "id": 51
+        }
+      }
+    ]
   }
 ]

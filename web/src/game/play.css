@@ -2,6 +2,9 @@
 .play-session[hidden], #editor-workspace[hidden] { display: none; }
 .play-screen[hidden], .play-controls[hidden], .play-battle[hidden] { display: none; }
 .play-console { position: relative; min-width: 0; overflow: hidden; border: 1px solid var(--color-base-300); border-radius: 12px; background: var(--color-base-100); }
+.play-objective { grid-column: 1 / -1; margin: 0; padding: 8px 12px; background: #17222d; color: #f8f8ed; font-size: 16px; line-height: 1.5; overflow-wrap: anywhere; }
+.play-objective[hidden] { display: none; }
+.play-objective strong { display: block; color: #edcc7c; font-size: 14px; }
 .play-encounter { position: absolute; z-index: 10; inset: 0; overflow: hidden; touch-action: none; cursor: wait; }
 .play-encounter[hidden] { display: none; }
 .encounter-flash { position: absolute; inset: 0; background: #f8f8ed; opacity: 0; }
@@ -21,7 +24,7 @@
 .resource-bar::-webkit-progress-bar { background: #35423c; }
 .resource-bar::-webkit-progress-value { background: var(--resource-color); }
 .resource-bar::-moz-progress-bar { background: var(--resource-color); }
-.play-viewport { display: flex; flex-direction: column; height: 100%; overflow: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.play-viewport { display: flex; flex-direction: column; height: 100%; overflow: auto; overscroll-behavior: contain; scrollbar-width: none; touch-action: none; user-select: none; -webkit-user-select: none; }
 .play-viewport::-webkit-scrollbar { display: none; }
 .play-viewport canvas { display: block; flex: none; max-width: none; margin: auto; touch-action: none; }
 .play-viewport canvas:focus-visible { outline: 2px solid #ffe3a0; outline-offset: -2px; }
@@ -40,6 +43,8 @@
 .play-menu > * { flex: 1 1 44px; min-width: 0; }
 .play-menu .btn { width: 100%; padding-inline: 4px; font-size: 12px; }
 .play-key-hint { grid-column: 1 / -1; text-align: center; font-size: 12px; }
+.play-touch-hint { display: none; grid-column: 1 / -1; margin: 0; font-size: 12px; text-align: center; }
+@media (pointer: coarse) { .play-touch-hint { display: block; } }
 .editor-play-session { padding: 20px; gap: 12px; }
 .play-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 .play-heading select { font: inherit; background: var(--color-base-100); color: var(--color-base-content); border: 1px solid var(--color-base-300); border-radius: 6px; padding: 6px 8px; }
@@ -106,7 +111,8 @@
 @media (max-width: 640px) {
   #gallery-walking > .card-body { padding: 12px; gap: 12px; }
   .editor-play-session { padding: 12px; }
-  .player-menu-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
+  .player-menu-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+  .play-shop-window .player-menu-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .player-menu-tabs button { padding-inline: 4px; font-size: 16px; }
   .play-inventory-window, .play-shop-window { inset: auto 8px 8px; }
   .player-menu-tabs { position: sticky; top: 0; z-index: 1; background: #18251c; }
@@ -131,7 +137,9 @@
 }
 .nfc-game-page { width: min(100%, 960px); margin: auto; padding: 8px; }
 .nfc-game-page > .btn { margin-bottom: 8px; min-height: 44px; touch-action: manipulation; }
-.nfc-game-page .play-console { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: calc(100svh - 84px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); min-height: 320px; }
+.nfc-game-page .play-console { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: calc(100svh - 84px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); min-height: 320px; }
+.nfc-game-page .play-screen { grid-row: 2; }
+.nfc-game-page .play-controls { grid-row: 3; }
 .nfc-game-page .play-screen { height: auto; min-height: 0; }
 .nfc-game-page .play-battle { grid-row: 1 / -1; height: 100%; min-height: 0; display: grid; grid-template-rows: minmax(112px, 1fr) auto; }
 .nfc-game-page .play-battle[hidden] { display: none; }
@@ -149,7 +157,8 @@
   .nfc-game-page .battle-player-health > span, .nfc-game-page .battle-player-mana > span { font-size: 14px; }
 }
 @media (max-height: 480px) and (orientation: landscape) {
-  .nfc-game-page .play-console { grid-template-columns: minmax(0, 1fr) 168px; grid-template-rows: minmax(0, 1fr); min-height: 220px; }
+  .nfc-game-page .play-console { grid-template-columns: minmax(0, 1fr) 168px; grid-template-rows: auto minmax(0, 1fr); min-height: 220px; }
+  .nfc-game-page .play-controls { grid-row: 2; }
   .nfc-game-page .play-battle { grid-template-columns: minmax(0, 1fr) minmax(220px, 34%); grid-template-rows: minmax(0, 1fr); }
   .nfc-game-page .battle-footer { max-height: calc(100% - 16px); align-content: start; }
   .nfc-game-page .battle-field { grid-template-rows: 72px minmax(0, 1fr); }

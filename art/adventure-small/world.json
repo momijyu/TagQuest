@@ -1,0 +1,630 @@
+{
+  "format": "tagquest-world-editor-v1",
+  "stages": [
+    {
+      "id": 0,
+      "name": "小さな城",
+      "width": 7,
+      "height": 7,
+      "spawn": {
+        "x": 48,
+        "y": 64
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "marble",
+            "x": 1,
+            "y": 1,
+            "width": 5,
+            "height": 4
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 0,
+            "width": 7,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 1,
+            "width": 1,
+            "height": 5
+          },
+          {
+            "tile": "wall-top",
+            "x": 6,
+            "y": 1,
+            "width": 1,
+            "height": 5
+          },
+          {
+            "tile": "wall-top",
+            "x": 0,
+            "y": 5,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "wall-top",
+            "x": 4,
+            "y": 5,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "carpet",
+            "x": 3,
+            "y": 2,
+            "width": 1,
+            "height": 5
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "throne",
+          "x": 44,
+          "y": 16,
+          "parameters": []
+        },
+        {
+          "kind": "king",
+          "x": 48,
+          "y": 32,
+          "parameters": [
+            1
+          ],
+          "dialogue": {
+            "type": "template",
+            "id": 46
+          }
+        }
+      ],
+      "exits": [
+        {
+          "x": 3,
+          "y": 6,
+          "targetStageId": 1,
+          "targetX": 1,
+          "targetY": 6,
+          "direction": "front"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "enemyId": 0,
+        "rate": 0.1
+      }
+    },
+    {
+      "id": 1,
+      "name": "小さな街",
+      "width": 17,
+      "height": 11,
+      "spawn": {
+        "x": 128,
+        "y": 112
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "grass",
+            "x": 1,
+            "y": 1,
+            "width": 15,
+            "height": 9
+          },
+          {
+            "tile": "brick",
+            "x": 0,
+            "y": 6,
+            "width": 16,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 8,
+            "y": 6,
+            "width": 1,
+            "height": 5
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "weapon-shop",
+          "x": 40,
+          "y": 16,
+          "parameters": []
+        },
+        {
+          "kind": "armor-shop",
+          "x": 120,
+          "y": 16,
+          "parameters": []
+        },
+        {
+          "kind": "item-shop",
+          "x": 200,
+          "y": 16,
+          "parameters": []
+        },
+        {
+          "kind": "weapon-merchant",
+          "x": 48,
+          "y": 48,
+          "parameters": []
+        },
+        {
+          "kind": "armor-merchant",
+          "x": 128,
+          "y": 48,
+          "parameters": []
+        },
+        {
+          "kind": "item-merchant",
+          "x": 208,
+          "y": 48,
+          "parameters": []
+        },
+        {
+          "kind": "house-red",
+          "x": 48,
+          "y": 96,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 40
+          }
+        }
+      ],
+      "exits": [
+        {
+          "x": 0,
+          "y": 6,
+          "targetStageId": 0,
+          "targetX": 3,
+          "targetY": 5,
+          "direction": "back"
+        },
+        {
+          "x": 8,
+          "y": 10,
+          "targetStageId": 2,
+          "targetX": 4,
+          "targetY": 11,
+          "direction": "front"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "小さな世界",
+      "width": 16,
+      "height": 16,
+      "spawn": {
+        "x": 64,
+        "y": 160
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "sea",
+        "rectangles": [
+          {
+            "tile": "sand",
+            "x": 1,
+            "y": 1,
+            "width": 14,
+            "height": 14
+          },
+          {
+            "tile": "grass",
+            "x": 2,
+            "y": 2,
+            "width": 12,
+            "height": 12
+          },
+          {
+            "tile": "world-forest",
+            "x": 3,
+            "y": 3,
+            "width": 3,
+            "height": 3
+          },
+          {
+            "tile": "world-mountain",
+            "x": 9,
+            "y": 2,
+            "width": 1,
+            "height": 5
+          },
+          {
+            "tile": "world-mountain",
+            "x": 9,
+            "y": 9,
+            "width": 1,
+            "height": 4
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "world-town",
+          "x": 64,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "world-forest-entrance",
+          "x": 80,
+          "y": 96,
+          "parameters": []
+        },
+        {
+          "kind": "world-cave",
+          "x": 176,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "world-demon-castle",
+          "x": 176,
+          "y": 64,
+          "parameters": []
+        }
+      ],
+      "exits": [
+        {
+          "x": 4,
+          "y": 10,
+          "targetStageId": 1,
+          "targetX": 8,
+          "targetY": 9,
+          "direction": "back"
+        },
+        {
+          "x": 5,
+          "y": 6,
+          "targetStageId": 3,
+          "targetX": 4,
+          "targetY": 7,
+          "direction": "back"
+        },
+        {
+          "x": 11,
+          "y": 10,
+          "targetStageId": 4,
+          "targetX": 4,
+          "targetY": 7,
+          "direction": "back"
+        },
+        {
+          "x": 11,
+          "y": 4,
+          "targetStageId": 5,
+          "targetX": 3,
+          "targetY": 6,
+          "direction": "back"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "小さな森",
+      "width": 9,
+      "height": 9,
+      "spawn": {
+        "x": 64,
+        "y": 96
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "forest-ground",
+            "x": 0,
+            "y": 0,
+            "width": 9,
+            "height": 8
+          },
+          {
+            "tile": "dirt",
+            "x": 4,
+            "y": 2,
+            "width": 1,
+            "height": 7
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 0,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 96,
+          "y": 16,
+          "parameters": []
+        },
+        {
+          "kind": "tree",
+          "x": 0,
+          "y": 64,
+          "parameters": []
+        },
+        {
+          "kind": "forest-fairy",
+          "x": 80,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 49
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 96,
+          "y": 80,
+          "parameters": [],
+          "itemId": 7
+        }
+      ],
+      "exits": [
+        {
+          "x": 4,
+          "y": 8,
+          "targetStageId": 2,
+          "targetX": 5,
+          "targetY": 7,
+          "direction": "front"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "enemyId": 1,
+        "rate": 12,
+        "enemies": [
+          {
+            "enemyId": 1,
+            "weight": 5
+          },
+          {
+            "enemyId": 2,
+            "weight": 3
+          },
+          {
+            "enemyId": 3,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "name": "小さな洞窟",
+      "width": 9,
+      "height": 9,
+      "spawn": {
+        "x": 64,
+        "y": 96
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "cave-wall",
+            "x": 0,
+            "y": 0,
+            "width": 9,
+            "height": 8
+          },
+          {
+            "tile": "cave-floor",
+            "x": 1,
+            "y": 1,
+            "width": 3,
+            "height": 3
+          },
+          {
+            "tile": "cave-floor",
+            "x": 5,
+            "y": 3,
+            "width": 3,
+            "height": 3
+          },
+          {
+            "tile": "cave-floor",
+            "x": 3,
+            "y": 3,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "cave-floor",
+            "x": 4,
+            "y": 3,
+            "width": 1,
+            "height": 6
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "cave-witch",
+          "x": 16,
+          "y": 16,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 50
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 96,
+          "y": 64,
+          "parameters": [],
+          "itemId": 4
+        }
+      ],
+      "exits": [
+        {
+          "x": 4,
+          "y": 8,
+          "targetStageId": 2,
+          "targetX": 11,
+          "targetY": 11,
+          "direction": "front"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "enemyId": 5,
+        "rate": 14,
+        "enemies": [
+          {
+            "enemyId": 5,
+            "weight": 5
+          },
+          {
+            "enemyId": 6,
+            "weight": 3
+          },
+          {
+            "enemyId": 7,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "name": "小さな魔王城",
+      "width": 7,
+      "height": 8,
+      "spawn": {
+        "x": 48,
+        "y": 80
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "demon-floor",
+            "x": 1,
+            "y": 1,
+            "width": 5,
+            "height": 5
+          },
+          {
+            "tile": "demon-wall-top",
+            "x": 0,
+            "y": 0,
+            "width": 7,
+            "height": 1
+          },
+          {
+            "tile": "demon-wall-top",
+            "x": 0,
+            "y": 1,
+            "width": 1,
+            "height": 6
+          },
+          {
+            "tile": "demon-wall-top",
+            "x": 6,
+            "y": 1,
+            "width": 1,
+            "height": 6
+          },
+          {
+            "tile": "demon-wall-top",
+            "x": 0,
+            "y": 6,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "demon-wall-top",
+            "x": 4,
+            "y": 6,
+            "width": 3,
+            "height": 1
+          },
+          {
+            "tile": "demon-carpet",
+            "x": 3,
+            "y": 2,
+            "width": 1,
+            "height": 6
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "demon-throne",
+          "x": 44,
+          "y": 16,
+          "parameters": []
+        },
+        {
+          "kind": "demon-lord",
+          "x": 48,
+          "y": 32,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 51
+          },
+          "battleEvent": {
+            "enemyId": 4,
+            "once": true,
+            "clear": true
+          }
+        }
+      ],
+      "exits": [
+        {
+          "x": 3,
+          "y": 7,
+          "targetStageId": 2,
+          "targetX": 11,
+          "targetY": 5,
+          "direction": "front"
+        }
+      ]
+    }
+  ]
+}

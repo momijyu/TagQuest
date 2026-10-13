@@ -1,5 +1,41 @@
 [
-  { "merchant": "weapon-merchant", "name": "武器屋", "items": [3, 4] },
-  { "merchant": "armor-merchant", "name": "防具屋", "items": [5, 6, 7, 8] },
-  { "merchant": "item-merchant", "name": "道具屋", "items": [0, 1, 2] }
+  {
+    "merchant": "weapon-merchant",
+    "name": "武器屋",
+    "items": [
+      3,
+      4
+    ],
+    "recipes": [
+      4,
+      5
+    ]
+  },
+  {
+    "merchant": "armor-merchant",
+    "name": "防具屋",
+    "items": [
+      5,
+      6,
+      7,
+      8
+    ],
+    "recipes": [
+      2,
+      3
+    ]
+  },
+  {
+    "merchant": "item-merchant",
+    "name": "道具屋",
+    "items": [
+      0,
+      1,
+      2
+    ],
+    "recipes": [
+      0,
+      1
+    ]
+  }
 ]

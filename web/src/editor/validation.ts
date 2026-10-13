@@ -3,6 +3,7 @@ import type { World } from './model';
 import { canStand, interactionTarget } from '../game/walking';
 import type { Position, Direction } from '../game/walking';
 import { isNpc } from '../data/npc-placement';
+import { isInspectableObject } from '../data/interactions';
 import { exitArrival } from '../data/stage-exits';
 export interface MapIssue { stageId: number; x: number; y: number; text: string }
 export function validateWorld(world: World): MapIssue[] {
@@ -62,7 +63,8 @@ export function validateWorld(world: World): MapIssue[] {
     for (const [index, e] of stage.entities.entries()) {
       const missing = isNpc(e.kind) && !e.dialogue && !e.battleEvent && !e.kind.endsWith('-merchant');
       if (missing) add(stage.id, e.x, e.y, `${label}：${e.kind}の会話が未設定です`);
-      if (first && positions.length && (isNpc(e.kind) || e.kind === 'treasure-chest') && !missing && !targets.has(index)) add(stage.id, e.x, e.y, `${label}：${e.kind}を調べられる位置に到達できません`);
+      const inspectable = isNpc(e.kind) || e.kind === 'treasure-chest' || isInspectableObject(e.kind) && (e.dialogue || e.itemId !== undefined);
+      if (first && positions.length && inspectable && !missing && !targets.has(index)) add(stage.id, e.x, e.y, `${label}：${e.kind}を調べられる位置に到達できません`);
     }
   }
   return issues;

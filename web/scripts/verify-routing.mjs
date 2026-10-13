@@ -14,7 +14,7 @@ try {
   const valid = '#' + base64url(encodeWorld(initialWorld(), true).bytes);
   class Element {
     hidden = false; children = []; dataset = {}; textContent = '';
-    append(child) { this.children.push(child); }
+    append(...children) { this.children.push(...children); }
     replaceChildren() { this.children = []; }
   }
   const flush = async () => { for (let i = 0; i < 12; i++) await Promise.resolve(); };
@@ -103,11 +103,23 @@ try {
     assert.deepEqual([elements.get('#town-loot-overlay').width, elements.get('#town-loot-overlay').height], [400, 336], 'sparkle overlay matches the new map');
     assert.deepEqual([elements.get('#repeat-preview').width, elements.get('#repeat-preview').height], [13 * 16 * 8, 12 * 16 * 8], 'castle preview matches the spacious playable hall');
     assert.equal(elements.get('#repeat-preview').style.width, '416px', 'whole castle displays at an integer 2x pixel scale');
-    assert.ok(paints > 1000); assert.equal(elements.get('#enemy-catalog').children.length, 4); assert.equal(elements.get('#world-locations').children.length, 4); assert.equal(elements.get('#item-catalog').children.length, 13); assert.ok(elements.get('#status').hidden);
+    const catalog = JSON.parse(readFileSync(join(root, 'web/src/data/item-catalog.json'), 'utf8'));
+    const verifyItemList = () => {
+      const groups = elements.get('#item-catalog').children;
+      assert.deepEqual(groups.map(group => group.children[0].textContent), ['回復・治療', '武器', '防具', '装飾品', '素材']);
+      assert.deepEqual(groups.map(group => group.children[1].children.length), [5, 6, 6, 2, 6]);
+      for (const group of groups) assert.equal(group.children[0].children[0].textContent, `${group.children[1].children.length}種類`);
+      const displayed = groups.flatMap(group => group.children[1].children.map(row => [row.children[0].textContent, row.children[1].textContent]));
+      assert.deepEqual(displayed.sort(), catalog.map(item => [item.name, item.description]).sort(), 'every current item and its effect/material use appears exactly once');
+      assert.deepEqual(groups[4].children[1].children.map(row => row.children[0].textContent), catalog.filter(item => !item.effect && !item.equipment).map(item => item.name), 'monster drops are grouped as materials');
+    };
+    assert.ok(paints > 1000); assert.equal(elements.get('#enemy-catalog').children.length, 7); assert.equal(elements.get('#world-locations').children.length, 5); verifyItemList(); assert.ok(elements.get('#status').hidden);
     const before = paints;
     active = false; const [id, tick] = frames.entries().next().value; frames.delete(id); tick(320); assert.equal(paints, before);
     active = true; const [nextId, nextTick] = frames.entries().next().value; frames.delete(nextId); nextTick(480); assert.ok(paints > before);
     stop(); assert.equal(frames.size, 0); assert.equal(motionListeners.size, 0);
+    const stopAgain = await startGallery({ king: sprite, players, kings: players }, kings, () => active);
+    verifyItemList(); stopAgain(); assert.equal(frames.size, 0); assert.equal(motionListeners.size, 0);
     elements.delete('#repeat-preview');
     await assert.rejects(startGallery({ king: sprite, players, kings: players }, kings, () => active), /画面要素/);
     assert.equal(frames.size, 0); assert.equal(motionListeners.size, 0);

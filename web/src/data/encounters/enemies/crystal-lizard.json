@@ -1,0 +1,52 @@
+{
+  "id": 7,
+  "name": "水晶トカゲ",
+  "characterId": "crystal-lizard",
+  "battleImage": "crystal-lizard",
+  "background": "cave",
+  "stats": {
+    "hp": 60,
+    "attack": 12,
+    "defense": 4
+  },
+  "reward": {
+    "gold": 22,
+    "experience": 76,
+    "items": [
+      {
+        "itemId": 18,
+        "quantity": 1
+      },
+      {
+        "itemId": 2,
+        "quantity": 1
+      }
+    ]
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "attack",
+        "text": "水晶トカゲが尾を振り回した！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "水晶トカゲが水晶のつぶてを飛ばした！",
+        "power": 1.3
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "attack",
+        "text": "水晶トカゲが尾を振り回した！",
+        "power": 1
+      },
+      {
+        "type": "attack",
+        "text": "水晶トカゲが水晶のつぶてを飛ばした！",
+        "power": 1.3
+      }
+    ]
+  }
+}

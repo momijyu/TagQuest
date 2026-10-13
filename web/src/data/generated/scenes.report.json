@@ -1,15 +1,15 @@
 {
-  "format": "TQ v14 experimental",
-  "binary_bytes": 202,
-  "base64url_chars": 270,
+  "format": "TQ v15 experimental",
+  "binary_bytes": 206,
+  "base64url_chars": 275,
   "base_url": "https://tag-quest-kappa.vercel.app/",
-  "final_url_bytes": 306,
+  "final_url_bytes": 311,
   "binary_target_bytes": 300,
-  "remaining_to_binary_target_bytes": 98,
+  "remaining_to_binary_target_bytes": 94,
   "includes_ndef_overhead": true,
-  "ndef_tlv_bytes": 311,
+  "ndef_tlv_bytes": 316,
   "ntag215_ndef_capacity_bytes": 496,
-  "remaining_ntag215_bytes": 185,
+  "remaining_ntag215_bytes": 180,
   "stages": [
     {
       "id": 0,
@@ -27,8 +27,8 @@
       "entity_bytes": 13,
       "interaction_bytes": 6,
       "exit_bytes": 4,
-      "encounter_bytes": 3,
-      "stage_bytes": 49,
+      "encounter_bytes": 7,
+      "stage_bytes": 53,
       "tile_counts": {
         "marble": 10,
         "carpet": 15,
@@ -63,8 +63,8 @@
     }
   ],
   "binary_bytes_by_floor_codec": {
-    "RAW": 361,
-    "RLE": 281,
-    "RECT": 202
+    "RAW": 365,
+    "RLE": 285,
+    "RECT": 206
   }
 }

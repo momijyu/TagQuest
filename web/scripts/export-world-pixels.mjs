@@ -22,7 +22,7 @@ try {
     }));
     png(join(output, `${id}.png`), width, height, rgba);
   }
-  const sheetWidth = 40 * 4 * 4, sheetHeight = 40 * 4, sheet = Buffer.alloc(sheetWidth * sheetHeight * 4);
+  const sheetWidth = 40 * Object.keys(worldLandmarks).length * 4, sheetHeight = 40 * 4, sheet = Buffer.alloc(sheetWidth * sheetHeight * 4);
   for (let i = 0; i < sheetWidth * sheetHeight; i++) sheet.set([24,37,28,255], i * 4);
   Object.values(worldLandmarks).forEach((sprite, i) => sprite.pixels.forEach((row, y) => [...row].forEach((code, x) => {
     if (code === '.') return;

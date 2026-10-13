@@ -1,4 +1,6 @@
 import { worldTerrainTiles } from '../data/tiles/world-terrain';
+import { explorationTiles } from '../data/tiles/exploration';
+import { caveCrystal, signpost, stoneTablet } from '../data/objects/exploration';
 import { placementFrame } from '../data/entity-geometry';
 import { isBuilding, buildingDrawingPosition } from '../data/building-placement';
 import catalog from '../data/scene-catalog.json';
@@ -48,10 +50,10 @@ const tiles = {
   'wall-left': castleWallLeft, 'wall-right': castleWallRight,
   'wall-top-left': castleWallTopLeft, 'wall-top-right': castleWallTopRight,
   grass: townGrass, dirt: townDirt, brick: townBrick, water: castleMoat, bridge: castleBridge,
-  empty: emptyTile, 'forest-ground': forestGround, sea: worldSea, sand: worldSand, 'cave-floor': caveFloor, 'cave-wall': caveWall, ...demonCastleTiles, ...worldTerrainTiles,
+  empty: emptyTile, 'forest-ground': forestGround, sea: worldSea, sand: worldSand, 'cave-floor': caveFloor, 'cave-wall': caveWall, ...demonCastleTiles, ...worldTerrainTiles, ...explorationTiles,
 };
 const sprites = {
-  pillar, 'demon-pillar': demonPillar, castle: castleExterior, well, tree,
+  pillar, 'demon-pillar': demonPillar, castle: castleExterior, well, tree, signpost, 'cave-crystal': caveCrystal, 'stone-tablet': stoneTablet,
   'world-mountain': worldMountain, 'world-forest': worldForest,
   ...worldLocations,
   'house-red': townHouses.red.sprite, 'house-slate': townHouses.slate.sprite,
@@ -108,11 +110,17 @@ export function entityFrame(entity: PlacedEntity): { x: number; y: number; width
   return placementFrame(entity);
 }
 
-/** 建物は中央の横2マス、玉座・木・NPCは横1マスを通行不可にする。 */
+/** 民家は下側4×2マス、お店は下側中央4×4マス。屋根や奥壁の後ろは通れる。 */
 export function entityCollisionFrame(entity: PlacedEntity): { x: number; y: number; width: number; height: number } {
+  if (entity.kind === 'house-red' || entity.kind === 'house-slate' || entity.kind in shops) {
+    const drawing = entityDrawingFrame(entity);
+    const width = 64, height = entity.kind in shops ? 64 : 32;
+    return { x: drawing.x + (drawing.width - width) / 2, y: drawing.y + drawing.height - height, width, height };
+  }
   const frame = entityFrame(entity);
   if (entity.kind === 'throne' || entity.kind === 'demon-throne') return { ...frame, x: frame.x + (frame.width - 16) / 2, width: 16 };
   if (entity.kind === 'tree') return { x: frame.x + 16, y: frame.y + 32, width: 16, height: 16 };
+  if (entity.kind === 'cave-crystal' || entity.kind === 'stone-tablet') return { x: frame.x, y: frame.y + 16, width: 16, height: 16 };
   if (isNpc(entity.kind)) return { x: frame.x, y: frame.y + 16, width: 16, height: 16 };
   return frame;
 }
@@ -203,7 +211,7 @@ export function drawCompiledScene(
     }
     return root.y + root.height;
   };
-  const hasDepth = (entity: PlacedEntity): boolean => entity.kind === 'tree' || isNpc(entity.kind) || entity.kind === 'treasure-chest' || isBuilding(entity.kind);
+  const hasDepth = (entity: PlacedEntity): boolean => entity.kind === 'tree' || entity.kind === 'cave-crystal' || entity.kind === 'stone-tablet' || entity.kind === 'signpost' || isNpc(entity.kind) || entity.kind === 'treasure-chest' || isBuilding(entity.kind);
   const layeredEntities = scene.entities.filter(hasDepth).sort((a, b) => depth(a) - depth(b) || Number(isBuilding(b.kind)) - Number(isBuilding(a.kind)));
   const feet = characters && scene.spawn ? playerCollisionFrame(scene.spawn) : undefined;
   const inFrontOfPlayer = (entity: PlacedEntity): boolean => Boolean(feet && depth(entity) > feet.y + feet.height);

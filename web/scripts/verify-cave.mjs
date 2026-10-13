@@ -41,8 +41,8 @@ try {
   assert.equal(encoded[2], 9);
   assert.equal(encoded[9], 130); // RECT + stage-local palette.
   assert.deepEqual(decodeScenes(encoded)[0].tiles, caveStagePreview.tiles);
-  assert.equal(encodeWorld(initialWorld()).bytes[2], 14);
-  assert.equal(encodeWorld(initialWorld()).bytes.length, 202);
+  assert.equal(encodeWorld(initialWorld()).bytes[2], 15);
+  assert.equal(encodeWorld(initialWorld()).bytes.length, 206);
   const source = join(temporary, 'cave.json'); writeFileSync(source, JSON.stringify(cave));
   for (const codec of ['RAW', 'RLE', 'RECT']) {
     const output = join(temporary, `${codec}.bin`);
@@ -101,7 +101,7 @@ Path(sys.argv[2]).write_bytes(binary)`, source, output, codec], { cwd: root });
   assert.equal(canStand(caveStagePreview, { x: 144, y: 240 }), true, 'single-cell doorway is passable');
   const world = createAdventureWorld(), scenes = decodeScenes(encodeWorld(world).bytes);
   assert.equal(scenes.length, 6);
-  const game = createWorldGame(scenes, 2, () => 0);
+  const game = createWorldGame(scenes, 2, () => 0.999999);
   function walkTo(x, y) {
     const path = reachable(game.scene, game.position, true).get(`${x},${y}`);
     assert.ok(path, `route to ${x},${y}`);
@@ -113,13 +113,13 @@ Path(sys.argv[2]).write_bytes(binary)`, source, output, codec], { cwd: root });
   assert.deepEqual(game.position, { x: 144, y: 224 });
   walkTo(64, 32); // left chamber
   walkTo(208, 64); // right chamber, beside the new treasure chest
-  assert.equal(game.encounter, null, 'cave monsters remain unassigned');
+  assert.equal(game.encounter, null, 'route-only checks avoid the configured cave encounters');
   walkTo(144, 224);
   assert.equal(game.move('front'), true);
   assert.equal(game.scene.id, 2);
   assert.deepEqual(game.position, { x: 192, y: 192 });
   assert.equal(game.move('back'), true); assert.equal(game.scene.id, 4);
-  assert.deepEqual(world.stages.find(stage => stage.id === 4).encounter, undefined);
+  assert.deepEqual(world.stages.find(stage => stage.id === 4).encounter.enemies.map(entry => entry.enemyId), [5, 6, 7]);
   assert.equal(game.move('front'), true); assert.equal(game.scene.id, 2);
   walkTo(368, 64); // in front of the demon castle, across the river bridge
   assert.equal(game.move('back'), true); assert.equal(game.scene.id, 5);
@@ -159,7 +159,7 @@ Path(sys.argv[2]).write_bytes(binary)`, source, output, codec], { cwd: root });
   assert.deepEqual(decodeScenes(interactionBytes).find(stage => stage.id === 5).entities[0].dialogue,
     { type: 'custom', text: '古い玉座だ。' });
   assert.equal(world.stages.find(stage => stage.id === 5).encounter, undefined);
-  // Follow the real sample from Lv1: defeat the king, remove royal gear, travel and clear.
+  // Follow the real sample from Lv1: defeat the king, keep royal gear, travel and clear.
   const clearGame=createWorldGame(scenes,0,()=>0);
   assert.equal(clearGame.move('left'),true);assert.equal(clearGame.battle.enemy.id,0);
   function win(session) {
@@ -172,7 +172,7 @@ Path(sys.argv[2]).write_bytes(binary)`, source, output, codec], { cwd: root });
   }
   win(clearGame);while(clearGame.message)clearGame.interact();
   assert.equal(clearGame.status.level,10);
-  for(const slot of ['head','armor','weapon'])assert.equal(clearGame.unequip(slot).ok,true);
+  assert.equal(clearGame.status.appearance,'king');
   function walkClearTo(x,y) {
     const path=reachable({...clearGame.scene,entities:clearGame.visibleEntities},clearGame.position,true).get(`${x},${y}`);
     assert.ok(path,`clear route in stage ${clearGame.scene.id} to ${x},${y}`);
@@ -191,6 +191,6 @@ Path(sys.argv[2]).write_bytes(binary)`, source, output, codec], { cwd: root });
   clearGame.reset();assert.equal(clearGame.cleared,false);assert.equal(clearGame.scene.id,0);
   assert.ok(clearGame.status.level===1);
   console.log('Cave: pixel materials, all floor routes, single-cell doorway, wall blocking, field round trips and no default enemies passed.');
-  console.log('Demon castle: bridge/field route, all hall passages, purple/red throne messages, boss prebattle cancellation and Lv1→king reward→unequip→travel→GAME CLEAR/reset passed.');
+  console.log('Demon castle: bridge/field route, all hall passages, purple/red throne messages, boss prebattle cancellation and Lv1→king reward→royal gear→travel→GAME CLEAR/reset passed.');
   console.log('TQ v9: all three local-palette codecs, Python/Web parity, truncation/invalid palettes and v8 preservation passed.');
 } finally { rmSync(temporary, { recursive: true, force: true }); }

@@ -25,7 +25,7 @@ try {
 
   for (const boss of [king, demon]) {
     assert.equal(boss.canEscape, false);
-    const battle = createBattle(boss);
+    const battle = createBattle(boss, { wasAttacked: boss.id === 0 });
     const hp = battle.playerHp, mp = battle.playerMp;
     battle.escape(); assert.equal(battle.phase, 'commands'); assert.match(battle.text, /この戦いからは逃げられない！/);
     battle.escape(); battle.cancelEscape(); battle.advance(); assert.equal(battle.phase, 'commands');
@@ -34,10 +34,21 @@ try {
     battle.advance(); assert.equal(battle.phase, 'commands');
     const permitted = createBattle({ ...boss, canEscape: true }); permitted.escape(); assert.equal(permitted.phase, 'escape');
   }
+  const peacefulKing = createBattle(king);
+  assert.equal(peacefulKing.canEscape, true);
+  assert.match(peacefulKing.text, /攻撃する前なら/);
+  peacefulKing.guard(); nextTurn(peacefulKing);
+  peacefulKing.escape(); assert.equal(peacefulKing.phase, 'escape');
+  peacefulKing.cancelEscape(); peacefulKing.attack(); nextTurn(peacefulKing);
+  assert.equal(peacefulKing.canEscape, false);
+  const angryHp = peacefulKing.playerHp;
+  peacefulKing.escape(); assert.equal(peacefulKing.phase, 'commands');
+  assert.equal(peacefulKing.playerHp, angryHp, 'a blocked escape never spends a turn');
   const defaultEscape = structuredClone(mushroom); delete defaultEscape.canEscape;
   const fleeing = createBattle(parseEnemyDefinitions([defaultEscape])[0]); fleeing.escape(); assert.equal(fleeing.phase, 'escape');
   for (const value of [0, 1, 'false', null, [], {}]) {
     assert.throws(() => parseEnemyDefinitions([{ ...mushroom, canEscape: value }]));
+    assert.throws(() => parseEnemyDefinitions([{ ...king, canEscapeBeforeAttacked: value }]));
     const bad = structuredClone(mushroom); bad.patterns.beforeAttacked[0].inflictPoison = value;
     assert.throws(() => parseEnemyDefinitions([bad]));
   }
@@ -85,6 +96,22 @@ try {
   assert.equal(unlearned.useFieldSkill(2).ok, false); assert.equal(unlearned.vitals.mp, 10);
 
   const scene = { id: 0, width: 6, height: 6, spawn: { x: 16, y: 32 }, tiles: new Uint8Array(36).fill(7), entities: [], encounter: { enabled: true, enemyId: 2, rate: 100 } };
+  const kingScene = { ...scene, entities: [{ kind: 'king', x: 64, y: 0, parameters: [0] }], encounter: { enabled: true, enemyId: 0, rate: 100, once: true } };
+  const royalVisit = createWorldGame([kingScene], 0, () => 0);
+  royalVisit.move('right'); assert.equal(royalVisit.battle.canEscape, true);
+  royalVisit.battle.escape(); royalVisit.finishEncounter('escape');
+  assert.ok(royalVisit.visibleEntities.some(entity => entity.kind === 'king'), 'peaceful escape leaves the king in the castle');
+  assert.equal(royalVisit.status.hp, playerConfig.stats.hp);
+  royalVisit.move('left'); assert.equal(royalVisit.battle.wasAttacked, false);
+  royalVisit.battle.attack(); nextTurn(royalVisit.battle);
+  assert.equal(royalVisit.battle.canEscape, false);
+  for (let turns = 0; royalVisit.battle.phase !== 'defeat'; turns++) {
+    assert.ok(turns < 50); royalVisit.battle.guard(); nextTurn(royalVisit.battle);
+  }
+  royalVisit.finishEncounter('defeat'); royalVisit.interact();
+  royalVisit.move('right'); assert.equal(royalVisit.battle.wasAttacked, true);
+  assert.equal(royalVisit.battle.canEscape, false, 'provocation survives defeat and a new encounter');
+  royalVisit.reset(); royalVisit.move('right'); assert.equal(royalVisit.battle.canEscape, true, 'reset restores peaceful escape');
   const game = createWorldGame([scene], 0, () => 0, { player: { ...playerConfig, initialItems: [{ itemId: 1, quantity: 1 }] } });
   game.move('right'); assert.equal(game.useFieldSkill(2).ok, false);
   game.battle.guard(); nextTurn(game.battle); game.battle.guard(); nextTurn(game.battle);
@@ -98,10 +125,15 @@ try {
   const bossScene = { ...scene, encounter: undefined, entities: [{ kind: 'demon-lord', x: 16, y: 0, parameters: [], battleEvent: { enemyId: 4, once: true, clear: true } }] };
   const town = { ...scene, id: 1, encounter: undefined, entities: [{ kind: 'resident', x: 16, y: 0, parameters: [], dialogue: { type: 'custom', text: 'おめでとう！' } }] };
   bossScene.exits = [{ x: 2, y: 3, targetStageId: 1, targetX: 1, targetY: 3, direction: 'back' }];
+  const winBoss = session => {
+    session.battle.attack(); assert.equal(session.battle.phase, 'player-action');
+    session.battle.advance(); session.battle.advance(); session.battle.attack();
+    assert.equal(session.battle.phase, 'victory'); session.finishEncounter('victory');
+  };
   const cleared = createWorldGame([bossScene, town], 0, () => 0, { player: { ...playerConfig, stats: { hp: 300, attack: 200, defense: 10 } } });
   cleared.move('back'); cleared.interact(); assert.equal(cleared.cancelBattleDialogue(), true); assert.equal(cleared.battle, null);
   cleared.interact(); cleared.interact(); assert.equal(cleared.cancelBattleDialogue(), false);
-  cleared.battle.attack(); cleared.finishEncounter('victory'); assert.equal(cleared.cleared, true);
+  winBoss(cleared); assert.equal(cleared.cleared, true);
   assert.match(cleared.message.text, /GAME CLEAR/); assert.equal(cleared.move('front'), false, 'the notice needs to be closed first');
   cleared.interact(); assert.equal(cleared.message, null); assert.ok(!cleared.visibleEntities.some(e => e.kind === 'demon-lord'));
   assert.equal(cleared.move('front'), true); assert.equal(cleared.move('right'), true); assert.equal(cleared.scene.id, 1);
@@ -112,7 +144,7 @@ try {
   let encounterRoll = 0.99;
   const continuing = createWorldGame([bossScene, { ...town, encounter: { enabled: true, enemyId: 1, rate: 50 } }], 0, () => encounterRoll,
     { player: { ...playerConfig, stats: { hp: 300, attack: 200, defense: 10 } }, enemies: [{ ...enemyCatalog.find(e => e.id === 1), stats: { hp: 1, attack: 1, defense: 0 }, reward: { gold: 1, experience: 60, items: [] } }] });
-  continuing.move('back'); continuing.interact(); continuing.interact(); continuing.battle.attack(); continuing.finishEncounter('victory'); continuing.interact();
+  continuing.move('back'); continuing.interact(); continuing.interact(); winBoss(continuing); continuing.interact();
   continuing.move('front'); continuing.move('right'); assert.equal(continuing.scene.id, 1);
   encounterRoll = 0; continuing.move('right'); assert.equal(continuing.battle.enemy.id, 1);
   continuing.battle.attack(); continuing.finishEncounter('victory');

@@ -1,0 +1,110 @@
+[
+  {
+    "id": 0,
+    "ingredients": [
+      {
+        "itemId": 13,
+        "quantity": 2
+      }
+    ],
+    "result": {
+      "itemId": 19,
+      "quantity": 1
+    },
+    "gold": 4
+  },
+  {
+    "id": 1,
+    "ingredients": [
+      {
+        "itemId": 13,
+        "quantity": 1
+      },
+      {
+        "itemId": 14,
+        "quantity": 2
+      }
+    ],
+    "result": {
+      "itemId": 20,
+      "quantity": 1
+    },
+    "gold": 0
+  },
+  {
+    "id": 2,
+    "ingredients": [
+      {
+        "itemId": 15,
+        "quantity": 3
+      },
+      {
+        "itemId": 16,
+        "quantity": 2
+      }
+    ],
+    "result": {
+      "itemId": 21,
+      "quantity": 1
+    },
+    "gold": 25
+  },
+  {
+    "id": 3,
+    "ingredients": [
+      {
+        "itemId": 15,
+        "quantity": 1
+      },
+      {
+        "itemId": 16,
+        "quantity": 3
+      }
+    ],
+    "result": {
+      "itemId": 22,
+      "quantity": 1
+    },
+    "gold": 10
+  },
+  {
+    "id": 4,
+    "ingredients": [
+      {
+        "itemId": 4,
+        "quantity": 1
+      },
+      {
+        "itemId": 17,
+        "quantity": 3
+      }
+    ],
+    "result": {
+      "itemId": 23,
+      "quantity": 1
+    },
+    "gold": 10
+  },
+  {
+    "id": 5,
+    "ingredients": [
+      {
+        "itemId": 3,
+        "quantity": 1
+      },
+      {
+        "itemId": 17,
+        "quantity": 1
+      },
+      {
+        "itemId": 18,
+        "quantity": 3
+      }
+    ],
+    "result": {
+      "itemId": 24,
+      "quantity": 1
+    },
+    "gold": 10
+  }
+]

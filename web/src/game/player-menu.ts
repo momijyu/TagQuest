@@ -1,9 +1,10 @@
-import { findItem, equipmentSlots, slotNames } from '../data/items';
+import { findItem, itemCatalog, equipmentSlots, slotNames } from '../data/items';
 import type { EquipmentSlot } from '../data/items';
 import type { createWorldGame } from './world';
 import { escapeHtml as html } from './html';
 import { updateResourceBar } from './resource-bars';
 import { findSkill } from '../data/skills';
+import { findExchangeRecipe } from '../data/exchanges';
 
 type World = ReturnType<typeof createWorldGame>;
 /** プレイ画面内の所持品・装備・ステータスと店の売買。 */
@@ -30,25 +31,26 @@ export function mountPlayerMenus(inventoryRoot: HTMLElement, shopRoot: HTMLEleme
         if (!store) { lastShop = null; snapshot = ''; return; }
         if (store !== lastShop) { lastShop = store; page = 'buy'; feedback = ''; focus = true; }
       }
-      const items = game.inventory, status = game.status;
-      const key = JSON.stringify({ items, status, page, store, feedback });
+      const items = game.inventory, status = game.status, discovered = game.discoveredItems;
+      const key = JSON.stringify({ items, status, discovered, story: game.story, page, store, feedback });
       if (key === snapshot && !focus) return;
       snapshot = key;
-      get('[data-menu-title]').textContent = shop ? store!.name : page === 'equipment' ? 'そうび' : page === 'status' ? 'つよさ' : page === 'spells' ? 'まほう' : 'どうぐ';
+      get('[data-menu-title]').textContent = shop ? store!.name : page === 'collection' ? 'アイテムずかん' : page === 'equipment' ? 'そうび' : page === 'status' ? 'つよさ' : page === 'spells' ? 'まほう' : 'どうぐ';
       get('[data-player-stats]').textContent = `${status.name}　Lv ${status.level}　${status.gold}G\n攻撃力 ${status.attack}　防御力 ${status.defense}\n経験値 ${status.experience}　${status.nextLevelExperience === null ? '最高レベル' : `次まで ${status.nextLevelExperience - status.experience}`}`;
       get('[data-menu-hp]').textContent = `HP ${status.hp} / ${status.maxHp}${status.poisoned ? '　毒' : ''}`;
       get('[data-menu-mp]').textContent = `MP ${status.mp} / ${status.maxMp}`;
       updateResourceBar(get('[data-menu-hp-bar]') as HTMLProgressElement, status.hp, status.maxHp, `${status.name}のHP`);
       updateResourceBar(get('[data-menu-mp-bar]') as HTMLProgressElement, status.mp, status.maxMp, `${status.name}のMP`);
-      const tabs = shop ? [['buy', '買う'], ['sell', '売る']] : [['items', 'どうぐ'], ['spells', 'まほう'], ['equipment', 'そうび'], ['status', 'つよさ']];
+      const tabs = shop ? [['buy', '買う'], ['sell', '売る'], ...(store!.recipes?.length ? [['exchange', '素材交換']] : [])] : [['items', 'どうぐ'], ['spells', 'まほう'], ['equipment', 'そうび'], ['status', 'つよさ'], ['collection', 'ずかん']];
       get('[data-player-tabs]').innerHTML = tabs.map(([id, name]) => `<button data-player-tab="${id}" aria-pressed="${id === page}">${name}</button>`).join('');
       root.querySelectorAll<HTMLButtonElement>('[data-player-tab]').forEach(tab => tab.addEventListener('click', () => {
         if (!active()) return;
         page = tab.dataset.playerTab!; feedback = ''; selected = 0; render(true);
       }));
       const summary = get('[data-play-items]');
-      summary.hidden = shop || page !== 'items';
-      summary.textContent = items.map(({ itemId, count }) => `${findItem(itemId)!.name} ×${count}`).join('\n') || 'なし';
+      summary.hidden = shop || page !== 'collection';
+      summary.textContent = page === 'collection' ? `入手済み ${discovered.length} / ${itemCatalog.length}`
+        : items.map(({ itemId, count }) => `${findItem(itemId)!.name} ×${count}`).join('\n') || 'なし';
       const comparison = (item: ReturnType<typeof findItem>): string => {
         if (!item?.equipment) return '';
         const gear = item.equipment;
@@ -64,16 +66,29 @@ export function mountPlayerMenus(inventoryRoot: HTMLElement, shopRoot: HTMLEleme
       let rows: string[] = [];
       if (shop && page === 'buy') rows = store!.items.map(id => {
         const item = findItem(id)!;
-        return `<div class="player-item-row"><span>${html(item.name)}　${item.price}G<small>${html(item.description)} ${comparison(item)}${item.equipment ? `　装備Lv ${item.equipment.requiredLevel ?? 1}` : ''}</small></span>${button('buy', '買う', id)}</div>`;
+        const count = items.find(entry => entry.itemId === id)?.count ?? 0;
+        const equipped = Object.values(status.equipment).includes(id);
+        return `<div class="player-item-row"><span>${html(item.name)}　${item.price}G　所持 ${count}個${equipped ? '（装備中）' : ''}<small>${html(item.description)} ${comparison(item)}${item.equipment ? `　装備Lv ${item.equipment.requiredLevel ?? 1}` : ''}</small></span>${button('buy', '買う', id)}</div>`;
+      });
+      else if (shop && page === 'exchange') rows = (store!.recipes ?? []).map(id => {
+        const recipe = findExchangeRecipe(id)!, item = findItem(recipe.result.itemId)!;
+        const materials = recipe.ingredients.map(({ itemId, quantity }) => {
+          const count = items.find(entry => entry.itemId === itemId)?.count ?? 0;
+          return `${findItem(itemId)!.name} ${count}/${quantity}個${Object.values(status.equipment).includes(itemId) ? '（装備中の1個は使えません）' : ''}`;
+        }).join('・');
+        return `<div class="player-item-row"><span>${html(item.name)} ×${recipe.result.quantity}<small>${html(item.description)} ${comparison(item)}</small><small>必要素材（所持/必要）：${html(materials)}${recipe.gold ? `　＋${recipe.gold}G` : '　手数料なし'}</small></span>${button('exchange', '交換する', id)}</div>`;
       });
       else if (shop) rows = items.map(({ itemId, count }) => {
         const item = findItem(itemId)!, equipped = Object.values(status.equipment).includes(itemId);
         return `<div class="player-item-row"><span>${html(item.name)} ×${count}　${item.sellPrice}G${equipped ? '（装備中）' : ''}</span>${button('sell', '売る', itemId)}</div>`;
       });
-      else if (page === 'items') rows = items.map(({ itemId }) => {
+      else if (page === 'items') rows = items.map(({ itemId, count }) => {
         const item = findItem(itemId)!;
-        return `<div class="player-item-row"><span>${html(item.name)}<small>${html(item.description)} ${comparison(item)}${item.equipment ? `　装備Lv ${item.equipment.requiredLevel ?? 1}` : ''}</small></span>${item.equipment ? button('equip', '装備する', itemId) : item.effect ? button('use', '使う', itemId) : ''}</div>`;
+        return `<div class="player-item-row"><span>${html(item.name)} ×${count}<small>${html(item.description)} ${comparison(item)}${item.equipment ? `　装備Lv ${item.equipment.requiredLevel ?? 1}` : !item.effect ? `　素材・売値 ${item.sellPrice}G` : ''}</small></span>${item.equipment ? button('equip', '装備する', itemId) : item.effect ? button('use', '使う', itemId) : ''}</div>`;
       });
+      else if (page === 'collection') rows = itemCatalog.map(item => discovered.includes(item.id)
+        ? `<div class="player-item-row"><span>${html(item.name)}<small>${html(item.description)}　所持 ${items.find(entry => entry.itemId === item.id)?.count ?? 0}個</small></span></div>`
+        : '<div class="player-item-row"><span>？？？<small>未入手</small></span></div>');
       else if (page === 'spells') {
         rows = status.skills.flatMap(id => {
           const skill = findSkill(id)!;
@@ -90,7 +105,8 @@ export function mountPlayerMenus(inventoryRoot: HTMLElement, shopRoot: HTMLEleme
           return `<div class="player-item-row"><span>${html(item.name)}<small>${html(item.description)} ${comparison(item)}　装備Lv ${item.equipment!.requiredLevel ?? 1}</small></span>${button('equip', '装備する', itemId)}</div>`;
         }));
       } else rows = [`<p>基礎最大HP ${status.baseStats.hp} ＋ 装備 ${status.maxHp - status.baseStats.hp}<br>基礎最大MP ${status.baseStats.mp} ＋ 装備 ${status.maxMp - status.baseStats.mp}<br>基礎攻撃力 ${status.baseStats.attack} ＋ 装備 ${status.attack - status.baseStats.attack}<br>基礎防御力 ${status.baseStats.defense} ＋ 装備 ${status.defense - status.baseStats.defense}</p>`,
-        ...status.skillSchedule.map(({ id, learnLevel, learned }) => { const skill = findSkill(id)!; return `<p>${skill.kind === 'technique' ? '特技' : '魔法'}：${html(skill.name)}　MP ${skill.mpCost}　${learned ? '習得済み' : `Lv ${learnLevel}で習得`}</p>`; })];
+        ...status.skillSchedule.map(({ id, learnLevel, learned }) => { const skill = findSkill(id)!; return `<p>${skill.kind === 'technique' ? '特技' : '魔法'}：${html(skill.name)}　MP ${skill.mpCost}　${learned ? '習得済み' : `Lv ${learnLevel}で習得`}</p>`; }),
+        ...(game.story ? [`<p data-story-objective>冒険：${html(game.story.title)}<br>${html(game.story.objective)}</p>`] : [])];
       get('[data-player-list]').innerHTML = rows.join('') || '<p>なし</p>';
       get('[data-player-feedback]').textContent = feedback;
       root.querySelectorAll<HTMLButtonElement>('[data-menu-action]').forEach((action, index) => action.addEventListener('click', () => {
@@ -99,7 +115,7 @@ export function mountPlayerMenus(inventoryRoot: HTMLElement, shopRoot: HTMLEleme
         if (shop && !game.shop || !shop && (game.encounter || game.shop || game.message)) return;
         selected = index;
         const id = Number(action.dataset.menuItem);
-        const result = action.dataset.menuAction === 'buy' ? game.buy(id) : action.dataset.menuAction === 'sell' ? game.sell(id)
+        const result = action.dataset.menuAction === 'buy' ? game.buy(id) : action.dataset.menuAction === 'sell' ? game.sell(id) : action.dataset.menuAction === 'exchange' ? game.exchange(id)
           : action.dataset.menuAction === 'equip' ? game.equip(id) : action.dataset.menuAction === 'unequip' ? game.unequip(action.dataset.menuSlot as EquipmentSlot) : action.dataset.menuAction === 'spell' ? game.useFieldSkill(id) : game.useItem(id);
         feedback = result.message; render(true); changed();
       }));

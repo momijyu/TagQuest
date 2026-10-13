@@ -54,6 +54,8 @@ export const labels: Record<string, string> = {
   'weapon-merchant': '武器屋の店員', 'armor-merchant': '防具屋の店員', 'item-merchant': '道具屋の店員',
   traveler: '若者', resident: '女性', elder: 'おじいさん', loot: 'キラキラ',
   'treasure-chest': '宝箱', 'cave-witch': '洞窟の魔女', 'forest-fairy': '森の妖精', 'demon-lord': '魔王',
+  'meadow-flowers': '花の草地', 'ruins-floor': '遺跡の石畳', 'world-ruins': '古城の遺跡（全体マップ）', signpost: '道しるべ', 'cave-crystal': '洞窟の水晶',
+  'stone-tablet': '古い石碑',
   'moat-outer-bank': '堀の外縁', 'moat-inner-bank': '堀の内縁',
 };
 export const stageLabel = (scene: EditableScene): string => scene.name === 'castle' ? '城' : labels[scene.name] ?? scene.name;
@@ -255,8 +257,9 @@ export function encodeWorld(world: World, compactEntities = false): { bytes: Uin
     .some(name => catalog.tiles.indexOf(name) >= 16));
   const hasEvents = world.stages.some(s => s.entities.some(e => e.battleEvent));
   const hasBuildings = world.stages.some(stage => stage.entities.some(e => isBuilding(e.kind)));
-  const packedExits = hasBuildings || compactEntities && world.stages.some(stage => stage.exits?.length);
-  const version = hasBuildings ? 14 : packedExits ? 13 : world.stages.some(stage => (stage.encounter?.enemies?.length ?? 0) > 1) ? 12 : compactEntities ? 11 : hasEvents ? 10 : usesExtendedTiles ? 9 : 8;
+  const fractionalRate = world.stages.some(stage => stage.encounter && !Number.isInteger(stage.encounter.rate));
+  const packedExits = fractionalRate || hasBuildings || compactEntities && world.stages.some(stage => stage.exits?.length);
+  const version = fractionalRate ? 15 : hasBuildings ? 14 : packedExits ? 13 : world.stages.some(stage => (stage.encounter?.enemies?.length ?? 0) > 1) ? 12 : compactEntities ? 11 : hasEvents ? 10 : usesExtendedTiles ? 9 : 8;
   const bytes: number[] = [0x54, 0x51, version, world.stages.length];
   const reports: StageReport[] = [];
   for (const source of world.stages) {

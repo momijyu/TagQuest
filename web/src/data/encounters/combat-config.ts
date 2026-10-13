@@ -29,6 +29,7 @@ export type EnemyAction = { readonly type: 'say'; readonly text: string }
   | { readonly type: 'attack'; readonly text: string; readonly power: number; readonly speech?: string; readonly inflictPoison?: boolean };
 export interface EnemyDefinition {
   readonly canEscape?: boolean;
+  readonly canEscapeBeforeAttacked?: boolean;
   readonly royalEquipmentWarning?: string;
   readonly royalEquipmentPlayerAttackMultiplier?: number;
   readonly royalEquipmentAttack?: { readonly multiplier: number; readonly match: 'any' | 'set' };
@@ -36,7 +37,7 @@ export interface EnemyDefinition {
   readonly name: string;
   readonly characterId: string;
   readonly battleImage?: string;
-  readonly background?: 'castle' | 'grassland' | 'forest';
+  readonly background?: 'castle' | 'grassland' | 'forest' | 'cave';
   readonly stats: CombatStats;
   readonly firstAttackedMessage?: string;
   readonly reward?: VictoryReward | null;
@@ -48,6 +49,7 @@ export interface PlayerDefinition {
   readonly guardMultiplier: number;
   readonly maxMp?: number;
   readonly initialGold?: number;
+  readonly defeatGoldLossPercent?: number;
   readonly initialItems?: readonly { readonly itemId: number; readonly quantity: number }[];
   readonly skills?: readonly number[];
   readonly initialExperience?: number;
@@ -99,9 +101,10 @@ export function parseEnemyDefinitions(value: unknown): readonly EnemyDefinition[
     if (seen.has(id)) throw new Error('敵IDが重複しています。');
     seen.add(id);
     if (data.battleImage !== undefined && (typeof data.battleImage !== 'string' || !illustrationIds.includes(data.battleImage))) throw new Error('敵の戦闘画像IDが不明です。');
-    if (data.background !== undefined && (typeof data.background !== 'string' || !['castle', 'grassland', 'forest'].includes(data.background))) throw new Error('戦闘背景はcastle・grassland・forestを指定してください。');
+    if (data.background !== undefined && (typeof data.background !== 'string' || !['castle', 'grassland', 'forest', 'cave'].includes(data.background))) throw new Error('戦闘背景はcastle・grassland・forest・caveを指定してください。');
     return { id, ...(data.royalEquipmentWarning === undefined ? {} : { royalEquipmentWarning: validateCustomDialogue(data.royalEquipmentWarning) }), name: validateCustomDialogue(data.name), characterId: validateCustomDialogue(data.characterId), stats: stats(data.stats),
       ...(data.canEscape === undefined ? {} : { canEscape: boolean(data.canEscape) }),
+      ...(data.canEscapeBeforeAttacked === undefined ? {} : { canEscapeBeforeAttacked: boolean(data.canEscapeBeforeAttacked) }),
       ...(data.battleImage === undefined ? {} : { battleImage: data.battleImage as string }),
       background: (data.background ?? 'castle') as EnemyDefinition['background'],
       ...(data.firstAttackedMessage === undefined ? {} : { firstAttackedMessage: validateCustomDialogue(data.firstAttackedMessage) }),
@@ -120,8 +123,9 @@ export function parsePlayerDefinition(value: unknown): PlayerDefinition {
   const skills = rawSkills.map(id => whole(id, 0, 255));
   if (new Set(skills).size !== skills.length || skills.some(id => !findSkill(id))) throw new Error('習得技IDが不明か重複しています。');
   const initialExperience = whole(data.initialExperience ?? 0, 0, maximumExperience);
+  const defeatGoldLossPercent = whole(data.defeatGoldLossPercent ?? 50, 0, 100);
   return { name: validateCustomDialogue(data.name), stats: stats(data.stats), guardMultiplier: data.guardMultiplier,
-    maxMp: whole(data.maxMp ?? 0, 0, 9999), initialGold: initial.gold, initialItems: initial.items, skills, initialExperience, level: levelForExperience(initialExperience) };
+    maxMp: whole(data.maxMp ?? 0, 0, 9999), initialGold: initial.gold, defeatGoldLossPercent, initialItems: initial.items, skills, initialExperience, level: levelForExperience(initialExperience) };
 }
 export const enemyCatalog = parseEnemyDefinitions(enemyDefinitions);
 export const playerConfig = parsePlayerDefinition(playerDefinition);
@@ -131,5 +135,5 @@ export const findEnemy = (id: number) => enemyCatalog.find(enemy => enemy.id ===
 export function royalEquipmentWarning(enemy: EnemyDefinition, equipment: Readonly<Record<EquipmentSlot, number | null>>): string | null {
   const condition = enemy.royalEquipmentAttack;
   if (!condition || condition.multiplier <= 1 || !(condition.match === 'any' ? wearsAnyRoyalEquipment(equipment) : wearsRoyalSet(equipment))) return null;
-  return enemy.royalEquipmentWarning ?? `王の装備を外すと、この敵の攻撃力${condition.multiplier}倍の効果を解除できます。`;
+  return enemy.royalEquipmentWarning ?? null;
 }

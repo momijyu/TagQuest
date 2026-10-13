@@ -168,5 +168,119 @@
       "attack": 200,
       "defense": 50
     }
+  },
+  {
+    "id": 13,
+    "name": "若葉のしずく",
+    "description": "リーフジェルが落とす、透き通った葉のしずく。 道具屋で回復薬やどくけし丸に交換できる。",
+    "price": 6,
+    "sellPrice": 3
+  },
+  {
+    "id": 14,
+    "name": "キノコの胞子",
+    "description": "おばけキノコから集めた不思議な胞子。 道具屋でどくけし丸に交換できる。",
+    "price": 10,
+    "sellPrice": 5
+  },
+  {
+    "id": 15,
+    "name": "森狼の毛皮",
+    "description": "森オオカミの丈夫な毛皮。 防具屋でベストやお守りに交換できる。",
+    "price": 16,
+    "sellPrice": 8
+  },
+  {
+    "id": 16,
+    "name": "コウモリの羽",
+    "description": "洞窟コウモリの薄くしなやかな羽。 防具屋でベストやお守りに交換できる。",
+    "price": 12,
+    "sellPrice": 6
+  },
+  {
+    "id": 17,
+    "name": "岩のかけら",
+    "description": "岩ヤドカリの殻からこぼれた石。 武器屋で剣の強化や水晶の杖作りに使える。",
+    "price": 18,
+    "sellPrice": 9
+  },
+  {
+    "id": 18,
+    "name": "水晶の欠片",
+    "description": "水晶トカゲの輝くうろこ。 武器屋で水晶の杖作りに使える。",
+    "price": 30,
+    "sellPrice": 15
+  },
+  {
+    "id": 19,
+    "name": "上やくそう",
+    "description": "HPを50回復",
+    "price": 24,
+    "sellPrice": 10,
+    "effect": {
+      "type": "heal-hp",
+      "amount": 50
+    }
+  },
+  {
+    "id": 20,
+    "name": "どくけし丸",
+    "description": "キノコの胞子から作った丸薬。毒を治す",
+    "price": 14,
+    "sellPrice": 6,
+    "effect": {
+      "type": "cure-poison"
+    }
+  },
+  {
+    "id": 21,
+    "name": "森狼のベスト",
+    "description": "最大HP＋10・防御力＋7",
+    "price": 160,
+    "sellPrice": 60,
+    "equipment": {
+      "slot": "armor",
+      "hp": 10,
+      "attack": 0,
+      "defense": 7
+    }
+  },
+  {
+    "id": 22,
+    "name": "羽のお守り",
+    "description": "最大MP＋8・防御力＋2",
+    "price": 110,
+    "sellPrice": 35,
+    "equipment": {
+      "slot": "accessory",
+      "mp": 8,
+      "attack": 0,
+      "defense": 2
+    }
+  },
+  {
+    "id": 23,
+    "name": "岩鉄の剣",
+    "description": "銅の剣を岩で鍛えた剣。攻撃力＋12・防御力＋1",
+    "price": 180,
+    "sellPrice": 70,
+    "equipment": {
+      "slot": "weapon",
+      "attack": 12,
+      "defense": 1
+    }
+  },
+  {
+    "id": 24,
+    "name": "水晶の杖",
+    "description": "木の剣を水晶の杖に作り替える。最大MP＋15・攻撃力＋5",
+    "price": 180,
+    "sellPrice": 65,
+    "equipment": {
+      "slot": "weapon",
+      "mp": 15,
+      "attack": 5,
+      "defense": 0
+    }
   }
 ]

@@ -3,15 +3,16 @@ import catalog from '../data/scene-catalog.json';
 import { playerCollisionFrame } from '../data/player-placement';
 import { entityFrame, entityCollisionFrame } from '../renderer/compiled-scene';
 import { isNpc } from '../data/npc-placement';
-import { dialogueText, npcNames, isInspectableObject, canHaveItem } from '../data/interactions';
+import { dialogueText, dialogueSpeaker, npcNames, isInspectableObject, canHaveItem, inspectionText } from '../data/interactions';
+import type { Dialogue } from '../data/interactions';
 import { findItem } from '../data/items';
 import { isWorldLocation } from '../data/objects/world-locations';
 
 export type Direction = 'front' | 'back' | 'left' | 'right';
 export interface Position { readonly x: number; readonly y: number }
-const walkableTiles = new Set(['marble', 'carpet', 'grass', 'dirt', 'brick', 'bridge', 'forest-ground', 'sand', 'cave-floor', 'demon-floor', 'demon-carpet', 'world-forest']);
+const walkableTiles = new Set(['marble', 'carpet', 'grass', 'dirt', 'brick', 'bridge', 'forest-ground', 'sand', 'cave-floor', 'demon-floor', 'demon-carpet', 'world-forest', 'meadow-flowers', 'ruins-floor']);
 type Rectangle = Position & { readonly width: number; readonly height: number };
-export interface GameMessage { readonly speaker: string; readonly text: string; readonly shopKind?: string; readonly battleEntityIndex?: number }
+export interface GameMessage { readonly speaker: string; readonly text: string; readonly dialogue?: Dialogue; readonly shopKind?: string; readonly battleEntityIndex?: number }
 const overlaps = (a: Rectangle, b: Rectangle) => a.x < b.x + b.width && a.x + a.width > b.x
   && a.y < b.y + b.height && a.y + a.height > b.y;
 
@@ -35,17 +36,17 @@ export function interactionTarget(scene: SceneData, position: Position, directio
   removed: ReadonlySet<number> = new Set(), collected: ReadonlySet<number> = new Set()): number | undefined {
   const dx = direction === 'left' ? -1 : direction === 'right' ? 1 : 0;
   const dy = direction === 'back' ? -1 : direction === 'front' ? 1 : 0;
+  let fallback: number | undefined;
   for (const distance of [16, 32]) {
     const probe = { x: position.x + dx * distance, y: position.y + dy * distance };
     for (const [index, entity] of scene.entities.entries()) {
       const object = isInspectableObject(entity.kind);
       const frame = object || isNpc(entity.kind) ? entityCollisionFrame(entity) : entityFrame(entity);
       const throne = entity.kind === 'throne' || entity.kind === 'demon-throne';
-      const chest = entity.kind === 'treasure-chest';
       if (throne && (direction !== 'back' || playerCollisionFrame(position).y < frame.y + frame.height)) continue;
       if (removed.has(index) || entity.kind === 'loot' && collected.has(index)
         || !(isNpc(entity.kind) && (entity.dialogue || entity.battleEvent || entity.kind.endsWith('-merchant')) || entity.kind === 'loot' && entity.itemId !== undefined
-          || object && (entity.dialogue || entity.itemId !== undefined || throne || chest))) continue;
+          || object)) continue;
       // 店員は同じ売り場のカウンター越しに、下側から2マスまで話せる。
       const shop = direction === 'back' && entity.kind.endsWith('-merchant') ? scene.entities.find(candidate => {
         if (candidate.kind !== entity.kind.replace('-merchant', '-shop')) return false;
@@ -60,10 +61,15 @@ export function interactionTarget(scene: SceneData, position: Position, directio
         if (!canStand(passage, { x: position.x + dx * step, y: position.y + dy * step })) { clear = false; break; }
       }
       if (!clear) continue;
+      // 未設定の売り場の反応より、カウンター越しの店員との会話を優先する。
+      if (object && !entity.dialogue && entity.itemId === undefined && !throne && entity.kind !== 'treasure-chest') {
+        fallback ??= index;
+        continue;
+      }
       return index;
     }
   }
-  return undefined;
+  return fallback;
 }
 
 /** 編集データを変更せず、1マスずつ歩くための一時的な状態。 */
@@ -104,8 +110,8 @@ export function createWalkingGame(source: SceneData, entry?: { position: Positio
     get visibleEntities() { return scene.entities.filter((entity, index) => !(entity.kind === 'loot' && collected.has(index)) && !removed.has(index)); },
     get openedChests() { return new Set(scene.entities.filter((entity, index) => entity.kind === 'treasure-chest' && opened.has(index))); },
     removeEntity(index: number): void { removed.add(index); },
-    removeCharacter(kind: string): void {
-      scene.entities.forEach((entity, index) => { if (entity.kind === kind) removed.add(index); });
+    removeCharacter(kind: string, predicate: (entity: SceneData['entities'][number]) => boolean = () => true): void {
+      scene.entities.forEach((entity, index) => { if (entity.kind === kind && predicate(entity)) removed.add(index); });
     },
     enter(next: Position, facing: Direction): void {
       if (!canStand(collisionScene(), next)) throw new Error('到着位置が歩けない場所です。');
@@ -123,21 +129,22 @@ export function createWalkingGame(source: SceneData, entry?: { position: Positio
       if (index === undefined) return;
       const entity = scene.entities[index];
       const object = isInspectableObject(entity.kind);
-      const throne = entity.kind === 'throne' || entity.kind === 'demon-throne';
       const chest = entity.kind === 'treasure-chest';
       if (chest && opened.has(index)) {
         messages.push({ speaker: '', text: '宝箱は空っぽだった。' });
         return;
       }
+      if (object && entity.itemId !== undefined && collected.has(index)) {
+        messages.push({ speaker: '', text: 'もうここには何もないようだ。' });
+        return;
+      }
       if (chest) opened.add(index);
-      if (entity.dialogue || entity.battleEvent || entity.kind.endsWith('-merchant')) messages.push({ speaker: npcNames[entity.kind] ?? '', text: entity.dialogue ? dialogueText(entity.dialogue) : entity.battleEvent ? '戦いが始まる！' : 'いらっしゃい！',
+      if (entity.dialogue || entity.battleEvent || entity.kind.endsWith('-merchant')) messages.push({ speaker: dialogueSpeaker(entity.dialogue, npcNames[entity.kind] ?? ''), text: entity.dialogue ? dialogueText(entity.dialogue) : entity.battleEvent ? '戦いが始まる！' : 'いらっしゃい！',
+        ...(entity.dialogue ? { dialogue: entity.dialogue } : {}),
         ...(entity.battleEvent ? { battleEntityIndex: index } : {}),
         ...(entity.kind.endsWith('-merchant') ? { shopKind: entity.kind } : {}) });
       else if (entity.itemId === undefined || collected.has(index)) {
-        if (throne) messages.push({ speaker: '', text: entity.kind === 'demon-throne'
-          ? '紫のクッションと金の装飾がついた玉座だ。'
-          : '赤いクッションと金の装飾がついた玉座だ。' });
-        else if (object) messages.push({ speaker: '', text: chest ? '宝箱は空っぽだった。' : '何も見つからなかった。' });
+        if (object) messages.push({ speaker: '', text: inspectionText(entity.kind) });
       }
       collect(index);
       return;
