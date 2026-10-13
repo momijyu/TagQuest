@@ -1,15 +1,15 @@
 {
   "format": "TQ v15 experimental",
-  "binary_bytes": 706,
-  "base64url_chars": 942,
+  "binary_bytes": 702,
+  "base64url_chars": 936,
   "base_url": "https://tag-quest-kappa.vercel.app/",
-  "final_url_bytes": 978,
+  "final_url_bytes": 972,
   "binary_target_bytes": 300,
-  "remaining_to_binary_target_bytes": -406,
+  "remaining_to_binary_target_bytes": -402,
   "includes_ndef_overhead": true,
-  "ndef_tlv_bytes": 983,
+  "ndef_tlv_bytes": 977,
   "ntag215_ndef_capacity_bytes": 496,
-  "remaining_ntag215_bytes": -487,
+  "remaining_ntag215_bytes": -481,
   "stages": [
     {
       "id": 0,
@@ -70,8 +70,8 @@
       "height": 24,
       "floor_bytes": {
         "RAW": 392,
-        "RLE": 161,
-        "RECT": 247
+        "RLE": 157,
+        "RECT": 235
       },
       "selected_codec": "RLE",
       "header_bytes": 9,
@@ -80,13 +80,13 @@
       "interaction_bytes": 2,
       "exit_bytes": 14,
       "encounter_bytes": 2,
-      "stage_bytes": 196,
+      "stage_bytes": 192,
       "tile_counts": {
-        "grass": 111,
+        "grass": 110,
         "bridge": 1,
         "forest-ground": 1,
-        "sea": 517,
-        "sand": 72,
+        "sea": 523,
+        "sand": 67,
         "world-mountain": 41,
         "world-forest": 25
       }
@@ -169,7 +169,7 @@
   ],
   "binary_bytes_by_floor_codec": {
     "RAW": 1604,
-    "RLE": 864,
-    "RECT": 792
+    "RLE": 860,
+    "RECT": 780
   }
 }

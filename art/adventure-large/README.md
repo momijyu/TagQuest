@@ -30,7 +30,7 @@
 
 `web/` で `npm run export:adventure -- large`、または3種まとめて `npm run export:demos` を実行すると、JSON・バイナリ・レポート・URL・15枚のPNGを再生成します。[海辺の集落](./seaside-town.png)、[妖精の花園](./fairy-garden.png)、[北の城](./north-castle.png)、[北の大陸](./north-world.png)、[水晶の洞窟](./crystal-cave.png)、[東の大陸](./east-world.png)、[遺跡](./ruins.png) で全景を確認できます。
 
-現公開先でバイナリ1,804B・URL2,442B・NDEF/TLV2,447B。NTAG215の496Bには収まらず、ブラウザ試遊・URL共有用です。計算の正本は [world.report.json](./world.report.json)。NFCへ収める場合は [小型版](../adventure-small/README.md) を使います。
+現公開先でバイナリ1,795B・URL2,430B・NDEF/TLV2,435B。NTAG215の496Bには収まらず、ブラウザ試遊・URL共有用です。計算の正本は [world.report.json](./world.report.json)。NFCへ収める場合は [小型版](../adventure-small/README.md) を使います。
 
 物語「消えた灯火」は、妖精と魔女→北の王→奥深い森と水晶の洞窟→古城の書記→魔王へつながります。王が援軍を出さなかった過去と守護者の誓いをたどり、灯火を取り戻します。「つよさ」に次の目的を表示しますが、会話を移動・戦闘の必須条件にはしません。クリア後は後日談の会話を聞いて帰還できます。本文・話者・後日談はWeb共通の [会話テンプレート](../../web/src/data/dialogue-templates.json)、目的と結末は [物語config](../../web/src/data/adventure-story.json) を参照します。敗北ではG半減、所持品・経験値保持で復活します。
 

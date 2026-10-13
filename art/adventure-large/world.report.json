@@ -1,15 +1,15 @@
 {
   "format": "TQ v15 experimental",
-  "binary_bytes": 1804,
-  "base64url_chars": 2406,
+  "binary_bytes": 1795,
+  "base64url_chars": 2394,
   "base_url": "https://tag-quest-kappa.vercel.app/",
-  "final_url_bytes": 2442,
+  "final_url_bytes": 2430,
   "binary_target_bytes": 300,
-  "remaining_to_binary_target_bytes": -1504,
+  "remaining_to_binary_target_bytes": -1495,
   "includes_ndef_overhead": true,
-  "ndef_tlv_bytes": 2447,
+  "ndef_tlv_bytes": 2435,
   "ntag215_ndef_capacity_bytes": 496,
-  "remaining_ntag215_bytes": -1951,
+  "remaining_ntag215_bytes": -1939,
   "stages": [
     {
       "id": 0,
@@ -70,8 +70,8 @@
       "height": 24,
       "floor_bytes": {
         "RAW": 393,
-        "RLE": 162,
-        "RECT": 251
+        "RLE": 156,
+        "RECT": 236
       },
       "selected_codec": "RLE",
       "header_bytes": 9,
@@ -80,14 +80,14 @@
       "interaction_bytes": 6,
       "exit_bytes": 14,
       "encounter_bytes": 2,
-      "stage_bytes": 201,
+      "stage_bytes": 195,
       "tile_counts": {
-        "grass": 110,
+        "grass": 108,
         "dirt": 6,
         "bridge": 1,
         "forest-ground": 1,
-        "sea": 517,
-        "sand": 67,
+        "sea": 523,
+        "sand": 63,
         "world-mountain": 41,
         "world-forest": 25
       }
@@ -203,7 +203,7 @@
       "floor_bytes": {
         "RAW": 271,
         "RLE": 102,
-        "RECT": 64
+        "RECT": 61
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
@@ -212,12 +212,13 @@
       "interaction_bytes": 35,
       "exit_bytes": 8,
       "encounter_bytes": 2,
-      "stage_bytes": 175,
+      "stage_bytes": 172,
       "tile_counts": {
         "grass": 355,
         "dirt": 9,
-        "brick": 102,
+        "brick": 101,
         "water": 23,
+        "bridge": 1,
         "empty": 24,
         "meadow-flowers": 12
       }
@@ -229,7 +230,7 @@
       "height": 30,
       "floor_bytes": {
         "RAW": 486,
-        "RLE": 135,
+        "RLE": 143,
         "RECT": 44
       },
       "selected_codec": "RECT",
@@ -241,11 +242,11 @@
       "encounter_bytes": 10,
       "stage_bytes": 146,
       "tile_counts": {
-        "dirt": 68,
+        "dirt": 76,
         "empty": 62,
-        "forest-ground": 761,
+        "forest-ground": 756,
         "sea": 42,
-        "meadow-flowers": 27
+        "meadow-flowers": 24
       }
     },
     {
@@ -280,7 +281,7 @@
       "height": 32,
       "floor_bytes": {
         "RAW": 520,
-        "RLE": 335,
+        "RLE": 337,
         "RECT": 64
       },
       "selected_codec": "RECT",
@@ -292,11 +293,11 @@
       "encounter_bytes": 2,
       "stage_bytes": 114,
       "tile_counts": {
-        "grass": 317,
-        "dirt": 65,
+        "grass": 322,
+        "dirt": 59,
         "bridge": 4,
         "sea": 371,
-        "sand": 149,
+        "sand": 150,
         "world-mountain": 72,
         "world-forest": 46
       }
@@ -407,7 +408,7 @@
   ],
   "binary_bytes_by_floor_codec": {
     "RAW": 5307,
-    "RLE": 2870,
-    "RECT": 1893
+    "RLE": 2874,
+    "RECT": 1875
   }
 }

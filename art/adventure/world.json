@@ -648,13 +648,6 @@
           },
           {
             "tile": "sand",
-            "x": 19,
-            "y": 8,
-            "width": 1,
-            "height": 1
-          },
-          {
-            "tile": "sand",
             "x": 3,
             "y": 9,
             "width": 2,
@@ -676,17 +669,10 @@
           },
           {
             "tile": "sand",
-            "x": 19,
-            "y": 9,
-            "width": 2,
-            "height": 2
-          },
-          {
-            "tile": "sand",
             "x": 2,
             "y": 10,
             "width": 1,
-            "height": 5
+            "height": 7
           },
           {
             "tile": "grass",
@@ -773,17 +759,10 @@
             "height": 1
           },
           {
-            "tile": "sand",
-            "x": 1,
-            "y": 15,
-            "width": 1,
-            "height": 1
-          },
-          {
             "tile": "grass",
-            "x": 2,
+            "x": 3,
             "y": 15,
-            "width": 14,
+            "width": 13,
             "height": 1
           },
           {
@@ -792,13 +771,6 @@
             "y": 15,
             "width": 1,
             "height": 3
-          },
-          {
-            "tile": "sand",
-            "x": 2,
-            "y": 16,
-            "width": 1,
-            "height": 1
           },
           {
             "tile": "grass",

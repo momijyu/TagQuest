@@ -17,8 +17,10 @@ export function inferLocationName(scene: SceneData): string {
       ? '水晶の洞窟' : '洞窟';
   }
   if (['weapon-shop', 'armor-shop', 'item-shop', 'house-red', 'house-slate'].some(kind => kinds.has(kind))) {
-    return tiles.has('sea') ? '海辺の集落' : '街';
+    return tiles.has('sea') ? '海辺の集落' : tiles.has('meadow-flowers') ? '北の市場' : '街';
   }
+  if (kinds.has('world-ruins')) return '東の大陸';
+  if (kinds.has('world-town') && kinds.has('world-forest-entrance') && !kinds.has('world-cave')) return '北の大陸';
   if (kinds.has('tree') || kinds.has('forest-fairy') || tiles.has('forest-ground') && !tiles.has('world-mountain')) {
     if (roles.has('deep-forest')) return '奥深い森';
     if (tiles.has('meadow-flowers') && !scene.encounter?.enabled) return '妖精の花園';

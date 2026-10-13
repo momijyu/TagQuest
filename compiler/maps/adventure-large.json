@@ -493,7 +493,7 @@
             "height": 2
           },
           {
-            "tile": "grass",
+            "tile": "sand",
             "x": 23,
             "y": 3,
             "width": 1,
@@ -648,13 +648,6 @@
           },
           {
             "tile": "sand",
-            "x": 19,
-            "y": 8,
-            "width": 1,
-            "height": 1
-          },
-          {
-            "tile": "sand",
             "x": 3,
             "y": 9,
             "width": 2,
@@ -676,17 +669,10 @@
           },
           {
             "tile": "sand",
-            "x": 19,
-            "y": 9,
-            "width": 2,
-            "height": 2
-          },
-          {
-            "tile": "sand",
             "x": 2,
             "y": 10,
             "width": 1,
-            "height": 5
+            "height": 7
           },
           {
             "tile": "grass",
@@ -773,17 +759,10 @@
             "height": 1
           },
           {
-            "tile": "sand",
-            "x": 1,
-            "y": 15,
-            "width": 1,
-            "height": 1
-          },
-          {
             "tile": "grass",
-            "x": 2,
+            "x": 3,
             "y": 15,
-            "width": 14,
+            "width": 13,
             "height": 1
           },
           {
@@ -792,13 +771,6 @@
             "y": 15,
             "width": 1,
             "height": 3
-          },
-          {
-            "tile": "sand",
-            "x": 2,
-            "y": 16,
-            "width": 1,
-            "height": 1
           },
           {
             "tile": "grass",
@@ -2283,13 +2255,6 @@
             "height": 1
           },
           {
-            "tile": "brick",
-            "x": 12,
-            "y": 6,
-            "width": 1,
-            "height": 2
-          },
-          {
             "tile": "meadow-flowers",
             "x": 10,
             "y": 2,
@@ -2558,13 +2523,13 @@
             "x": 19,
             "y": 3,
             "width": 1,
-            "height": 9
+            "height": 15
           },
           {
             "tile": "meadow-flowers",
-            "x": 4,
+            "x": 6,
             "y": 10,
-            "width": 4,
+            "width": 3,
             "height": 3
           },
           {
@@ -3239,7 +3204,7 @@
             "tile": "dirt",
             "x": 0,
             "y": 16,
-            "width": 31,
+            "width": 25,
             "height": 1
           },
           {

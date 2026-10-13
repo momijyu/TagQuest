@@ -21,8 +21,8 @@ export function mountPlayerMenus(inventoryRoot: HTMLElement, shopRoot: HTMLEleme
     let page = shop ? 'buy' : 'items', snapshot = '', feedback = '', lastShop: unknown, selected = 0;
     const get = (selector: string) => root.querySelector<HTMLElement>(selector)!;
     const closeSelector = shop ? '[data-shop-close]' : '[data-play-close-items]';
-    const navigationButtons = () => [...root.querySelectorAll<HTMLButtonElement>('[data-menu-action]'), root.querySelector<HTMLButtonElement>(closeSelector)!];
-    const button = (action: string, label: string, itemId?: number, slot?: EquipmentSlot) => `<button data-menu-action="${action}"${itemId === undefined ? '' : ` data-menu-item="${itemId}"`}${slot ? ` data-menu-slot="${slot}"` : ''}>${html(label)}</button>`;
+    const navigationButtons = () => [...root.querySelectorAll<HTMLButtonElement>('[data-menu-action]'), root.querySelector<HTMLButtonElement>(closeSelector)!].filter(button => !button.disabled);
+    const button = (action: string, label: string, itemId?: number, slot?: EquipmentSlot, disabled = false) => `<button data-menu-action="${action}"${itemId === undefined ? '' : ` data-menu-item="${itemId}"`}${slot ? ` data-menu-slot="${slot}"` : ''}${disabled ? ' disabled' : ''}>${html(label)}</button>`;
     function render(focus = false): void {
       const game = getGame(); if (!game) return;
       const store = game.shop;
@@ -84,7 +84,8 @@ export function mountPlayerMenus(inventoryRoot: HTMLElement, shopRoot: HTMLEleme
       });
       else if (page === 'items') rows = items.map(({ itemId, count }) => {
         const item = findItem(itemId)!;
-        return `<div class="player-item-row"><span>${html(item.name)} ×${count}<small>${html(item.description)} ${comparison(item)}${item.equipment ? `　装備Lv ${item.equipment.requiredLevel ?? 1}` : !item.effect ? `　素材・売値 ${item.sellPrice}G` : ''}</small></span>${item.equipment ? button('equip', '装備する', itemId) : item.effect ? button('use', '使う', itemId) : ''}</div>`;
+        const equipped = Object.values(status.equipment).includes(itemId);
+        return `<div class="player-item-row"><span>${html(item.name)} ×${count}${equipped ? '（装備中）' : ''}<small>${html(item.description)} ${comparison(item)}${item.equipment ? `　装備Lv ${item.equipment.requiredLevel ?? 1}` : !item.effect ? `　素材・売値 ${item.sellPrice}G` : ''}</small></span>${item.equipment ? button('equip', equipped ? '装備中' : '装備する', itemId, undefined, equipped) : item.effect ? button('use', '使う', itemId) : ''}</div>`;
       });
       else if (page === 'collection') rows = itemCatalog.map(item => discovered.includes(item.id)
         ? `<div class="player-item-row"><span>${html(item.name)}<small>${html(item.description)}　所持 ${items.find(entry => entry.itemId === item.id)?.count ?? 0}個</small></span></div>`
@@ -102,18 +103,23 @@ export function mountPlayerMenus(inventoryRoot: HTMLElement, shopRoot: HTMLEleme
         });
         rows.push(...items.filter(({ itemId }) => findItem(itemId)!.equipment).map(({ itemId }) => {
           const item = findItem(itemId)!;
-          return `<div class="player-item-row"><span>${html(item.name)}<small>${html(item.description)} ${comparison(item)}　装備Lv ${item.equipment!.requiredLevel ?? 1}</small></span>${button('equip', '装備する', itemId)}</div>`;
+          const equipped = Object.values(status.equipment).includes(itemId);
+          return `<div class="player-item-row"><span>${html(item.name)}${equipped ? '（装備中）' : ''}<small>${html(item.description)} ${comparison(item)}　装備Lv ${item.equipment!.requiredLevel ?? 1}</small></span>${button('equip', equipped ? '装備中' : '装備する', itemId, undefined, equipped)}</div>`;
         }));
       } else rows = [`<p>基礎最大HP ${status.baseStats.hp} ＋ 装備 ${status.maxHp - status.baseStats.hp}<br>基礎最大MP ${status.baseStats.mp} ＋ 装備 ${status.maxMp - status.baseStats.mp}<br>基礎攻撃力 ${status.baseStats.attack} ＋ 装備 ${status.attack - status.baseStats.attack}<br>基礎防御力 ${status.baseStats.defense} ＋ 装備 ${status.defense - status.baseStats.defense}</p>`,
-        ...status.skillSchedule.map(({ id, learnLevel, learned }) => { const skill = findSkill(id)!; return `<p>${skill.kind === 'technique' ? '特技' : '魔法'}：${html(skill.name)}　MP ${skill.mpCost}　${learned ? '習得済み' : `Lv ${learnLevel}で習得`}</p>`; }),
+        ...status.skillSchedule.map(({ id, learned }) => {
+          const skill = findSkill(id)!, kind = skill.kind === 'technique' ? '特技' : '魔法';
+          return learned ? `<p>${kind}：${html(skill.name)}　MP ${skill.mpCost}　習得済み<small>${html(skill.description)}</small></p>`
+            : `<p>${kind}：???</p>`;
+        }),
         ...(game.story ? [`<p data-story-objective>冒険：${html(game.story.title)}<br>${html(game.story.objective)}</p>`] : [])];
       get('[data-player-list]').innerHTML = rows.join('') || '<p>なし</p>';
       get('[data-player-feedback]').textContent = feedback;
-      root.querySelectorAll<HTMLButtonElement>('[data-menu-action]').forEach((action, index) => action.addEventListener('click', () => {
-        if (!active()) return;
+      root.querySelectorAll<HTMLButtonElement>('[data-menu-action]').forEach(action => action.addEventListener('click', () => {
+        if (!active() || action.disabled) return;
         const game = getGame()!;
         if (shop && !game.shop || !shop && (game.encounter || game.shop || game.message)) return;
-        selected = index;
+        selected = navigationButtons().indexOf(action);
         const id = Number(action.dataset.menuItem);
         const result = action.dataset.menuAction === 'buy' ? game.buy(id) : action.dataset.menuAction === 'sell' ? game.sell(id) : action.dataset.menuAction === 'exchange' ? game.exchange(id)
           : action.dataset.menuAction === 'equip' ? game.equip(id) : action.dataset.menuAction === 'unequip' ? game.unequip(action.dataset.menuSlot as EquipmentSlot) : action.dataset.menuAction === 'spell' ? game.useFieldSkill(id) : game.useItem(id);

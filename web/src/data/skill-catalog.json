@@ -154,5 +154,53 @@
       "type": "heal-hp",
       "amount": 600
     }
+  },
+  {
+    "id": 13,
+    "name": "連撃",
+    "kind": "technique",
+    "description": "攻撃力の2倍で攻撃",
+    "mpCost": 5,
+    "learnLevel": 6,
+    "effect": {
+      "type": "physical-damage",
+      "power": 2
+    }
+  },
+  {
+    "id": 14,
+    "name": "渾身斬り",
+    "kind": "technique",
+    "description": "攻撃力の2.5倍で攻撃",
+    "mpCost": 10,
+    "learnLevel": 18,
+    "effect": {
+      "type": "physical-damage",
+      "power": 2.5
+    }
+  },
+  {
+    "id": 15,
+    "name": "疾風連斬",
+    "kind": "technique",
+    "description": "攻撃力の3倍で攻撃",
+    "mpCost": 18,
+    "learnLevel": 36,
+    "effect": {
+      "type": "physical-damage",
+      "power": 3
+    }
+  },
+  {
+    "id": 16,
+    "name": "天破斬",
+    "kind": "technique",
+    "description": "攻撃力の4倍で攻撃",
+    "mpCost": 28,
+    "learnLevel": 50,
+    "effect": {
+      "type": "physical-damage",
+      "power": 4
+    }
   }
 ]

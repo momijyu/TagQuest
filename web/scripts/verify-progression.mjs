@@ -65,6 +65,10 @@ try {
     if (skill.effect.type === 'magic-damage') {
       assert.equal(battle.enemyHp, 9999 - skill.effect.amount);
       assert.equal(caster.useFieldSkill(skill.id).ok, false);
+    } else if (skill.effect.type === 'physical-damage') {
+      assert.equal(battle.enemyHp, 9999 - Math.max(1, Math.floor(definition.stats.attack * skill.effect.power) - battle.enemy.stats.defense));
+      assert.equal(battle.playerHp, 1);
+      assert.equal(caster.useFieldSkill(skill.id).ok, false, 'physical techniques are battle-only');
     } else {
       assert.equal(battle.playerHp, Math.min(definition.stats.hp, 1 + skill.effect.amount));
       assert.equal(caster.useFieldSkill(skill.id).ok, false, 'full HP does not consume MP');
@@ -124,7 +128,7 @@ try {
   } finally { skill.learnLevel = oldLearn; gear.requiredLevel = oldRequired; }
   // Real, unmodified defaults announce new magic after each early milestone.
   assert.deepEqual(createPlayerState().definition.skills, [0, 1, 2]);
-  for (const [level, skillId, name] of [[3, 3, '氷の矢'], [5, 4, '大きな癒し'], [8, 5, '雷撃']]) {
+  for (const [level, skillId, name] of [[3, 3, '氷の矢'], [5, 4, '大きな癒し'], [8, 5, '雷撃'], [6, 13, '連撃'], [18, 14, '渾身斬り'], [36, 15, '疾風連斬'], [50, 16, '天破斬']]) {
     const threshold = progressionConfig.levelThresholds[level - 1];
     const scene = { id: 0, width: 5, height: 5, spawn: { x: 16, y: 32 }, tiles: new Uint8Array(25).fill(7), entities: [], encounter: { enabled: true, rate: 100, enemyId: 1 } };
     const enemy = { ...enemyCatalog.find(entry => entry.id === 1), stats: { hp: 1, attack: 0, defense: 0 }, reward: { gold: 0, experience: 1, items: [] } };

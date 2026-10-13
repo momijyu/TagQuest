@@ -23,8 +23,7 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
     <div class="battle-art" data-battle-art>
       <span class="battle-damage battle-damage-enemy" data-battle-damage-enemy hidden aria-hidden="true"></span>
       <canvas width="320" height="192" data-battle-canvas aria-label="遭遇した敵"></canvas>
-      <button class="battle-enemy" data-battle-enemy><span class="game-window battle-enemy-name"><span data-battle-enemy-name></span><small data-battle-enemy-hp></small></span></button>
-      <span class="battle-target-arrow" data-battle-target hidden aria-hidden="true">▶</span>
+      <div class="battle-enemy" data-battle-enemy><span class="game-window battle-enemy-name"><span data-battle-enemy-name></span><small data-battle-enemy-hp></small></span></div>
     </div>
     </div>
   </div>
@@ -47,7 +46,6 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
         <button data-battle-command="spells">まほう</button>
       </div>
       <div class="battle-panel" data-battle-panel hidden>
-        <p data-battle-items hidden></p>
         <div class="battle-item-list" data-battle-item-list hidden></div>
         <div class="battle-skill-list" data-battle-skill-list hidden></div>
         <button data-battle-next hidden>つづける</button>
@@ -60,18 +58,17 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
   const context = canvas.getContext('2d');
   if (!context) throw new Error('Canvas 2Dを利用できません。');
   const commands = [...root.querySelectorAll<HTMLButtonElement>('[data-battle-command]')];
-  const enemy = get<HTMLButtonElement>('[data-battle-enemy]');
+  const enemy = get('[data-battle-enemy]');
   const next = get<HTMLButtonElement>('[data-battle-next]');
   const back = get<HTMLButtonElement>('[data-battle-back]');
   let encounter: EncounterEvent | null = null;
   let inventory: readonly { itemId: number; count: number }[] = [];
   let battle: Battle | null = null;
-  let menu: 'commands' | 'target' | 'items' | 'techniques' | 'spells' = 'commands';
+  let menu: 'commands' | 'items' | 'techniques' | 'spells' = 'commands';
   let selected = 0;
   let selectedItem = 0;
   let notice = '';
   let selectedSkill = 0;
-  let pendingSkill: number | null = null;
   const sound = createBattleSound();
   const soundButton = get<HTMLButtonElement>('[data-battle-sound]');
   let lastFeedback = 0;
@@ -188,12 +185,12 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
     if (!encounter || !battle) return;
     const phase = battle.phase;
     inventory = supplies.inventory?.() ?? inventory;
-    const choosing = phase === 'commands', targeting = choosing && menu === 'target', browsing = choosing && menu === 'items';
+    const choosing = phase === 'commands', browsing = choosing && menu === 'items';
+    const usableItems = inventory.filter(({ itemId, count }) => count > 0 && findItem(itemId)?.effect);
     const browsingSkills = choosing && (menu === 'techniques' || menu === 'spells');
     const skills = (battle.player.skills ?? []).map(findSkill).filter(skill => skill && (skill.learnLevel ?? 1) <= (battle!.player.level ?? 1) && skill.kind === (menu === 'techniques' ? 'technique' : 'spell'));
     get('[data-battle-commands]').hidden = !choosing || menu !== 'commands';
     get('[data-battle-panel]').hidden = choosing && menu === 'commands';
-    get('[data-battle-target]').hidden = !targeting;
     get('[data-battle-enemy-name]').textContent = encounter.name;
     get('[data-battle-enemy-hp]').textContent = `HP ${battle.enemyHp} / ${battle.enemy.stats.hp}`;
     get('[data-battle-player-name]').textContent = `${battle.player.name}　Lv ${battle.player.level ?? 1}${battle.poisoned ? '　毒' : ''}`;
@@ -207,26 +204,21 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
     get('[data-battle-speech]').hidden = !battle.speech || menu !== 'commands';
     get('[data-battle-speech-text]').textContent = battle.speech ?? '';
     enemy.hidden = phase === 'victory';
-    enemy.disabled = !targeting;
-    enemy.setAttribute('aria-label', targeting ? `${encounter.name}に攻撃する` : encounter.name);
-    enemy.dataset.targeting = String(targeting);
     commands.forEach((button, index) => {
       button.dataset.selected = String(index === selected);
       button.setAttribute('aria-pressed', String(index === selected));
     });
-    get('[data-battle-log]').textContent = targeting ? pendingSkill === null ? 'こうげきする相手を選んでください。' : `${findSkill(pendingSkill)!.name}を使う相手を選んでください。`
-      : browsingSkills ? notice || (skills.length ? '技を選んでください。' : 'まだ覚えていない。') : browsing ? notice || (inventory.length ? 'もちもの' : 'どうぐを持っていない。') : battle.text;
-    get('[data-battle-party]').textContent = phase === 'enemy-action' || phase === 'defeat' ? '敵のターン' : browsingSkills ? menu === 'techniques' ? 'とくぎ' : 'まほう' : targeting ? 'こうげき' : browsing || phase === 'player-action' && battle.action === 'item' ? 'どうぐ' : phase === 'player-action' && battle.action === 'guard' ? 'ぼうぎょ' : 'コマンド';
-    const items = get('[data-battle-items]');
-    items.hidden = !browsing || !inventory.length;
-    items.textContent = inventory.map(({ itemId, count }) => `${findItem(itemId)!.name} ×${count}`).join('\n');
+    get('[data-battle-log]').textContent = browsingSkills ? notice || (skills.length ? '技を選んでください。' : 'まだ覚えていない。') : browsing ? notice || (usableItems.length ? 'どうぐを選んでください。' : '使えるどうぐを持っていない。') : battle.text;
+    get('[data-battle-party]').textContent = phase === 'enemy-action' || phase === 'defeat' ? '敵のターン' : browsingSkills ? menu === 'techniques' ? 'とくぎ' : 'まほう' : browsing || phase === 'player-action' && battle.action === 'item' ? 'どうぐ' : phase === 'player-action' && battle.action === 'guard' ? 'ぼうぎょ' : 'コマンド';
     const itemList = get('[data-battle-item-list]');
-    itemList.hidden = !browsing || !inventory.length;
-    itemList.innerHTML = browsing ? inventory.map(({ itemId, count }) => `<button data-battle-item="${itemId}">${escapeHtml(findItem(itemId)!.name)} ×${count}</button>`).join('') : '';
+    itemList.hidden = !browsing || !usableItems.length;
+    itemList.innerHTML = browsing ? usableItems.map(({ itemId, count }) => {
+      const item = findItem(itemId)!;
+      return `<button data-battle-item="${itemId}">${escapeHtml(item.name)} ×${count}<small>${escapeHtml(item.description)}</small></button>`;
+    }).join('') : '';
     const itemButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-battle-item]')];
     selectedItem = Math.min(selectedItem, Math.max(0, itemButtons.length - 1));
     itemButtons.forEach(button => {
-      button.disabled = !findItem(Number(button.dataset.battleItem))!.effect;
       button.addEventListener('click', () => useItem(Number(button.dataset.battleItem)));
     });
     const skillList = get('[data-battle-skill-list]');
@@ -242,14 +234,13 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
     next.textContent = phase === 'defeat' ? '復活する' : phase === 'escape' || phase === 'victory' ? 'フィールドに戻る' : 'つづける';
     back.hidden = !choosing || menu === 'commands';
     drawEnemy(); showFeedback();
-    if (focus) (targeting ? enemy : browsingSkills ? skillButtons.filter(button => !button.disabled)[selectedSkill] ?? back : browsing ? itemButtons.filter(button => !button.disabled)[selectedItem] ?? back : choosing ? commands[selected] : next).focus({ preventScroll: true });
+    if (focus) (browsingSkills ? skillButtons.filter(button => !button.disabled)[selectedSkill] ?? back : browsing ? itemButtons[selectedItem] ?? back : choosing ? commands[selected] : next).focus({ preventScroll: true });
   }
   function chooseSkill(skillId: number): void {
     if (!isActive() || !battle || battle.phase !== 'commands' || !['techniques', 'spells'].includes(menu)) return;
     const skill = findSkill(skillId)!;
     if (skill.mpCost > battle.playerMp) { notice = 'MPが足りない。'; render(true); return; }
     notice = '';
-    if (skill.effect.type !== 'heal-hp') { pendingSkill = skillId; menu = 'target'; render(true); return; }
     const result = battle.useSkill(skillId);
     if (result.ok) menu = 'commands'; else notice = result.message;
     render(true);
@@ -263,9 +254,9 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
   function choose(index: number): void {
     if (!isActive() || !battle || battle.phase !== 'commands' || menu !== 'commands') return;
     selected = index;
-    notice = ''; selectedItem = 0; selectedSkill = 0; pendingSkill = null;
+    notice = ''; selectedItem = 0; selectedSkill = 0;
     const command = commands[index].dataset.battleCommand;
-    if (command === 'attack') menu = 'target';
+    if (command === 'attack') battle.attack();
     else if (command === 'items') menu = 'items';
     else if (command === 'techniques' || command === 'spells') menu = command;
     else if (command === 'guard') battle.guard();
@@ -274,18 +265,8 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
   }
   function returnToCommands(): void {
     if (!isActive() || !battle || !['commands', 'escape'].includes(battle.phase)) return;
-    if (menu === 'target' && pendingSkill !== null) { menu = findSkill(pendingSkill)!.kind === 'technique' ? 'techniques' : 'spells'; pendingSkill = null; }
-    else { battle.cancelEscape(); menu = 'commands'; }
+    battle.cancelEscape(); menu = 'commands';
     notice = ''; render(true);
-  }
-  function attack(): void {
-    if (!isActive() || !battle || battle.phase !== 'commands' || menu !== 'target') return;
-    if (pendingSkill === null) battle.attack();
-    else {
-      const result = battle.useSkill(pendingSkill);
-      if (!result.ok) { menu = findSkill(pendingSkill)!.kind === 'technique' ? 'techniques' : 'spells'; pendingSkill = null; notice = result.message; render(true); return; }
-    }
-    pendingSkill = null; menu = 'commands'; render(true);
   }
   function advance(): void {
     if (!isActive() || !battle) return;
@@ -293,7 +274,6 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
     else { battle.advance(); render(true); }
   }
   commands.forEach((button, index) => button.addEventListener('click', () => choose(index)));
-  enemy.addEventListener('click', attack);
   back.addEventListener('click', returnToCommands);
   next.addEventListener('click', advance);
   return {
@@ -303,7 +283,7 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
       root.hidden = !event;
       if (event === encounter) return;
       clearFeedback(); lastFeedback = 0;
-      encounter = event; inventory = items; menu = 'commands'; selected = 0; selectedItem = 0; notice = ''; selectedSkill = 0; pendingSkill = null;
+      encounter = event; inventory = items; menu = 'commands'; selected = 0; selectedItem = 0; notice = ''; selectedSkill = 0;
       battle = event ? session ?? createBattle(findEnemy(event.enemyId)!) : null;
       if (event) render(true);
     },
@@ -316,7 +296,6 @@ export function mountBattleView(root: HTMLElement, king: ImageSprite, isActive: 
       if (key === 'Escape') { returnToCommands(); return; }
       if (['e', 'Enter', ' '].includes(key)) {
         if (battle.phase === 'commands' && menu === 'commands') choose(selected);
-        else if (battle.phase === 'commands' && menu === 'target') attack();
         else if (battle.phase === 'commands' && menu === 'items') {
           const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-battle-item]')].filter(button => !button.disabled);
           if (buttons.length) useItem(Number(buttons[selectedItem % buttons.length].dataset.battleItem)); else returnToCommands();

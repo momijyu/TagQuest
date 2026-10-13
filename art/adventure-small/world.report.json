@@ -1,15 +1,15 @@
 {
-  "format": "TQ v15 experimental",
-  "binary_bytes": 334,
-  "base64url_chars": 446,
+  "format": "TQ v14 experimental",
+  "binary_bytes": 302,
+  "base64url_chars": 403,
   "base_url": "https://tag-quest-kappa.vercel.app/",
-  "final_url_bytes": 482,
+  "final_url_bytes": 439,
   "binary_target_bytes": 300,
-  "remaining_to_binary_target_bytes": -34,
+  "remaining_to_binary_target_bytes": -2,
   "includes_ndef_overhead": true,
-  "ndef_tlv_bytes": 487,
+  "ndef_tlv_bytes": 444,
   "ntag215_ndef_capacity_bytes": 496,
-  "remaining_ntag215_bytes": 9,
+  "remaining_ntag215_bytes": 52,
   "stages": [
     {
       "id": 0,
@@ -19,16 +19,16 @@
       "floor_bytes": {
         "RAW": 25,
         "RLE": 20,
-        "RECT": 20
+        "RECT": 11
       },
-      "selected_codec": "RLE",
+      "selected_codec": "RECT",
       "header_bytes": 9,
       "entity_count": 2,
       "entity_bytes": 5,
       "interaction_bytes": 6,
       "exit_bytes": 5,
-      "encounter_bytes": 7,
-      "stage_bytes": 52,
+      "encounter_bytes": 3,
+      "stage_bytes": 39,
       "tile_counts": {
         "marble": 17,
         "carpet": 5,
@@ -50,10 +50,10 @@
       "header_bytes": 9,
       "entity_count": 7,
       "entity_bytes": 21,
-      "interaction_bytes": 6,
+      "interaction_bytes": 2,
       "exit_bytes": 8,
       "encounter_bytes": 2,
-      "stage_bytes": 57,
+      "stage_bytes": 53,
       "tile_counts": {
         "grass": 117,
         "brick": 20,
@@ -118,7 +118,7 @@
       "floor_bytes": {
         "RAW": 45,
         "RLE": 22,
-        "RECT": 21
+        "RECT": 15
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
@@ -127,11 +127,11 @@
       "interaction_bytes": 9,
       "exit_bytes": 5,
       "encounter_bytes": 10,
-      "stage_bytes": 58,
+      "stage_bytes": 52,
       "tile_counts": {
         "empty": 8,
-        "cave-floor": 24,
-        "cave-wall": 49
+        "cave-floor": 38,
+        "cave-wall": 35
       }
     },
     {
@@ -142,7 +142,7 @@
       "floor_bytes": {
         "RAW": 33,
         "RLE": 29,
-        "RECT": 25
+        "RECT": 16
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
@@ -151,7 +151,7 @@
       "interaction_bytes": 6,
       "exit_bytes": 5,
       "encounter_bytes": 5,
-      "stage_bytes": 54,
+      "stage_bytes": 45,
       "tile_counts": {
         "empty": 6,
         "demon-floor": 21,
@@ -161,8 +161,8 @@
     }
   ],
   "binary_bytes_by_floor_codec": {
-    "RAW": 598,
-    "RLE": 427,
-    "RECT": 334
+    "RAW": 590,
+    "RLE": 419,
+    "RECT": 302
   }
 }

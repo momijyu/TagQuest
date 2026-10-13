@@ -452,6 +452,7 @@ try {
       this.tagName = tag.toUpperCase(); this.attributes = attributes;
       this.id = attributes.id; this.value = attributes.value ?? ''; this.checked = 'checked' in attributes;
       this.hidden = 'hidden' in attributes;
+      this.disabled = 'disabled' in attributes;
       for (const [key, value] of Object.entries(attributes)) if (key.startsWith('data-')) this.dataset[key.slice(5).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())] = value;
       const classes = new Set((attributes.class ?? '').split(' '));
       this.classList = { toggle: (name, on) => on ? classes.add(name) : classes.delete(name), add: name => classes.add(name), remove: name => classes.delete(name), contains: name => classes.has(name) };
@@ -1145,7 +1146,7 @@ try {
   assert.equal(encounterView.querySelector('[data-play-screen]').hidden, true);
   assert.equal(encounterView.querySelector('[data-play-controls]').hidden, true);
   assert.equal(encounterView.querySelector('[data-play-message]').hidden, true);
-  assert.equal(battle.querySelector('[data-battle-enemy-name]').textContent, '王様'); assert.equal(battleEnemy.disabled, true);
+  assert.equal(battle.querySelector('[data-battle-enemy-name]').textContent, '王様'); assert.equal(battleEnemy.tagName, 'DIV');
   assert.deepEqual(battle.querySelector('[data-battle-canvas]').images.at(-1).slice(5), [112, 64, 96, 96]);
   const battlePlayer = encounterCanvas.images.at(-1).slice(5);
   await encounterView.querySelector('[data-play-advance]').click();
@@ -1159,22 +1160,23 @@ try {
   assert.equal(battle.querySelector('[data-battle-player-hp]').textContent, 'HP 40 / 40');
   await encounterView.dispatch('keydown', { key: 'Escape' }); assert.match(battleLog.textContent, /よく来た/);
   await battleNext.click();
-  await battleCommands[0].click(); assert.equal(battleEnemy.disabled, false);
+  await battleCommands[0].click();
   assert.equal(battleSpeech.hidden, true);
-  assert.equal(battle.querySelector('[data-battle-target]').hidden, false);
+  assert.equal(battle.querySelector('[data-battle-target]'), null);
+  const firstAttackLog = battleLog.textContent;
   let repeatPrevented = false;
   await encounterView.dispatch('keydown', { key: 'Enter', target: battleEnemy, repeat: true, preventDefault() { repeatPrevented = true; } });
   assert.equal(repeatPrevented, true); // native buttons must also suppress a held Enter
   await encounterView.dispatch('keydown', { key: 'Enter', repeat: true });
-  assert.equal(battleEnemy.disabled, false); // repeats must not attack accidentally
-  await encounterView.dispatch('keydown', { key: 'Escape' }); assert.equal(battleEnemy.disabled, true);
-  await battleCommands[0].click(); await battleEnemy.click();
+  assert.equal(battleLog.textContent, firstAttackLog, 'repeated keys do not advance a committed action');
+  await encounterView.dispatch('keydown', { key: 'Escape' }); assert.equal(battleLog.textContent, firstAttackLog);
+  await battleCommands[0].click(); await battleEnemy.click(); // neither can repeat the committed attack
   assert.equal(battleLog.textContent, 'ゆうしゃは王様にこうげき！\n10のダメージ！');
   assert.equal(battle.querySelector('[data-battle-damage-enemy]').textContent,'10');
   assert.equal(battle.querySelector('[data-battle-damage-enemy]').hidden,false);
   assert.equal(battleSpeech.hidden, true); assert.equal(battleSpeechText.textContent, '');
   assert.equal(battle.querySelector('[data-battle-enemy-hp]').textContent, 'HP 20 / 30');
-  assert.equal(battleEnemy.disabled, true); assert.equal(battleNext.hidden, false);
+  assert.equal(battleNext.hidden, false);
   tick(performance.now() + 400); assert.equal(battleLog.textContent, 'ゆうしゃは王様にこうげき！\n10のダメージ！');
   await window.dispatch('resize'); assert.equal(battle.querySelector('[data-battle-enemy-hp]').textContent, 'HP 20 / 30');
   await battleNext.click();
@@ -1184,7 +1186,7 @@ try {
   assert.equal(battleHpBar.value, 34); assert.equal(battleSpeech.hidden, false); assert.equal(battleSpeechText.textContent, '何をするんじゃ！！！');
   await encounterView.dispatch('keydown', { key: 'Escape' }); assert.match(battleLog.textContent, /6のダメージ/);
   await battleNext.click();
-  await battleCommands[1].click(); assert.equal(battleLog.textContent, 'どうぐを持っていない。');
+  await battleCommands[1].click(); assert.equal(battleLog.textContent, '使えるどうぐを持っていない。');
   assert.equal(battleSpeech.hidden, true);
   await battle.querySelector('[data-battle-back]').click();
   await battleCommands[2].click(); assert.equal(battleLog.textContent, 'ゆうしゃは身をまもっている。');
@@ -1293,8 +1295,9 @@ try {
   const event = { enemyId: 0, name: '王様', stageId: 0 }, owned = [{ itemId: 0, count: 2 }];
   battleView.sync(event, owned);
   const ownedCommands = battleRoot.querySelectorAll('[data-battle-command]');
-  await ownedCommands[1].click(); assert.equal(battleRoot.querySelector('[data-battle-items]').textContent, 'やくそう ×2');
-  battleView.sync(event, owned); assert.equal(battleRoot.querySelector('[data-battle-items]').hidden, false);
+  await ownedCommands[1].click(); assert.match(battleRoot.querySelector('[data-battle-item-list]').innerHTML, /やくそう ×2<small>/);
+  assert.equal(battleRoot.querySelector('[data-battle-items]'), null, 'there is no duplicate inventory text');
+  battleView.sync(event, owned); assert.equal(battleRoot.querySelector('[data-battle-item-list]').hidden, false);
   assert.deepEqual(owned, [{ itemId: 0, count: 2 }]);
   await battleRoot.querySelector('[data-battle-back]').click();
   battleActive = false; await ownedCommands[3].click(); assert.equal(escaped, 0);
@@ -1450,6 +1453,26 @@ try {
       await menuRoot.querySelectorAll('[data-player-tab]').find(button => button.dataset.playerTab === 'collection').click();
       assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /上やくそう/);
       assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /若葉のしずく.*所持 0個/);
+      selectedGame = createWorldGame([menuScene], 0, undefined, { player: { ...playerConfig, initialItems: [{ itemId: 3, quantity: 1 }] } });
+      selectedGame.equip(3); menus.reset(); menus.sync();
+      await menuRoot.querySelectorAll('[data-player-tab]').find(button => button.dataset.playerTab === 'items').click();
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /木の剣 ×1（装備中）/);
+      assert.equal(menuAction(menuRoot, 'equip', 3).disabled, true);
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /data-menu-action="equip" data-menu-item="3" disabled>装備中<\/button>/);
+      assert.equal(focused, menuRoot.querySelector('[data-play-close-items]'), 'an equipped-only inventory can still be closed by keyboard');
+      await menuRoot.querySelectorAll('[data-player-tab]').find(button => button.dataset.playerTab === 'equipment').click();
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /木の剣（装備中）/);
+      assert.equal(menuAction(menuRoot, 'equip', 3).disabled, true);
+      await menuRoot.querySelectorAll('[data-menu-action]').find(button => button.dataset.menuAction === 'unequip').click();
+      assert.equal(menuAction(menuRoot, 'equip', 3).disabled, false, 'removing equipment enables its equip button again');
+      await menuRoot.querySelectorAll('[data-player-tab]').find(button => button.dataset.playerTab === 'status').click();
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /強打.*<small>攻撃力の1.5倍で攻撃<\/small>/);
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /魔法：\?\?\?/);
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /特技：\?\?\?/);
+      assert.doesNotMatch(menuRoot.querySelector('[data-player-list]').innerHTML, /氷の矢|連撃|18ダメージ|Lv \d+で習得/);
+      selectedGame = createWorldGame([menuScene], 0, undefined, { player: { ...playerConfig, initialExperience: 60 } }); menus.sync();
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /氷の矢　MP 4　習得済み<small>敵に18ダメージ<\/small>/);
+      assert.doesNotMatch(menuRoot.querySelector('[data-player-list]').innerHTML, /大きな癒し|連撃/);
     } finally { Element.prototype.focus = originalFocus; }
   }
   // The shared play UI displays growth and learning after the victory return.
@@ -1593,8 +1616,10 @@ try {
       assert.equal(fight.querySelector('[data-battle-player-hp]').textContent, hpBeforeEscape);
       assert.equal(fight.querySelector('[data-battle-commands]').hidden, false);
       await fight.querySelectorAll('[data-battle-command]')[0].click();
-      assert.equal(fight.querySelector('[data-battle-target]').hidden, false);
+      assert.equal(fight.querySelector('[data-battle-target]'), null);
+      const committed = fight.querySelector('[data-battle-log]').textContent;
       await view.dispatch('keydown', { key: 'Escape' });
+      assert.equal(fight.querySelector('[data-battle-log]').textContent, committed, 'escape cannot cancel the immediate attack');
     } else {
       await fight.querySelector('[data-battle-next]').click(); assert.equal(fight.hidden, true);
     }
@@ -1629,16 +1654,17 @@ try {
   assert.match(healingRoot.querySelector('[data-battle-log]').textContent, /HPが20回復/);
   await healingRoot.querySelector('[data-battle-next]').click(); assert.equal(healingRoot.querySelector('[data-battle-player-hp]').textContent, 'HP 24 / 40');
   await healingRoot.querySelector('[data-battle-next]').click(); await healingRoot.querySelectorAll('[data-battle-command]')[1].click();
-  assert.equal(healingRoot.querySelector('[data-battle-items]').textContent, 'やくそう ×1');
+  assert.match(healingRoot.querySelector('[data-battle-item-list]').innerHTML, /やくそう ×1<small>/);
   assert.match(healingRoot.querySelector('[data-battle-resources]').textContent, /92G/);
   await healingRoot.querySelector('[data-battle-back]').click();
   const skillCommand = kind => healingRoot.querySelectorAll('[data-battle-command]').find(button => button.dataset.battleCommand === kind);
   const skillButton = id => healingRoot.querySelectorAll('[data-battle-skill]').find(button => Number(button.dataset.battleSkill) === id);
-  await skillCommand('spells').click(); await skillButton(1).click();
-  assert.equal(healingRoot.querySelector('[data-battle-target]').hidden, false); assert.equal(healingSession.playerMp, 10);
+  await skillCommand('spells').click();
   healingView.keydown({ key: 'Escape', preventDefault() {} }); assert.equal(healingSession.playerMp, 10);
-  assert.equal(healingRoot.querySelector('[data-battle-skill-list]').hidden, false);
-  await skillButton(1).click(); await healingRoot.querySelector('[data-battle-enemy]').click();
+  assert.equal(healingRoot.querySelector('[data-battle-commands]').hidden, false, 'skill browsing can still be cancelled before choosing');
+  await skillCommand('spells').click(); await skillButton(1).click();
+  assert.equal(healingRoot.querySelector('[data-battle-target]'), null);
+  healingView.keydown({ key: 'Escape', preventDefault() {} });
   assert.equal(healingSession.playerMp, 7); assert.equal(healingSession.enemyHp, 18);
   assert.equal(healingRoot.querySelector('[data-battle-player-mp-bar]').value, 7);
   assert.equal(healingRoot.querySelector('[data-battle-player-mp]').textContent, 'MP 7 / 10');
@@ -1646,6 +1672,33 @@ try {
   await skillCommand('spells').click(); await skillButton(2).click();
   assert.equal(healingSession.playerHp, 38); assert.equal(healingSession.playerMp, 4);
   assert.equal(healingRoot.querySelector('[data-battle-player-hp-bar]').value, 38);
+  {
+    const root = new Element(), session = createBattle(healingSession.enemy, { playerHp: 10 });
+    const owned = [{ itemId: 3, count: 1 }, { itemId: 13, count: 2 }, { itemId: 0, count: 2 }, { itemId: 1, count: 1 }, { itemId: 2, count: 0 }];
+    const view = mountBattleView(root, character, () => true, () => {});
+    view.sync({ ...event }, owned, session);
+    await root.querySelectorAll('[data-battle-command]').find(button => button.dataset.battleCommand === 'items').click();
+    assert.deepEqual(root.querySelectorAll('[data-battle-item]').map(button => Number(button.dataset.battleItem)), [0, 1], 'only consumable items with positive quantities appear');
+    assert.equal(root.querySelector('[data-battle-items]'), null);
+    assert.match(root.querySelector('[data-battle-item-list]').innerHTML, /やくそう ×2<small>HPを20回復<\/small>/);
+    assert.deepEqual(owned, [{ itemId: 3, count: 1 }, { itemId: 13, count: 2 }, { itemId: 0, count: 2 }, { itemId: 1, count: 1 }, { itemId: 2, count: 0 }], 'filtering never changes inventory');
+    view.dispose();
+  }
+  for (const id of [13, 14, 15, 16]) {
+    const skill = findSkill(id), root = new Element();
+    const session = createBattle({ ...healingSession.enemy, stats: { hp: 9999, attack: 6, defense: 2 } },
+      { player: { ...playerConfig, level: skill.learnLevel, skills: [id], stats: { hp: 100, attack: 50, defense: 0 }, maxMp: 100 } });
+    const view = mountBattleView(root, character, () => true, () => {}); view.sync({ ...event }, [], session);
+    await root.querySelectorAll('[data-battle-command]').find(button => button.dataset.battleCommand === 'techniques').click();
+    view.keydown({ key: 'Enter', preventDefault() {} });
+    assert.equal(session.phase, 'player-action'); assert.equal(session.playerMp, 100 - skill.mpCost);
+    assert.equal(session.enemyHp, 9999 - Math.floor(50 * skill.effect.power) + 2);
+    assert.equal(root.querySelector('[data-battle-target]'), null, 'physical skills have no target-selection step');
+    view.keydown({ key: 'Escape', preventDefault() {} });
+    await root.querySelectorAll('[data-battle-command]')[0].click();
+    assert.equal(session.playerMp, 100 - skill.mpCost, 'a committed skill cannot be cancelled or repeated');
+    view.dispose();
+  }
   const emptySkills = createBattle(healingSession.enemy, { player: { ...healingSession.player, skills: [], maxMp: 0 } });
   healingView.sync({ ...event }, [], emptySkills); await skillCommand('techniques').click();
   assert.equal(healingRoot.querySelector('[data-battle-log]').textContent, 'まだ覚えていない。');
@@ -1664,7 +1717,8 @@ try {
     const view = mountBattleView(root, character, () => true, () => {});
     view.sync({ ...event }, inventory, session);
     await root.querySelectorAll('[data-battle-command]').find(b => b.dataset.battleCommand === 'items').click();
-    assert.ok(root.querySelectorAll('[data-battle-item]').every(b => b.disabled));
+    assert.equal(root.querySelectorAll('[data-battle-item]').length, 0, 'equipment is excluded from battle items');
+    assert.equal(root.querySelector('[data-battle-log]').textContent, '使えるどうぐを持っていない。');
     const hp = session.playerHp, mp = session.playerMp;
     view.keydown({ key, preventDefault() {} });
     assert.equal(root.querySelector('[data-battle-commands]').hidden, false);

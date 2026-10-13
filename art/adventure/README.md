@@ -69,7 +69,7 @@
 `web/` で `npm run export:adventure` を実行すると、このディレクトリへワールドJSON・TQ v15バイナリ・容量レポート・公開先URLと6枚のPNGを再出力します。
 `world.json` をエディタの「JSONを開く」で読み込めます。この操作は編集全体を置き換えるので、追加だけなら上記の見本ボタンを使います。
 
-6マップ合計706B（城74B・街158B・全体マップ269B・森104B・洞窟80B・魔王城96B・共通4B）。通常出力は830B。公開先 `https://tag-quest-kappa.vercel.app/` でURL978B、NDEF/TLV983Bとなり、NTAG215既定496Bには592B超過です。容量の正本は `world.report.json`。
+6マップ合計702B（城74B・街158B・全体マップ269B・森104B・洞窟80B・魔王城96B・共通4B）。通常出力は830B。公開先 `https://tag-quest-kappa.vercel.app/` でURL972B、NDEF/TLV977Bとなり、NTAG215既定496Bには592B超過です。容量の正本は `world.report.json`。
 この通常版は探索内容を優先します。NTAG215向けの6マップ版は [adventure-small](../adventure-small/README.md) に333B・NDEF485Bで保管します。従来の城＋街だけのcompact見本も195B・NDEF301Bで [art/nfc](../nfc/README.md) に残します。通常版をNTAG215へ書き込むことはできません。
 
 森・洞窟の戦闘で成長し、宝箱や店の装備・回復品を使って魔王を倒すとクリアです。王様は0.1%の隠し遭遇で、撃破はクリアの必須条件にしません。隠し装備と魔王の攻略ヒントはゲーム内会話に出しません。

@@ -170,10 +170,10 @@ try {
       execFileSync('python3', [join(root, 'compiler/build.py'), '--maps', file, ...(compact ? ['--compact'] : []), '--out', join(out, 'world.bin')], { stdio: 'pipe' });
       assert.deepEqual(Buffer.from(encoded.bytes), readFileSync(join(out, 'world.bin')), `${size}: Python/Web parity`);
       const budget = nfcBudget(encoded.bytes, defaultPublicBase(), 496, 5), scenes = readGameHash(new URL(budget.url).hash);
-      assert.equal(scenes[0].encounter.rate, 0.1, `${size}: the hidden king stays at 0.1% after URL replay`);
+      assert.equal(scenes[0].encounter.rate, size === 'small' ? 1 : 0.1, `${size}: the king's configured rate survives URL replay`);
       assert.equal(scenes.length, world.stages.length);
       const expectedNames = size === 'large'
-        ? ['お城', '街', 'フィールド', '森', '洞窟', '魔王城', 'フィールド', '街', '奥深い森', '水晶の洞窟', 'フィールド', '古城の遺跡', '北の城', '海辺の集落', '妖精の花園']
+        ? ['お城', '街', 'フィールド', '森', '洞窟', '魔王城', '北の大陸', '北の市場', '奥深い森', '水晶の洞窟', '東の大陸', '古城の遺跡', '北の城', '海辺の集落', '妖精の花園']
         : ['お城', '街', 'フィールド', '森', '洞窟', '魔王城'];
       assert.deepEqual(scenes.map(inferLocationName), expectedNames, 'location names survive URL decoding without serialized names');
       for (const scene of scenes) assert.equal(inferLocationName({ ...scene, id: 230 }), inferLocationName(scene), 'location inference ignores stage IDs');
@@ -183,15 +183,32 @@ try {
           for (let x = 1; x <= 3; x++) assert.equal(tiles(id, x, 6), 0, 'the partition has been removed, revealing marble');
         }
         for (let y = 2; y <= 20; y++) for (let x = 25; x <= 30; x++) assert.equal(tiles(2, x, y), 14, 'the inaccessible eastern island is sea');
+        for (const [x, y] of [[19, 8], [19, 9], [20, 9], [19, 10], [20, 10], [1, 15]]) assert.equal(tiles(2, x, y), 14, 'isolated sandbars and the western false exit are sea');
+        assert.equal(tiles(2, 2, 15), 15, 'the coast continues with sand instead of a grass projection');
       }
       if (size === 'large') {
+        assert.equal(tiles(7, 12, 7), 11, 'the northern market has a wooden bridge across the moat');
+        for (let y = 3; y <= 17; y++) assert.equal(tiles(8, 19, y), 8, 'the eastern forest path reaches the southern main road');
+        for (let y = 6; y <= 17; y++) assert.equal(tiles(8, 5, y), 8, 'flowers do not overwrite the western forest path');
+        for (let x = 0; x <= 24; x++) assert.ok([8, 11].includes(tiles(10, x, 16)), 'the east-west road and bridge reach the T junction');
+        assert.equal(tiles(10, 24, 16), 8);
+        for (let x = 25; x <= 31; x++) assert.notEqual(tiles(10, x, 16), 8, 'there is no misleading road through the eastern coastline');
+        assert.equal(tiles(2, 23, 3), 15, 'the northern shore has no leftover grass square');
         for (const [x, y] of [[20, 6], [21, 6], [21, 5], [22, 5], [23, 5], [23, 4]]) assert.equal(tiles(2, x, y), 8, 'a dirt road leads from the bridge to the exit');
         assert.ok(scenes.find(s => s.id === 2).entities.some(e => e.kind === 'signpost' && e.dialogue?.id === 70));
         assert.ok(scenes.find(s => s.id === 9).entities.some(e => e.kind === 'treasure-chest' && e.x >= 192 && e.x < 304 && e.y >= 160 && e.y < 224), 'the central crystal chamber rewards exploration');
       }
       if (size === 'small') {
         assert.equal(tiles(1, 0, 6), 9, 'the town exit continues the brick road');
-        assert.deepEqual(scenes.find(s => s.id === 1).entities.find(e => e.kind === 'house-red').dialogue, { type: 'template', id: 40 });
+        assert.equal(scenes.find(s => s.id === 1).entities.find(e => e.kind === 'house-red').dialogue, undefined, 'small houses use the shared default inspection text');
+        for (const [id, wall] of [[0, 2], [5, 20]]) {
+          const scene = scenes.find(s => s.id === id), exit = scene.exits[0];
+          for (let x = 0; x < scene.width; x++) assert.equal(tiles(id, x, 0), wall);
+          for (let y = 1; y < scene.height - 1; y++) {
+            assert.equal(tiles(id, 0, y), wall); assert.equal(tiles(id, scene.width - 1, y), wall);
+          }
+          for (let x = 0; x < scene.width; x++) assert.equal(tiles(id, x, scene.height - 1), x === exit.x ? id === 0 ? 1 : 19 : 12, 'the wall-base compression preserves the visible one-cell doorway');
+        }
         const forest = scenes.find(s => s.id === 3), fairy = forest.entities.find(e => e.kind === 'forest-fairy');
         for (const tree of forest.entities.filter(e => e.kind === 'tree')) {
           assert.ok(fairy.x + 16 <= tree.x || fairy.x >= tree.x + 48 || fairy.y + 32 <= tree.y || fairy.y >= tree.y + 48, 'the fairy does not overlap a tree canopy');
@@ -210,10 +227,21 @@ try {
         playThrough(scenes, size);
       }
       if (size === 'small' && compact) {
-        assert.ok(budget.urlBytes <= 490); assert.ok(budget.remainingBytes >= 0, 'small fits NTAG215 including the public URL and a 5B reserve');
+        assert.equal(encoded.bytes[2], 14, 'integer encounters no longer require v15');
+        assert.ok(encoded.bytes.length <= 310);
+        assert.ok(budget.urlBytes <= 450, 'small public URLs leave room for real tag metadata');
+        assert.ok(budget.ndefBytes <= 455);
+        assert.ok(496 - budget.ndefBytes >= 40);
+        assert.ok(budget.remainingBytes >= 40, 'at least 40B remains even after the extra 5B reserve');
+        assert.ok(encoded.reports.find(r => r.id === 0).floorBytes <= 11);
+        assert.ok(encoded.reports.find(r => r.id === 5).floorBytes <= 16);
+        assert.ok(encoded.reports.find(r => r.id === 4).floorBytes <= 15);
+        const kinds = scenes.flatMap(scene => scene.entities).map(entity => entity.kind);
+        for (const kind of ['weapon-shop', 'armor-shop', 'item-shop', 'weapon-merchant', 'armor-merchant', 'item-merchant', 'forest-fairy', 'cave-witch', 'demon-lord']) assert.equal(kinds.filter(value => value === kind).length, 1, `${kind} remains in the compact world`);
+        assert.equal(kinds.filter(kind => kind === 'treasure-chest').length, 2);
         assert.deepEqual(scenes.find(s => s.id === 3).encounter.enemies.map(e => e.enemyId), [1, 2, 3]);
         assert.deepEqual(scenes.find(s => s.id === 4).encounter.enemies.map(e => e.enemyId), [5, 6, 7]);
-        assert.equal(scenes[0].encounter.rate, 0.1);
+        assert.equal(scenes[0].encounter.rate, 1);
         console.log(`Small six-map world: ${encoded.bytes.length}B binary / ${budget.urlBytes}B URL / ${budget.ndefBytes}B NDEF / ${budget.remainingBytes}B spare after 5B reserve.`);
       }
     }
