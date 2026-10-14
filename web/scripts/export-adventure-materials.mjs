@@ -14,7 +14,8 @@ try {
   } });
   const { adventureMaterials } = await import(pathToFileURL(join(temporary, 'materials.mjs')));
   const output = join(root, 'art/adventure-materials'); mkdirSync(output, { recursive: true });
-  const scale = 4, width = Object.keys(adventureMaterials).length * 40 * scale, height = 40 * scale;
+  const scale = 4, cell = Math.max(40, ...Object.values(adventureMaterials).map(({ sprite }) => Math.max(sprite.width, sprite.height) + 8));
+  const width = Object.keys(adventureMaterials).length * cell * scale, height = cell * scale;
   const preview = Buffer.alloc(width * height * 4);
   for (let i = 0; i < width * height; i++) preview.set([24, 33, 40, 255], i * 4);
   for (const [index, [id, { sprite }]] of Object.entries(adventureMaterials).entries()) {
@@ -23,7 +24,7 @@ try {
       if (code === '.') return;
       const color = [...Buffer.from(sprite.palette[parseInt(code, 36)].slice(1), 'hex'), 255];
       rgba.set(color, (y * sprite.width + x) * 4);
-      const left = index * 40 + (40 - sprite.width) / 2, top = 36 - sprite.height;
+      const left = index * cell + (cell - sprite.width) / 2, top = cell - 4 - sprite.height;
       for (let dy = 0; dy < scale; dy++) for (let dx = 0; dx < scale; dx++) {
         preview.set(color, (((top + y) * scale + dy) * width + (left + x) * scale + dx) * 4);
       }

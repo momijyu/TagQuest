@@ -361,7 +361,7 @@ try {
   const catalog = JSON.parse(readFileSync(join(rootPath, 'web/src/data/scene-catalog.json')));
   for (const [id, name] of catalog.tiles.entries()) {
     const sample = { ...fieldBefore, tiles: new Uint8Array(15).fill(id) };
-    assert.equal(canStand(sample, sample.spawn), ['void-rift', 'marble', 'carpet', 'grass', 'dirt', 'brick', 'bridge', 'forest-ground', 'sand', 'cave-floor', 'demon-floor', 'demon-carpet', 'world-forest', 'meadow-flowers', 'ruins-floor'].includes(name), name);
+    assert.equal(canStand(sample, sample.spawn), ['bog-ground', 'ice-ground', 'ember-ground', 'void-rift', 'marble', 'carpet', 'grass', 'dirt', 'brick', 'bridge', 'forest-ground', 'sand', 'cave-floor', 'demon-floor', 'demon-carpet', 'world-forest', 'meadow-flowers', 'ruins-floor'].includes(name), name);
   }
   const corridor = structuredClone(fieldBefore);
   for (let y = 0; y < 5; y++) { corridor.tiles[y * 3] = 3; corridor.tiles[y * 3 + 2] = 4; }
@@ -586,7 +586,16 @@ try {
     }
     const labelledRoot = new Element(), labelled = mountPlayView(labelledRoot, characters, () => true, () => '作者の名前');
     labelled.start(field); assert.equal(labelledRoot.querySelector('[data-play-stage]').textContent, '作者の名前'); labelled.dispose();
-    play.dispose();
+    const shared = new Map(), disk = {getItem:key=>shared.get(key)??null,setItem:(key,value)=>shared.set(key,value),removeItem:key=>shared.delete(key)};
+    play.start(field,true,[field],{storage:disk});
+    const otherField={...field,id:7}, elsewhere=createWorldGame([otherField],7,()=>.5,{storage:disk});elsewhere.move('left');
+    const latestSave=disk.getItem('tagquest.play-save.v1'), oldPosition=position();
+    await window.dispatch('storage',{key:'tagquest.play-save.v1'});
+    assert.equal(root.querySelector('[data-play-save-warning]').hidden,false);assert.match(root.querySelector('[data-play-save-warning]').textContent,/別の画面/);assert.equal(root.querySelector('[data-play-reload]').hidden,false);
+    await root.dispatch('keydown',{key:'ArrowRight'});assert.deepEqual(position(),oldPosition);assert.equal(disk.getItem('tagquest.play-save.v1'),latestSave);
+    let reloads=0;const oldLocation=window.location;window.location={reload(){reloads++;}};
+    await root.querySelector('[data-play-reload]').click();assert.equal(reloads,1);window.location=oldLocation;
+    play.dispose();assert.equal(window.listeners.get('storage').length,0);
   }
   const images = [];
   drawCompiledScene({ fillRect() {}, drawImage(...args) { images.push(args); } }, toSceneData(original.stages[0]), { king: character, player: character });
@@ -621,7 +630,7 @@ try {
   control('base-url').value = 'https://tagquest.vercel.app/'; await control('base-url').dispatch('change');
   const wallMaterials = control('palette').querySelectorAll('[data-material]').map(button => button.dataset.material);
   assert.ok(wallMaterials.includes('wall-top')); assert.ok(wallMaterials.includes('demon-wall-top'));
-  assert.equal(wallMaterials.length, 22, 'floor palette shows one choice per wall material and the new exploration floors');
+  assert.equal(wallMaterials.length, 25, 'floor palette shows one choice per wall material and the new exploration floors');
   for (const old of ['wall-left', 'wall-right', 'wall-top-left', 'wall-top-right', 'demon-wall-left', 'demon-wall-right', 'demon-wall-top-left', 'demon-wall-top-right']) {
     assert.equal(wallMaterials.includes(old), false, 'manual wall directions are hidden');
   }
@@ -729,6 +738,9 @@ try {
   assert.equal(withWorldSample.stages.at(-1).id, 3, 'the sample receives an unused stage ID');
   assert.equal(withWorldSample.stages.at(-1).width, 32);
   await page.querySelectorAll('[data-category]').find(button => button.dataset.category === 'object').click();
+  for (const kind of ['inn-building', 'tavern', 'church', 'witch-hut', 'bounty-board']) {
+    assert.ok(page.querySelectorAll('[data-material]').some(button => button.dataset.material === kind), `${kind} is available in the editor`);
+  }
   for (const kind of locationKinds) {
     const choice = page.querySelectorAll('[data-material]').find(button => button.dataset.material === kind);
     assert.ok(choice, `${kind} is available in the editor`);
@@ -742,7 +754,11 @@ try {
   assert.deepEqual(JSON.parse(storage.get(savedKey)), beforeWorldSample, 'undo removes only the added sample');
   await page.querySelectorAll('[data-stage]').find(button => button.dataset.stage === '2').click();
   const beforeAdventureSample = JSON.parse(storage.get(savedKey));
-  for (const [size, count] of [['large', 18], ['small', 6]]) {
+  // この簡易DOMはHTMLのテキストノードを解析しないため、描画したHTMLでラベルを検証する。
+  assert.match(page.innerHTML, /id="editor-add-adventure-sample"[^>]*>＋ 通常の世界（16マップ）<\/button>/);
+  assert.match(page.innerHTML, /id="editor-add-large-sample"[^>]*>＋ 巨大な世界（28マップ）<\/button>/);
+  assert.match(page.innerHTML, /id="editor-add-small-sample"[^>]*>＋ 小さな世界（6マップ）<\/button>/);
+  for (const [size, count] of [['large', 28], ['small', 6]]) {
     await control(`add-${size}-sample`).click();
     const added = JSON.parse(storage.get(savedKey));
     assert.deepEqual(added.stages.slice(0, -count), beforeAdventureSample.stages);
@@ -758,8 +774,8 @@ try {
   }
   await control('add-adventure-sample').click();
   const withAdventureSample = JSON.parse(storage.get(savedKey));
-  assert.deepEqual(withAdventureSample.stages.slice(0, -6), beforeAdventureSample.stages);
-  assert.equal(withAdventureSample.stages.length, beforeAdventureSample.stages.length + 6);
+  assert.deepEqual(withAdventureSample.stages.slice(0, -16), beforeAdventureSample.stages);
+  assert.equal(withAdventureSample.stages.length, beforeAdventureSample.stages.length + 16);
   await control('play').click();
   assert.equal(control('error').hidden, true);
   const adventureView = control('play-view');
@@ -1488,7 +1504,7 @@ try {
       assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /特技：\?\?\?/);
       assert.doesNotMatch(menuRoot.querySelector('[data-player-list]').innerHTML, /氷の矢|連撃|18ダメージ|Lv \d+で習得/);
       selectedGame = createWorldGame([menuScene], 0, undefined, { player: { ...playerConfig, initialExperience: 60 } }); menus.sync();
-      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /氷の矢　MP 4　習得済み<small>敵を魔法で攻撃（基礎18）。魔力で威力が上がる<\/small>/);
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /氷の矢　MP 4　習得済み<small>鋭く尖った冷気の矢を撃ち放ち、敵の急所を射抜く氷結魔法。<\/small>/);
       assert.doesNotMatch(menuRoot.querySelector('[data-player-list]').innerHTML, /大きな癒し|連撃/);
       assert.match(menuRoot.querySelector('[data-player-stats]').textContent, /魔力 14/);
       assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /基礎魔力 14 ＋ 装備 0/);
@@ -1499,7 +1515,71 @@ try {
       assert.match(menuRoot.querySelector('[data-player-stats]').textContent, /攻撃力 12.*魔力 24/);
       assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /銅の剣.*魔力 -14/);
       await menuRoot.querySelectorAll('[data-player-tab]').find(button => button.dataset.playerTab === 'spells').click();
-      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /HPを最大39回復/);
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /やさしい祈りの光が傷口をそっと包み込み/);
+
+      selectedGame = createWorldGame([menuScene], 0, () => .5, { player: { ...playerConfig, initialExperience: 97020 } });
+      menus.reset(); menus.sync();
+      await menuRoot.querySelectorAll('[data-player-tab]').find(button => button.dataset.playerTab === 'spells').click();
+      assert.deepEqual(menuRoot.querySelectorAll('[data-menu-action]').map(button => Number(button.dataset.menuItem)), [2,4,7,10,12,17,18,19]);
+      const beforeGateMp = selectedGame.status.mp;
+      await menuAction(menuRoot, 'spell', 17).click();
+      assert.equal(selectedGame.status.mp, beforeGateMp - 5);
+      assert.ok(menuRoot.querySelectorAll('[data-menu-action]').some(button => button.dataset.menuAction === 'return-portal'));
+      await menuAction(menuRoot, 'spell', 19).click();
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /あと40歩/);
+      await menuAction(menuRoot, 'spell', 18).click();
+      assert.match(menuRoot.querySelector('[data-player-feedback]').textContent, /迷宮ではない/);
+      selectedGame.move('right'); menus.sync();
+      const closeCount = closed;
+      await menuRoot.querySelectorAll('[data-menu-action]').find(button => button.dataset.menuAction === 'return-portal').click();
+      assert.deepEqual(selectedGame.position, menuScene.spawn); assert.equal(closed, closeCount + 1, 'teleport dismisses the menu');
+
+      const gearDisk = new Map(), gearStorage = { getItem: key => gearDisk.get(key) ?? null, setItem: (key, value) => gearDisk.set(key, value), removeItem: key => gearDisk.delete(key) };
+      const mageGear = [46,55,51,58,61];
+      selectedGame = createWorldGame([menuScene], 0, () => .5, { storage: gearStorage,
+        player: { ...playerConfig, initialExperience: 97020, initialItems: [...mageGear,44].map(itemId => ({ itemId, quantity: 1 })) }, initialEquipment: mageGear });
+      selectedGame.save();
+      const mageSave = JSON.parse(gearDisk.get('tagquest.play-save.v1'));
+      mageSave.player.vitals.mp = 1; mageSave.player.vitals.hp--;
+      gearDisk.set('tagquest.play-save.v1', JSON.stringify(mageSave));
+      selectedGame = createWorldGame([menuScene], 0, () => .5, { storage: gearStorage });
+      menus.reset(); menus.sync();
+      await menuRoot.querySelectorAll('[data-player-tab]').find(button => button.dataset.playerTab === 'status').click();
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /呪文MP軽減 4（最低1MP）/);
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /火の玉　MP 1（通常3）/);
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /強打　MP 2　習得済み/);
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /会心率 0%　物理回避率 0%/);
+      await menuRoot.querySelectorAll('[data-player-tab]').find(button => button.dataset.playerTab === 'equipment').click();
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /魔導士の杖.*呪文MP軽減 -1/);
+      await menuRoot.querySelectorAll('[data-player-tab]').find(button => button.dataset.playerTab === 'spells').click();
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML, /癒し　MP 1（通常3）/);
+      assert.equal(menuAction(menuRoot, 'spell', 2).disabled, false);
+      assert.equal(menuAction(menuRoot, 'spell', 19).disabled, true, 'mist costs 2 MP after reduction');
+      await menuAction(menuRoot, 'spell', 2).click();
+      assert.equal(selectedGame.status.mp, 0); assert.equal(selectedGame.status.hp, selectedGame.status.maxHp);
+      assert.equal(menuAction(menuRoot, 'spell', 2).disabled, true);
+      const noMp = selectedGame.status.mp;
+      await menuAction(menuRoot, 'spell', 2).click(); assert.equal(selectedGame.status.mp, noMp);
+      const curses = [67,68,69,70];
+      selectedGame = createWorldGame([menuScene],0,()=>.5,{player:{...playerConfig,initialExperience:97020,initialItems:curses.map(itemId=>({itemId,quantity:1}))},initialEquipment:curses});
+      menus.reset();menus.sync();await menuRoot.querySelectorAll('[data-player-tab]').find(button=>button.dataset.playerTab==='status').click();
+      assert.match(menuRoot.querySelector('[data-player-list]').innerHTML,/戦闘経験値＋20%/);
+      assert.doesNotMatch(menuRoot.querySelector('[data-player-list]').innerHTML,/自傷|逃走不可|HP−6|通常遭遇率/);
+      await menuRoot.querySelectorAll('[data-player-tab]').find(button=>button.dataset.playerTab==='equipment').click();
+      await menuRoot.querySelectorAll('[data-menu-action]').find(button=>button.dataset.menuAction==='unequip').click();
+      assert.match(menuRoot.querySelector('[data-player-feedback]').textContent,/呪われていて外せない/);
+      for (const [id, effect] of [[71,/1歩ごとにEXP＋2/],[72,/3歩ごとにHP＋2・MP＋1（あと3歩）/],[73,/会心率 30%/],[74,/勝利時にMP＋10/],[75,/戦闘ゴールド2倍/]]) {
+        selectedGame = createWorldGame([menuScene],0,()=>.5,{player:{...playerConfig,initialItems:[{itemId:id,quantity:1}]},initialEquipment:[id]});
+        menus.reset();menus.sync();await menuRoot.querySelectorAll('[data-player-tab]').find(button=>button.dataset.playerTab==='status').click();
+        assert.match(menuRoot.querySelector('[data-player-list]').innerHTML,effect);
+        if (id === 71) { selectedGame.move('right'); menus.sync(); assert.match(menuRoot.querySelector('[data-player-stats]').textContent,/経験値 2/); }
+        if (id === 72) { selectedGame.move('right');selectedGame.move('left');menus.sync();assert.match(menuRoot.querySelector('[data-player-list]').innerHTML,/あと1歩/); }
+      }
+      selectedGame = createWorldGame([{...menuScene,entities:[{kind:'casino-dealer',x:16,y:0,parameters:[]}]}],0,()=>.5,{player:{...playerConfig,initialGold:1000}});
+      selectedGame.move('back');selectedGame.interact();selectedGame.interact();menus.reset();menus.sync();
+      await shopRoot.querySelectorAll('[data-player-tab]').find(button=>button.dataset.playerTab==='prizes').click();
+      assert.match(shopRoot.querySelector('[data-player-list]').innerHTML,/祝福の靴　800コイン/);
+      assert.match(shopRoot.querySelector('[data-player-list]').innerHTML,/黄金の指輪　1000コイン/);
 
     } finally { Element.prototype.focus = originalFocus; }
   }
@@ -1692,11 +1772,110 @@ try {
     assert.match(play.querySelector('[data-play-status]').textContent, /85G/);
     await page.querySelector('#editor-stop-play').click(); disposeInn();
   }
-  const { createBattle } = await import(pathToFileURL(join(temporary, 'battleEngine.mjs')).href);
+  // Ultimate facilities and current-position map keep native button and keyboard behavior.
+  {
+    const { mountPlayerMenus } = await import(pathToFileURL(join(temporary, 'playerMenus.mjs')).href);
+    const map = {id:0,width:8,height:8,spawn:{x:16,y:48},tiles:new Uint8Array(64).fill(7),entities:[]};
+    const marker = {...map,id:1,entities:[{kind:'blacksmith',x:80,y:16,parameters:[]}]};
+    let game, menus;
+    const menu = new Element(), shop = new Element();
+    const active = () => true, changed = () => menus.sync();
+    menus = mountPlayerMenus(menu,shop,()=>game,active,changed,()=>{});
+    const open = kind => {
+      game=createWorldGame([{...map,entities:[{kind,x:16,y:16,parameters:[]}]},marker],0,()=>.5,
+        {player:{...playerConfig,initialGold:2000,initialItems:[{itemId:4,quantity:1},{itemId:17,quantity:5},{itemId:18,quantity:2}]}});
+      game.move('back');game.move('back');game.interact();while(game.message)game.interact();menus.reset();menus.sync();assert.equal(shop.hidden,false);
+    };
+    const action = name => shop.querySelectorAll('[data-menu-action]').find(button=>button.dataset.menuAction===name);
+    open('blacksmith');await action('enhance').click();assert.match(shop.querySelector('[data-player-list]').innerHTML,/銅の剣 ＋1/);assert.match(shop.querySelector('[data-player-feedback]').textContent,/強化した/);
+    open('casino-dealer');await shop.querySelectorAll('[data-menu-action]').find(b=>b.dataset.menuAction==='coins'&&b.dataset.menuItem==='100').click();
+    assert.match(shop.querySelector('[data-player-list]').innerHTML,/100コイン/);
+    await shop.querySelectorAll('[data-player-tab]').find(b=>b.dataset.playerTab==='card').click();await action('card-start').click();assert.match(shop.querySelector('[data-player-list]').innerHTML,/今の数字：5/);
+    await action('card-guess').click();assert.match(shop.querySelector('[data-player-feedback]').textContent,/外れ/);
+    menus.keydown({key:'Escape',preventDefault(){}});assert.equal(shop.hidden,true);
+    open('fortune-teller');assert.match(shop.querySelector('[data-player-list]').innerHTML,/旅の手がかり/);
+    open('corral-keeper');assert.match(shop.querySelector('[data-player-list]').innerHTML,/仲間になりたそう/);
+    open('black-market-dealer');assert.match(shop.querySelector('[data-player-list]').innerHTML,/盗賊の合鍵.*500G/s);
+    open('shrine-keeper');assert.equal(shop.querySelectorAll('[data-menu-action]').length,0);menus.keydown({key:'Enter',preventDefault(){}});assert.equal(shop.hidden,true);
+    game=createWorldGame([{...map,id:2,entities:[{kind:'world-town',x:64,y:64,parameters:[]}]},marker],2);menus.reset();menus.sync();
+    await menu.querySelectorAll('[data-player-tab]').find(b=>b.dataset.playerTab==='map').click();
+    assert.equal(menu.querySelector('[data-menu-title]').textContent,'ちず');assert.equal(menu.querySelector('[data-world-map]').width,80);
+    const pin=()=>menu.querySelector('[data-world-map-pin]');assert.equal(pin().hidden,false);assert.equal(pin().style.left,'18.75%');assert.equal(pin().style.top,'56.25%');
+    game.move('right');menus.sync();assert.equal(pin().style.left,'31.25%','the current coordinate pin follows movement');
+    const plain=createWorldGame([map],0);game=plain;menus.reset();menus.sync();assert.ok(!menu.querySelectorAll('[data-player-tab]').some(b=>b.dataset.playerTab==='map'),'no facility/map tab is added to the small/ordinary runtime');
+  }
+  // Expansion service menus: native buttons, report feedback, prayer and material exchange.
+  {
+    const { mountPlayerMenus } = await import(pathToFileURL(join(temporary, 'playerMenus.mjs')).href);
+    const { enemyCatalog } = await import(pathToFileURL(join(temporary, 'combatConfig.mjs')).href);
+    const map = { id: 0, width: 10, height: 10, spawn: { x: 32, y: 32 }, tiles: new Uint8Array(100).fill(7), entities: [
+      { kind: 'unique-monster', x: 32, y: 16, parameters: [], battleEvent: { enemyId: 15, once: true } },
+      { kind: 'guild-master', x: 32, y: 96, parameters: [] },
+    ] };
+    let game = createWorldGame([map], 0, () => .999999, { enemies: [{ ...enemyCatalog.find(e => e.id === 15), stats: { hp: 1, attack: 1, defense: 0, magic: 0 } }] });
+    const drain = () => { for (let n = 0; game.message && !game.encounter; n++) { assert.ok(n < 10); game.interact(); } };
+    const menu = new Element(), shop = new Element();
+    const menus = mountPlayerMenus(menu, shop, () => game, () => true, () => menus.sync(), () => {});
+    game.move('back'); game.interact(); drain(); game.battle.attack(); game.finishEncounter('victory'); drain();
+    for (let i = 0; i < 4; i++) game.move('front'); game.interact(); drain(); menus.sync();
+    assert.equal(shop.hidden, false);
+    assert.equal(shop.querySelector('[data-player-tab]').dataset.playerTab, 'bounties');
+    assert.match(shop.querySelector('[data-player-list]').innerHTML, /蜘蛛の毒巣.*推奨Lv 18.*400G.*200G/s);
+    const claim = () => shop.querySelectorAll('[data-menu-action]').find(b => b.dataset.menuAction === 'claim-bounty');
+    assert.equal(claim().disabled, false); await claim().click();
+    assert.match(shop.querySelector('[data-player-feedback]').textContent, /特別ボーナス200G.*毒巣を払う者/s);
+    assert.equal(game.status.gold, 700); assert.equal(claim().disabled, true);
+    menus.keydown({ key: 'Escape', preventDefault() {} }); assert.equal(shop.hidden, true);
+    for (const kind of ['bounty-board', 'sister', 'alchemist']) {
+      game = createWorldGame([{ ...map, entities: [{ kind, x: 32, y: 16, parameters: [] }, { ...map.entities[0], x: 112 }]}], 0, () => .999999,
+        { player: { ...playerConfig, initialGold: 100, initialItems: [{ itemId: 34, quantity: 3 }] } });
+      game.move('back'); game.interact(); drain(); menus.reset(); menus.sync();
+      assert.equal(shop.hidden, false, `${kind}: service opens after its dialogue`);
+      if (kind === 'bounty-board') {
+        assert.match(shop.querySelector('[data-player-list]').innerHTML, /未討伐/);
+        assert.equal(shop.querySelectorAll('[data-menu-action]').length, 0);
+        menus.keydown({ key: 'Enter', preventDefault() {} }); assert.equal(shop.hidden, true, 'read-only board can close with decision key');
+      } else if (kind === 'sister') {
+        assert.match(shop.querySelector('[data-player-list]').innerHTML, /自動保存.*毒/s);
+        await shop.querySelector('[data-menu-action]').click(); assert.match(shop.querySelector('[data-player-feedback]').textContent, /祈り/);
+      } else {
+        assert.equal(shop.querySelectorAll('[data-player-tab]').find(b => b.dataset.playerTab === 'exchange').attributes['aria-pressed'], 'true');
+        const craft = shop.querySelectorAll('[data-menu-action]').find(b => b.dataset.menuAction === 'exchange' && b.dataset.menuItem === '6');
+        await craft.click(); assert.equal(game.status.gold, 60); assert.ok(game.inventory.some(i => i.itemId === 28));
+      }
+      await shop.querySelector('[data-shop-close]').click();
+    }
+  }
+  // The church offers paid cleansing, with no/insufficient funds preserving every equipped item.
+  {
+    const { mountPlayerMenus } = await import(pathToFileURL(join(temporary, 'playerMenus.mjs')).href);
+    const map = { id: 0, width: 6, height: 6, spawn: { x: 32, y: 32 }, tiles: new Uint8Array(36).fill(7), entities: [{kind:'sister',x:32,y:16,parameters:[]}] };
+    let game, prayers = 0;
+    const menu = new Element(), shop = new Element();
+    const menus = mountPlayerMenus(menu,shop,()=>game,()=>true,()=>menus.sync(),()=>{},()=>prayers++);
+    const action = name => shop.querySelectorAll('[data-menu-action]').find(button=>button.dataset.menuAction===name);
+    const visit = gold => {
+      const savedData=new Map(), disk={getItem:key=>savedData.get(key)??null,setItem:(key,value)=>savedData.set(key,value),removeItem:key=>savedData.delete(key)};
+      game=createWorldGame([map],0,()=>.5,{player:{...playerConfig,initialExperience:97020,initialGold:gold,initialItems:[67,68,69,70].map(itemId=>({itemId,quantity:1}))},initialEquipment:[67,68,69,70],storage:disk});
+      game.save();const saved=JSON.parse(disk.getItem('tagquest.play-save.v1'));saved.player.vitals.poisoned=true;disk.setItem('tagquest.play-save.v1',JSON.stringify(saved));game=createWorldGame([map],0,()=>.5,{storage:disk});
+      game.move('back'); game.interact(); assert.match(game.message.text,/恐ろしい呪い.*100G/s);
+      for(let n=0;game.message;n++){assert.ok(n<5);game.interact();}
+      menus.reset();menus.sync();assert.equal(shop.hidden,false);
+      assert.match(shop.querySelector('[data-player-list]').innerHTML,/100G.*はい.*いいえ/s);
+    };
+    visit(100);const before=game.status.equipment;await action('decline-purify').click();assert.equal(shop.hidden,true);assert.equal(game.status.gold,100);assert.deepEqual(game.status.equipment,before);assert.equal(prayers,0);
+    visit(99);await action('purify').click();assert.match(shop.querySelector('[data-player-feedback]').textContent,/お金が足りません/);assert.equal(game.status.gold,99);assert.equal(game.status.cursedEquipment.length,4);assert.equal(prayers,0);assert.equal(shop.querySelector('[data-player-feedback]').dataset.purified,'false');
+    assert.ok(game.status.poisoned);await action('pray').click();assert.equal(game.status.poisoned,false);assert.equal(game.status.gold,99);assert.equal(game.status.cursedEquipment.length,4);assert.equal(prayers,0);assert.match(shop.querySelector('[data-player-feedback]').textContent,/毒が治った/);
+    visit(100);await action('purify').click();assert.match(shop.querySelector('[data-player-feedback]').textContent,/聖なる祈り.*呪いが解け/s);assert.equal(game.status.gold,0);assert.equal(game.status.cursedEquipment.length,0);assert.equal(prayers,1);assert.equal(shop.querySelector('[data-player-feedback]').dataset.purified,'true');assert.equal(action('purify'),undefined);assert.ok(action('pray'));
+    assert.equal(game.purify().ok,false);assert.equal(game.status.gold,0);assert.equal(prayers,1);
+    await shop.querySelector('[data-shop-close]').click();
+  }
+  const { createBattle: createBattleBase } = await import(pathToFileURL(join(temporary, 'battleEngine.mjs')).href);
+  const createBattle = (enemy, options = {}) => createBattleBase(enemy, { random: () => .5, ...options });
   const healingRoot = new Element(); let herbs = 2;
   const healingSession = createBattle({ id: 0, name: '王様', characterId: 'king', stats: { hp: 30, attack: 6, defense: 0 },
     patterns: { beforeAttacked: [{ type: 'say', text: 'よく来た' }], afterAttacked: [{ type: 'attack', text: '反撃', power: 1 }] } },
-    { playerHp: 10, wasAttacked: true, consumeItem: id => id === 0 && herbs > 0 && Boolean(herbs--) });
+    { random: () => .5, playerHp: 10, wasAttacked: true, consumeItem: id => id === 0 && herbs > 0 && Boolean(herbs--) });
   const healingView = mountBattleView(healingRoot, character, () => true, () => {}, {
     inventory: () => herbs ? [{ itemId: 0, count: herbs }] : [], gold: () => 92,
   });
@@ -1718,7 +1897,7 @@ try {
   await skillCommand('spells').click(); await skillButton(1).click();
   assert.equal(healingRoot.querySelector('[data-battle-target]'), null);
   healingView.keydown({ key: 'Escape', preventDefault() {} });
-  assert.equal(healingSession.playerMp, 7); assert.equal(healingSession.enemyHp, 8);
+  assert.equal(healingSession.playerMp, 7); assert.equal(healingSession.enemyHp, 14);
   assert.equal(healingRoot.querySelector('[data-battle-player-mp-bar]').value, 7);
   assert.equal(healingRoot.querySelector('[data-battle-player-mp]').textContent, 'MP 7 / 10');
   await healingRoot.querySelector('[data-battle-next]').click(); await healingRoot.querySelector('[data-battle-next]').click();
@@ -1737,6 +1916,32 @@ try {
     assert.deepEqual(owned, [{ itemId: 3, count: 1 }, { itemId: 13, count: 2 }, { itemId: 0, count: 2 }, { itemId: 1, count: 1 }, { itemId: 2, count: 0 }], 'filtering never changes inventory');
     view.dispose();
   }
+  {
+    const root = new Element(), counts = new Map([0,1,2,13,28,29,41,42,43,63,64,65,66].map(id => [id,1]));
+    const inventory = () => [...counts].map(([itemId,count]) => ({itemId,count}));
+    const session = createBattle({ ...enemyCatalog[1], stats: {hp:9999,attack:1,defense:9999,magic:10} },
+      { consumeItem: id => { if (!counts.get(id)) return false; counts.set(id,counts.get(id)-1); return true; } });
+    let finished;
+    const view = mountBattleView(root, character, () => true, outcome => finished = outcome, {inventory});
+    view.sync({ ...event }, inventory(), session);
+    const items = () => root.querySelectorAll('[data-battle-command]').find(button => button.dataset.battleCommand === 'items');
+    await items().click();
+    assert.deepEqual(root.querySelectorAll('[data-battle-item]').map(button => Number(button.dataset.battleItem)), [0,1,2,63,64,65,66], 'battle-only items appear; seeds, XP books, materials, keys and gear do not');
+    assert.match(root.querySelector('[data-battle-item-list]').innerHTML, /火薬玉 ×1<small>敵に40の火炎ダメージ/);
+    await root.querySelectorAll('[data-battle-item]').find(button => button.dataset.battleItem === '63').click();
+    assert.equal(session.enemyHp,9959); assert.equal(session.playerMp,10); assert.equal(counts.get(63),0);
+    await root.querySelector('[data-battle-next]').click(); await root.querySelector('[data-battle-next]').click();
+    await items().click(); assert.ok(!root.querySelectorAll('[data-battle-item]').some(button => button.dataset.battleItem === '63'));
+    await root.querySelectorAll('[data-battle-item]').find(button => button.dataset.battleItem === '64').click();
+    assert.match(root.querySelector('[data-battle-player-name]').textContent, /敵幻惑3/);
+    await root.querySelector('[data-battle-next]').click(); await root.querySelector('[data-battle-next]').click();
+    await items().click(); await root.querySelectorAll('[data-battle-item]').find(button => button.dataset.battleItem === '66').click();
+    assert.match(root.querySelector('[data-battle-player-name]').textContent, /剛力3/);
+    await root.querySelector('[data-battle-next]').click(); await root.querySelector('[data-battle-next]').click();
+    await items().click(); await root.querySelectorAll('[data-battle-item]').find(button => button.dataset.battleItem === '65').click();
+    assert.equal(session.phase,'escape'); assert.equal(counts.get(65),0);
+    await root.querySelector('[data-battle-next]').click(); assert.equal(finished,'escape');view.dispose();
+  }
   for (const id of [13, 14, 15, 16]) {
     const skill = findSkill(id), root = new Element();
     const session = createBattle({ ...healingSession.enemy, stats: { hp: 9999, attack: 6, defense: 2 } },
@@ -1750,6 +1955,45 @@ try {
     view.keydown({ key: 'Escape', preventDefault() {} });
     await root.querySelectorAll('[data-battle-command]')[0].click();
     assert.equal(session.playerMp, 100 - skill.mpCost, 'a committed skill cannot be cancelled or repeated');
+    view.dispose();
+  }
+  {
+    const root = new Element(), session = createBattle({ ...healingSession.enemy, stats: { hp: 9999, attack: 6, defense: 0 } },
+      { player: { ...playerConfig, level: 99, maxMp: 100, stats: { hp: 100, attack: 10, defense: 0, magic: 10 } } });
+    const view = mountBattleView(root, character, () => true, () => {});
+    view.sync({ ...event }, [], session);
+    await root.querySelectorAll('[data-battle-command]').find(button => button.dataset.battleCommand === 'spells').click();
+    const ids = root.querySelectorAll('[data-battle-skill]').map(button => Number(button.dataset.battleSkill));
+    assert.ok([20,21,22,23].every(id => ids.includes(id)));
+    assert.ok([17,18,19].every(id => !ids.includes(id)), 'exploration-only spells are not offered during battle');
+    await root.querySelectorAll('[data-battle-skill]').find(button => button.dataset.battleSkill === '23').click();
+    assert.equal(session.playerMp, 90); assert.match(root.querySelector('[data-battle-player-name]').textContent, /障壁3/);
+    await root.querySelector('[data-battle-next]').click();
+    assert.match(root.querySelector('[data-battle-player-name]').textContent, /障壁2/);
+    view.dispose();
+  }
+  {
+    const root = new Element(), session = createBattle({ ...healingSession.enemy, stats: { hp: 9999, attack: 1, defense: 0 } },
+      { player: { ...playerConfig, level: 99, maxMp: 100, mpCostReduction: 4, stats: { hp: 100, attack: 10, defense: 0, magic: 10 } }, playerMp: 1 });
+    const view = mountBattleView(root, character, () => true, () => {});
+    view.sync({ ...event }, [], session);
+    const command = kind => root.querySelectorAll('[data-battle-command]').find(button => button.dataset.battleCommand === kind);
+    await command('techniques').click();
+    assert.equal(root.querySelectorAll('[data-battle-skill]').find(button => button.dataset.battleSkill === '0').disabled, true, 'physical technique still costs 2 MP');
+    view.keydown({ key: 'Enter', preventDefault() {} });
+    assert.equal(root.querySelector('[data-battle-commands]').hidden, false);
+    await command('spells').click();
+    assert.match(root.querySelector('[data-battle-skill-list]').innerHTML, /火の玉　MP 1（通常3）/);
+    const fire = root.querySelectorAll('[data-battle-skill]').find(button => button.dataset.battleSkill === '1');
+    assert.equal(fire.disabled, false);
+    assert.equal(root.querySelectorAll('[data-battle-skill]').find(button => button.dataset.battleSkill === '23').disabled, true);
+    await fire.click(); assert.equal(session.playerMp, 0);
+    assert.equal(root.querySelector('[data-battle-player-mp]').textContent, 'MP 0 / 100');
+    await root.querySelector('[data-battle-next]').click(); await root.querySelector('[data-battle-next]').click();
+    await command('spells').click();
+    assert.ok(root.querySelectorAll('[data-battle-skill]').every(button => button.disabled));
+    view.keydown({ key: 'Enter', preventDefault() {} });
+    assert.equal(root.querySelector('[data-battle-commands]').hidden, false);
     view.dispose();
   }
   const emptySkills = createBattle(healingSession.enemy, { player: { ...healingSession.player, skills: [], maxMp: 0 } });
@@ -1799,7 +2043,7 @@ try {
   healingView.keydown({ key: 'ArrowDown', preventDefault() {} });
   skillButton(1).disabled = true; // Enabled-button count changed after the selected index was set.
   healingView.keydown({ key: 'Enter', preventDefault() {} });
-  assert.equal(changedSkills.playerHp, 38); assert.equal(changedSkills.playerMp, 7);
+  assert.equal(changedSkills.playerHp, 34); assert.equal(changedSkills.playerMp, 7);
   healingView.sync(null, []);
   const gallery = new Element();
   gallery.innerHTML = readFileSync(join(rootPath, 'web/index.html'), 'utf8').match(/<section id="gallery-walking"[\s\S]*?<\/section>/)[0];
@@ -1933,7 +2177,7 @@ try {
   const gallerySize = gallery.querySelector('#gallery-play-size');
   gallerySize.value = 'large'; await gallerySize.dispatch('change');
   assert.equal(frames.size, 0); assert.equal(galleryView.hidden, true);
-  assert.equal(galleryMap.querySelectorAll('option').length, 18);
+  assert.equal(galleryMap.querySelectorAll('option').length, 28);
   assert.equal(gallery.querySelector('#gallery-play-budget'), null, 'player-facing demos omit tag-capacity details');
   galleryMap.value = 'stage-9'; await galleryMap.dispatch('change'); await galleryToggle.click();
   assert.equal(galleryView.querySelector('[data-play-stage]').textContent, '水晶の洞窟');
@@ -1956,7 +2200,11 @@ try {
   await touchDown.dispatch('pointerdown', { button: 0, pointerId: 16 }); await touchDown.dispatch('pointerup');
   assert.equal(galleryView.querySelector('[data-play-stage]').textContent, '小さな街');
   gallerySize.value = 'normal'; await gallerySize.dispatch('change');
-  assert.equal(galleryMap.querySelectorAll('option').length, 6);
+  assert.equal(galleryMap.querySelectorAll('option').length, 16);
+  galleryMap.value = 'stage-6'; await galleryMap.dispatch('change'); await galleryToggle.click();
+  assert.match(galleryView.querySelector('[data-play-danger]').textContent, /推奨Lv 15〜22.*レベル不足/);
+  assert.equal(galleryView.querySelector('[data-play-danger]').hidden, false);
+  await galleryToggle.click();
   assert.deepEqual(demoScenes, demoBefore, 'switching demos leaves the original source unchanged');
   const keyboardListeners = window.listeners.get('keydown').length;
   disposeGallery(); assert.equal(frames.size, 0);

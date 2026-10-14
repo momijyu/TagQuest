@@ -1,0 +1,66 @@
+{
+  "id": 16,
+  "name": "白銀の魔狼王 フェンリル",
+  "characterId": "fenrir",
+  "battleImage": "fenrir",
+  "background": "cave",
+  "family": "beast",
+  "stats": {
+    "hp": 880,
+    "attack": 52,
+    "defense": 22,
+    "magic": 25
+  },
+  "canEscape": false,
+  "reward": {
+    "gold": 800,
+    "experience": 350,
+    "items": [
+      {
+        "itemId": 32,
+        "quantity": 1
+      }
+    ]
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "attack",
+        "text": "フェンリルの氷結の牙！",
+        "power": 1.1
+      },
+      {
+        "type": "boost-attack",
+        "text": "フェンリルは凍てつく遠吠えを放った！",
+        "power": 1.35,
+        "turns": 2
+      },
+      {
+        "type": "attack",
+        "text": "フェンリルの2連爪撃！",
+        "power": 0.8,
+        "hits": 2
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "attack",
+        "text": "フェンリルの氷結の牙！",
+        "power": 1.1
+      },
+      {
+        "type": "boost-attack",
+        "text": "フェンリルは凍てつく遠吠えを放った！",
+        "power": 1.35,
+        "turns": 2
+      },
+      {
+        "type": "attack",
+        "text": "フェンリルの2連爪撃！",
+        "power": 0.8,
+        "hits": 2
+      }
+    ]
+  },
+  "boss": true
+}

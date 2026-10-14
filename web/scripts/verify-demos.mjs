@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdtempSync, writeFileSync, rmSync, readFileSync } from 'node:fs';
+import { readdirSync, mkdtempSync, writeFileSync, rmSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -27,6 +27,9 @@ try {
   const { dialogueTemplates, dialogueText } = await read('dialogues');
   const steps = [['back', 0, -16], ['front', 0, 16], ['left', -16, 0], ['right', 16, 0]];
   function playThrough(scenes, size) {
+    // The ultimate suite exercises the service-confirmed routes and key gates separately.
+    const legacy = scenes.filter(scene => !['旅人の港と商人街','地下水路と闇市','沈没神殿','古い民家の地下蔵'].includes(inferLocationName(scene)));
+    scenes = legacy.map(scene => ({...scene, exits: scene.exits?.filter(exit => legacy.some(target => target.id === exit.targetStageId))}));
     // Strong test stats isolate map/event correctness from the separately tested combat balance.
     const game = createWorldGame(scenes, 0, () => 0.999999, { player: { ...playerConfig, stats: { hp: 999, attack: 40, defense: 99 } } });
     const drain = () => { for (let n = 0; game.message && !game.encounter; n++) { assert.ok(n < 20); game.interact(); } };
@@ -157,9 +160,12 @@ try {
       assert.ok(game.visibleEntities.some(entity => entity.kind === 'demon-guard'), 'reset restores the optional bridge battle');
     }
   }
+  const smallLock = JSON.parse(readFileSync(join(root, 'web/scripts/small-world-lock.json'), 'utf8'));
+  for (const [path, hash] of Object.entries(smallLock)) assert.equal(createHash('sha256').update(readFileSync(join(root,path))).digest('hex'), hash, `${path}: small files remain byte for byte`);
+  assert.deepEqual(readdirSync(join(root,'art/adventure-small')).sort(),Object.keys(smallLock).filter(path=>path.startsWith('art/adventure-small/')).map(path=>path.split('/').at(-1)).sort());
   const sizes = ['normal', 'large', 'small'], worlds = sizes.map(createAdventurePreset);
-  assert.deepEqual(worlds[0], createAdventureWorld(), 'the existing adventure stays the normal sample');
-  assert.deepEqual(worlds.map(w => w.stages.length), [6, 18, 6]);
+  assert.deepEqual(worlds[0].stages[0], createAdventureWorld().stages[0], 'the base castle stays the normal sample');
+  assert.deepEqual(worlds.map(w => w.stages.length), [16, 28, 6]);
   const cells = world => world.stages.reduce((sum, stage) => sum + stage.width * stage.height, 0);
   assert.ok(cells(worlds[1]) > cells(worlds[0]) * 2, 'large is a bigger connected world, not just a renamed copy');
   assert.ok(cells(worlds[2]) < cells(worlds[0]));
@@ -216,26 +222,27 @@ try {
       const budget = nfcBudget(encoded.bytes, defaultPublicBase(), 496, 5), scenes = readGameHash(new URL(budget.url).hash);
       assert.equal(scenes[0].encounter.rate, size === 'small' ? 1 : 0.01, `${size}: the king's configured rate survives URL replay`);
       for (const id of size === 'large' ? [3, 8, 16] : [3]) {
-        assert.equal(scenes.find(scene => scene.id === id).encounter.rate, size === 'small' ? 12 : 6,
-          `${size}: forest exploration uses the configured reduced rate without changing the NFC small world`);
+        assert.equal(scenes.find(scene => scene.id === id).encounter.rate, size === 'small' ? 12 : size === 'large' ? 9 : 6,
+          `${size}: forest exploration uses its configured rate without changing the normal/small worlds`);
       }
       for (const id of size === 'large' ? [4, 9] : [4]) {
-        assert.equal(scenes.find(scene => scene.id === id).encounter.rate, size === 'small' ? 14 : 8,
-          `${size}: cave exploration uses the configured reduced rate without changing the NFC small world`);
+        assert.equal(scenes.find(scene => scene.id === id).encounter.rate, size === 'small' ? 14 : size === 'large' ? 12 : 8,
+          `${size}: cave exploration uses its configured rate without changing the normal/small worlds`);
       }
       assert.equal(scenes.length, world.stages.length);
-      assert.equal(scenes.flatMap(s => s.entities).filter(e => e.kind === 'treasure-chest').length, size === 'small' ? 2 : size === 'large' ? 45 : 12);
+      assert.equal(scenes.flatMap(s => s.entities).filter(e => e.kind === 'treasure-chest').length, size === 'small' ? 2 : size === 'large' ? 56 : 23);
       if (size !== 'small') {
         for (const id of size === 'large' ? [1, 7, 13] : [1]) {
           const town = scenes.find(s => s.id === id);
           assert.equal(town.width, 29);
-          assert.equal(town.entities.filter(e => ['house-red', 'house-slate'].includes(e.kind)).length, 4);
-          assert.deepEqual(town.entities.filter(e => e.x === 416).map(e => e.dialogue?.id), [72, 73], 'new homes use dedicated templates');
+          assert.equal(town.entities.filter(e => ['house-red', 'house-slate'].includes(e.kind)).length, id === 1 ? 1 : 4);
+          assert.deepEqual(town.entities.filter(e => e.x === 416 && ['house-red','house-slate','inn-building','church'].includes(e.kind)).map(e => e.dialogue?.id), [72, 73], 'converted service buildings preserve their inspection text');
         }
       }
       const expectedNames = size === 'large'
         ? ['お城', '街', 'フィールド', '森', '洞窟', '魔王城', '北の大陸', '北の市場', '奥深い森', '水晶の洞窟', '東の大陸', '古城の遺跡', '北の城', '海辺の集落', '妖精の花園', '辺境の大陸', '風渡りの森', '忘れられた砦']
         : ['お城', '街', 'フィールド', '森', '洞窟', '魔王城'];
+      if (size !== 'small') expectedNames.push('霧深き腐海・毒の湿原','蜘蛛の毒巣','凍てつく霊峰・氷狼の谷','氷狼の洞穴','灼熱の古戦場・竜の巣','紅蓮の竜穴','旅人の港と商人街','地下水路と闇市','沈没神殿','古い民家の地下蔵');
       assert.deepEqual(scenes.map(inferLocationName), expectedNames, 'location names survive URL decoding without serialized names');
       for (const scene of scenes) assert.equal(inferLocationName({ ...scene, id: 230 }), inferLocationName(scene), 'location inference ignores stage IDs');
       const tiles = (id, x, y) => scenes.find(s => s.id === id).tiles[y * scenes.find(s => s.id === id).width + x];
@@ -291,7 +298,9 @@ try {
         assert.equal(createHash('sha256').update(encoded.bytes).digest('hex'), '183209444663027a9a3e0308fac0513ada6a0cfa1775f7dcacd8db08cba2950c',
           'normal/large exploration changes must preserve the small world verified on a real NTAG215');
         assert.equal(encoded.bytes[2], 14, 'integer encounters no longer require v15');
-        assert.ok(encoded.bytes.length <= 310);
+        assert.equal(encoded.bytes.length, 302);
+        assert.equal(budget.urlBytes, 439);
+        assert.equal(budget.ndefBytes, 444);
         assert.ok(budget.urlBytes <= 450, 'small public URLs leave room for real tag metadata');
         assert.ok(budget.ndefBytes <= 455);
         assert.ok(496 - budget.ndefBytes >= 40);

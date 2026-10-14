@@ -7,10 +7,13 @@ export type Dialogue = { readonly type: 'template'; readonly id: number } | { re
 export interface InteractionData { readonly dialogue?: Dialogue; readonly itemId?: number }
 export interface DialogueTemplate { readonly name: string; readonly text: string; readonly speaker?: string; readonly afterClear?: string; readonly storyRole?: string; readonly locationName?: string }
 export const dialogueTemplates: readonly DialogueTemplate[] = templates;
+export const purificationOffer = dialogueTemplates.find(template => template.name === '教会のお祓い')!.text;
 export const customDialogueLimit = 1024;
 export const dialogueByteLength = (text: string): number => new TextEncoder().encode(text).length;
 export const isInspectableObject = (kind: string) => inspectableObjects.includes(kind);
 const inspectionMessages: Readonly<Record<string, string>> = {
+  'blacksmith-building': '金床と炉のある鍛冶屋だ。', 'teleport-shrine': '青く光る旅の扉の祠だ。', 'casino-building': 'きらびやかな遊技場のテントだ。', observatory: '水晶玉のある占いの館だ。', 'port-building': '海へ続く船乗りの詰所だ。', 'monster-corral': '魔物たちが休む牧場だ。', ship: '外海へ向かう帆船だ。船長に話しかけよう。', 'iron-gate': '鉄格子が閉ざされている。合鍵が必要だ。', 'well-entrance': '地下水路へ下りるはしごがある。',
+  'inn-building':'ベッドの看板がある宿屋だ。入口の主人に話しかけてみよう。', tavern:'冒険者が集まる酒場だ。掲示板に賞金首の情報がある。', church:'白石の教会だ。シスターが旅人を迎えている。', 'witch-hut':'薬草の香りが漂う工房だ。魔女が素材を調合してくれる。', 'bounty-board':'賞金首の依頼が並んでいる。',
   'house-red': '鍵がかかっているようだ。',
   'house-slate': '鍵がかかっているようだ。',
   well: 'きれいな水をたたえた井戸だ。',
@@ -33,6 +36,8 @@ export const inspectionText = (kind: string): string => inspectionMessages[kind]
 export const canHaveDialogue = (kind: string) => isNpc(kind) || isInspectableObject(kind);
 export const canHaveItem = (kind: string) => kind === 'loot' || isInspectableObject(kind);
 export const npcNames: Record<string, string> = {
+  blacksmith: '鍛冶屋', 'shrine-keeper': '祠の番人', 'casino-dealer': '遊技場の係', 'black-market-dealer': '盗賊', 'fortune-teller': '占い師', captain: '船長', 'corral-keeper': '牧場の主人',
+  'guild-master':'ギルドマスター', sister:'シスター', alchemist:'調合の魔女', 'unique-monster':'巣窟の主',
   king: '王様', traveler: '若者', resident: '女性', elder: 'おじいさん',
   'weapon-merchant': '武器屋の店員', 'armor-merchant': '防具屋の店員', 'item-merchant': '道具屋の店員',
   'cave-witch': '洞窟の魔女', 'forest-fairy': '森の妖精', 'demon-lord': '魔王', 'demon-guard': '魔王の子分', innkeeper: '宿屋の主人',

@@ -13,7 +13,8 @@ try {
     world: join(root, 'web/src/game/world.ts'), model: join(root, 'web/src/editor/model.ts'),
     skills: join(root, 'web/src/data/skills.ts'),
   }, formats: ['es'], fileName: (_, name) => `${name}.mjs` }, outDir: out, emptyOutDir: false } });
-  const { createBattle } = await import(pathToFileURL(join(out, 'battle.mjs')));
+  const { createBattle: createBattleBase } = await import(pathToFileURL(join(out, 'battle.mjs')));
+  const createBattle = (enemy, options = {}) => createBattleBase(enemy, { random: () => .5, ...options });
   const { enemyCatalog, playerConfig, parseEnemyDefinitions, parsePlayerDefinition } = await import(pathToFileURL(join(out, 'config.mjs')));
   const { createWorldGame: createWorldGameBase } = await import(pathToFileURL(join(out, 'world.mjs')));
   // The grace-period contract is exercised with defaults in verify-gameplay; these fixtures isolate repeated battles.
@@ -79,7 +80,7 @@ try {
   skills.advance(); skills.advance(); skills.useSkill(1); assert.equal(skills.enemyHp, 0); assert.equal(skills.playerMp, 2);
   skills.advance(); skills.advance(); assert.equal(skills.useSkill(1).ok, false); assert.equal(skills.phase, 'victory');
   const peacefulHeal = createBattle(king, { playerHp: 10 }); peacefulHeal.useSkill(2); peacefulHeal.advance();
-  assert.equal(peacefulHeal.playerHp, 38); assert.equal(peacefulHeal.wasAttacked, false);
+  assert.equal(peacefulHeal.playerHp, 34); assert.equal(peacefulHeal.wasAttacked, false);
   const skillKill = createBattle({ ...king, stats: { ...king.stats, hp: 12 }, reward: { gold: 10, items: [] } });
   skillKill.useSkill(1); assert.equal(skillKill.phase, 'victory'); assert.equal(skillKill.playerHp, 40); assert.match(skillKill.text, /10G/);
   const gearSkill = createBattle(king, { player: { ...playerConfig, stats: { ...playerConfig.stats, attack: 17 } } });

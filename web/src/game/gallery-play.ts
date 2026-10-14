@@ -52,7 +52,8 @@ export function startGalleryPlay(
       const encoded = encodeWorld(world, true);
       const normalKeys = ['castle', 'town', 'world', 'forest', 'cave', 'demon-castle'];
       const previous = map.value;
-      available = value === 'normal' ? normal : Object.fromEntries(decodeScenes(encoded.bytes).map(scene => [normalKeys[scene.id] ?? `stage-${scene.id}`, scene]));
+      const decoded = Object.fromEntries(decodeScenes(encoded.bytes).map(scene => [normalKeys[scene.id] ?? `stage-${scene.id}`, scene]));
+      available = value === 'normal' ? { ...decoded, ...normal } : decoded;
       names = Object.fromEntries(world.stages.map(stage => [normalKeys[stage.id] ?? `stage-${stage.id}`, stageLabel(stage)]));
       map.innerHTML = Object.entries(available).map(([key]) => `<option value="${key}"></option>`).join('');
       for (const option of map.querySelectorAll('option')) option.textContent = names[(option as HTMLOptionElement).value] ?? '';

@@ -1,12 +1,16 @@
 import { encodeWorld, toSceneData, stageLabel } from './model';
 import type { World } from './model';
-import { canStand, interactionTarget } from '../game/walking';
+import type { SceneData } from '../codec/scenes';
+import { facilityServices } from '../data/facilities';
+import { canStand as originalCanStand, interactionTarget } from '../game/walking';
 import type { Position, Direction } from '../game/walking';
 import { isNpc } from '../data/npc-placement';
 import { isInspectableObject } from '../data/interactions';
 import { exitArrival } from '../data/stage-exits';
 export interface MapIssue { stageId: number; x: number; y: number; text: string }
 export function validateWorld(world: World): MapIssue[] {
+  const keyAvailable = world.stages.some(stage => stage.entities.some(entity => entity.kind === 'black-market-dealer'));
+  const canStand = (scene: SceneData, position: Position) => originalCanStand(keyAvailable ? { ...scene, entities: scene.entities.filter(entity => entity.kind !== 'iron-gate') } : scene, position);
   const issues: MapIssue[] = [];
   const add = (stageId: number, x: number, y: number, text: string) => issues.push({ stageId, x, y, text });
   try { encodeWorld(world); } catch (e) { add(world.stages[0].id, 0, 0, String(e)); }
@@ -61,7 +65,7 @@ export function validateWorld(world: World): MapIssue[] {
       if (target !== undefined) targets.add(target);
     }
     for (const [index, e] of stage.entities.entries()) {
-      const missing = isNpc(e.kind) && !e.dialogue && !e.battleEvent && !e.kind.endsWith('-merchant');
+      const missing = isNpc(e.kind) && !e.dialogue && !e.battleEvent && !e.kind.endsWith('-merchant') && !facilityServices.some(kind => kind === e.kind) && !['innkeeper','guild-master','sister','alchemist'].includes(e.kind);
       if (missing) add(stage.id, e.x, e.y, `${label}：${e.kind}の会話が未設定です`);
       const inspectable = isNpc(e.kind) || e.kind === 'treasure-chest' || isInspectableObject(e.kind) && (e.dialogue || e.itemId !== undefined);
       if (first && positions.length && inspectable && !missing && !targets.has(index)) add(stage.id, e.x, e.y, `${label}：${e.kind}を調べられる位置に到達できません`);

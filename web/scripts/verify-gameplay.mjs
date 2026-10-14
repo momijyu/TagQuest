@@ -11,7 +11,8 @@ try {
     ['clearRecord', 'game/clear-record'], ['config', 'data/encounters/combat-config'], ['presets', 'editor/adventure-presets'], ['model', 'editor/model'],
   ].map(([name, file]) => [name, join(root, `web/src/${file}.ts`)])), formats: ['es'], fileName: (_, name) => `${name}.mjs` }, outDir: out } });
   const read = name => import(pathToFileURL(join(out, `${name}.mjs`)).href);
-  const { createWorldGame } = await read('world'), { createPlayerState } = await read('player'), { createBattle } = await read('battle');
+  const { createWorldGame } = await read('world'), { createPlayerState } = await read('player'), { createBattle: createBattleBase } = await read('battle');
+  const createBattle = (enemy, options = {}) => createBattleBase(enemy, { random: () => .5, ...options });
   const { playerConfig, enemyCatalog } = await read('config'), { canStand, interactionTarget } = await read('walking');
   const { hasTrueClear } = await read('clearRecord');
   const { createAdventurePreset } = await read('presets'), { toSceneData } = await read('model');
@@ -48,8 +49,8 @@ try {
   assert.throws(() => restored.restore({ ...player.snapshot(), equipment: { ...player.equipment, head: 999 } }));
   const enemy = { ...enemyCatalog[1], stats: { hp: 999, attack: 1, defense: 4 }, reward: null };
   const magic = createBattle(enemy, { player: { ...playerConfig, stats: { hp: 100, attack: 20, defense: 0, magic: 20 } } });
-  magic.useSkill(1); assert.equal(magic.feedback.amount, 28); // 12 + floor(20*1.0) - 4
-  const healing = createBattle(enemy, { playerHp: 1 }); healing.useSkill(2); assert.equal(healing.playerHp, 29);
+  magic.useSkill(1); assert.equal(magic.feedback.amount, 16); // 12 + floor(20*.4) - 4
+  const healing = createBattle(enemy, { playerHp: 1 }); healing.useSkill(2); assert.equal(healing.playerHp, 25);
   const rare = enemyCatalog.find(enemy => enemy.id === 10);
   for (const [roll, phase] of [[0.499999, 'escape'], [0.5, 'enemy-action']]) {
     const battle = createBattle(rare, { random: () => roll }); battle.guard(); battle.advance(); assert.equal(battle.phase, phase);

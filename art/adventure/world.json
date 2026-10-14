@@ -290,6 +290,13 @@
             "y": 18,
             "width": 1,
             "height": 2
+          },
+          {
+            "tile": "brick",
+            "x": 27,
+            "y": 12,
+            "width": 2,
+            "height": 1
           }
         ]
       },
@@ -330,7 +337,7 @@
           "itemId": 8
         },
         {
-          "kind": "house-slate",
+          "kind": "tavern",
           "x": 320,
           "y": 32,
           "parameters": []
@@ -443,7 +450,7 @@
           "itemId": 1
         },
         {
-          "kind": "house-red",
+          "kind": "inn-building",
           "x": 416,
           "y": 48,
           "parameters": [],
@@ -453,7 +460,7 @@
           }
         },
         {
-          "kind": "house-slate",
+          "kind": "church",
           "x": 416,
           "y": 224,
           "parameters": [],
@@ -465,8 +472,8 @@
         },
         {
           "kind": "innkeeper",
-          "x": 384,
-          "y": 160,
+          "x": 432,
+          "y": 112,
           "parameters": [],
           "dialogue": {
             "type": "template",
@@ -481,6 +488,42 @@
           "dialogue": {
             "type": "template",
             "id": 87
+          }
+        },
+        {
+          "kind": "guild-master",
+          "x": 336,
+          "y": 96,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 97
+          }
+        },
+        {
+          "kind": "bounty-board",
+          "x": 368,
+          "y": 128,
+          "parameters": []
+        },
+        {
+          "kind": "sister",
+          "x": 432,
+          "y": 288,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 98
+          }
+        },
+        {
+          "kind": "signpost",
+          "x": 416,
+          "y": 176,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 104
           }
         }
       ],
@@ -500,6 +543,14 @@
           "targetX": 8,
           "targetY": 16,
           "direction": "front"
+        },
+        {
+          "x": 28,
+          "y": 12,
+          "targetStageId": 12,
+          "targetX": 13,
+          "targetY": 24,
+          "direction": "back"
         }
       ]
     },
@@ -1392,6 +1443,54 @@
           "x": 368,
           "y": 64,
           "parameters": []
+        },
+        {
+          "kind": "world-forest-entrance",
+          "x": 80,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "signpost",
+          "x": 64,
+          "y": 160,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 94
+          }
+        },
+        {
+          "kind": "world-cave",
+          "x": 160,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "signpost",
+          "x": 144,
+          "y": 192,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 95
+          }
+        },
+        {
+          "kind": "world-cave",
+          "x": 240,
+          "y": 272,
+          "parameters": []
+        },
+        {
+          "kind": "signpost",
+          "x": 224,
+          "y": 304,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 96
+          }
         }
       ],
       "exits": [
@@ -1426,8 +1525,47 @@
           "targetX": 8,
           "targetY": 17,
           "direction": "back"
+        },
+        {
+          "x": 5,
+          "y": 10,
+          "targetStageId": 6,
+          "targetX": 9,
+          "targetY": 15,
+          "direction": "back"
+        },
+        {
+          "x": 10,
+          "y": 10,
+          "targetStageId": 8,
+          "targetX": 9,
+          "targetY": 15,
+          "direction": "back"
+        },
+        {
+          "x": 15,
+          "y": 17,
+          "targetStageId": 10,
+          "targetX": 9,
+          "targetY": 15,
+          "direction": "back"
         }
-      ]
+      ],
+      "encounter": {
+        "enabled": true,
+        "enemyId": 1,
+        "rate": 4,
+        "enemies": [
+          {
+            "enemyId": 1,
+            "weight": 70
+          },
+          {
+            "enemyId": 2,
+            "weight": 30
+          }
+        ]
+      }
     },
     {
       "id": 3,
@@ -2107,6 +2245,1121 @@
           "targetStageId": 2,
           "targetX": 23,
           "targetY": 5,
+          "direction": "front"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "霧深き腐海・毒の湿原",
+      "width": 19,
+      "height": 17,
+      "spawn": {
+        "x": 144,
+        "y": 224
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "bog-ground",
+            "x": 1,
+            "y": 1,
+            "width": 17,
+            "height": 15
+          },
+          {
+            "tile": "cave-wall",
+            "x": 1,
+            "y": 1,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "cave-wall",
+            "x": 17,
+            "y": 1,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "dirt",
+            "x": 9,
+            "y": 0,
+            "width": 1,
+            "height": 17
+          },
+          {
+            "tile": "water",
+            "x": 12,
+            "y": 6,
+            "width": 4,
+            "height": 4
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "signpost",
+          "x": 160,
+          "y": 224,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 88
+          }
+        },
+        {
+          "kind": "witch-hut",
+          "x": 48,
+          "y": 48,
+          "parameters": []
+        },
+        {
+          "kind": "alchemist",
+          "x": 64,
+          "y": 112,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 99
+          }
+        }
+      ],
+      "exits": [
+        {
+          "x": 9,
+          "y": 16,
+          "targetStageId": 2,
+          "targetX": 5,
+          "targetY": 11,
+          "direction": "front"
+        },
+        {
+          "x": 9,
+          "y": 0,
+          "targetStageId": 7,
+          "targetX": 6,
+          "targetY": 10,
+          "direction": "back"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "enemyId": 18,
+        "rate": 6,
+        "enemies": [
+          {
+            "enemyId": 18,
+            "weight": 60
+          },
+          {
+            "enemyId": 19,
+            "weight": 40
+          }
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "name": "蜘蛛の毒巣",
+      "width": 13,
+      "height": 13,
+      "spawn": {
+        "x": 96,
+        "y": 144
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "cave-wall",
+            "x": 1,
+            "y": 1,
+            "width": 11,
+            "height": 11
+          },
+          {
+            "tile": "bog-ground",
+            "x": 2,
+            "y": 2,
+            "width": 9,
+            "height": 10
+          },
+          {
+            "tile": "dirt",
+            "x": 6,
+            "y": 10,
+            "width": 1,
+            "height": 3
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "unique-monster",
+          "x": 96,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 89
+          },
+          "battleEvent": {
+            "enemyId": 15,
+            "once": true,
+            "clear": false
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 144,
+          "y": 32,
+          "parameters": [],
+          "itemId": 70
+        }
+      ],
+      "exits": [
+        {
+          "x": 6,
+          "y": 12,
+          "targetStageId": 6,
+          "targetX": 9,
+          "targetY": 1,
+          "direction": "front"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "凍てつく霊峰・氷狼の谷",
+      "width": 19,
+      "height": 17,
+      "spawn": {
+        "x": 144,
+        "y": 224
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "ice-ground",
+            "x": 1,
+            "y": 1,
+            "width": 17,
+            "height": 15
+          },
+          {
+            "tile": "cave-wall",
+            "x": 1,
+            "y": 1,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "cave-wall",
+            "x": 17,
+            "y": 1,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "dirt",
+            "x": 9,
+            "y": 0,
+            "width": 1,
+            "height": 17
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "signpost",
+          "x": 160,
+          "y": 224,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 90
+          }
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 48,
+          "y": 64,
+          "parameters": []
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 224,
+          "y": 64,
+          "parameters": []
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 64,
+          "y": 176,
+          "parameters": []
+        }
+      ],
+      "exits": [
+        {
+          "x": 9,
+          "y": 16,
+          "targetStageId": 2,
+          "targetX": 10,
+          "targetY": 11,
+          "direction": "front"
+        },
+        {
+          "x": 9,
+          "y": 0,
+          "targetStageId": 9,
+          "targetX": 6,
+          "targetY": 10,
+          "direction": "back"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "enemyId": 20,
+        "rate": 6,
+        "enemies": [
+          {
+            "enemyId": 20,
+            "weight": 60
+          },
+          {
+            "enemyId": 21,
+            "weight": 40
+          }
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "name": "氷狼の洞穴",
+      "width": 13,
+      "height": 13,
+      "spawn": {
+        "x": 96,
+        "y": 144
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "cave-wall",
+            "x": 1,
+            "y": 1,
+            "width": 11,
+            "height": 11
+          },
+          {
+            "tile": "ice-ground",
+            "x": 2,
+            "y": 2,
+            "width": 9,
+            "height": 10
+          },
+          {
+            "tile": "dirt",
+            "x": 6,
+            "y": 10,
+            "width": 1,
+            "height": 3
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "unique-monster",
+          "x": 96,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 91
+          },
+          "battleEvent": {
+            "enemyId": 16,
+            "once": true,
+            "clear": false
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 144,
+          "y": 32,
+          "parameters": [],
+          "itemId": 69
+        }
+      ],
+      "exits": [
+        {
+          "x": 6,
+          "y": 12,
+          "targetStageId": 8,
+          "targetX": 9,
+          "targetY": 1,
+          "direction": "front"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "灼熱の古戦場・竜の巣",
+      "width": 19,
+      "height": 17,
+      "spawn": {
+        "x": 144,
+        "y": 224
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "ember-ground",
+            "x": 1,
+            "y": 1,
+            "width": 17,
+            "height": 15
+          },
+          {
+            "tile": "cave-wall",
+            "x": 1,
+            "y": 1,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "cave-wall",
+            "x": 17,
+            "y": 1,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "dirt",
+            "x": 9,
+            "y": 0,
+            "width": 1,
+            "height": 17
+          },
+          {
+            "tile": "water",
+            "x": 3,
+            "y": 4,
+            "width": 4,
+            "height": 4
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "signpost",
+          "x": 160,
+          "y": 224,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 92
+          }
+        },
+        {
+          "kind": "world-mountain",
+          "x": 208,
+          "y": 64,
+          "parameters": []
+        },
+        {
+          "kind": "world-mountain",
+          "x": 208,
+          "y": 80,
+          "parameters": []
+        },
+        {
+          "kind": "world-mountain",
+          "x": 208,
+          "y": 96,
+          "parameters": []
+        }
+      ],
+      "exits": [
+        {
+          "x": 9,
+          "y": 16,
+          "targetStageId": 2,
+          "targetX": 15,
+          "targetY": 18,
+          "direction": "front"
+        },
+        {
+          "x": 9,
+          "y": 0,
+          "targetStageId": 11,
+          "targetX": 6,
+          "targetY": 10,
+          "direction": "back"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "enemyId": 22,
+        "rate": 6,
+        "enemies": [
+          {
+            "enemyId": 22,
+            "weight": 60
+          },
+          {
+            "enemyId": 23,
+            "weight": 40
+          }
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "name": "紅蓮の竜穴",
+      "width": 13,
+      "height": 13,
+      "spawn": {
+        "x": 96,
+        "y": 144
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "cave-wall",
+            "x": 1,
+            "y": 1,
+            "width": 11,
+            "height": 11
+          },
+          {
+            "tile": "ember-ground",
+            "x": 2,
+            "y": 2,
+            "width": 9,
+            "height": 10
+          },
+          {
+            "tile": "dirt",
+            "x": 6,
+            "y": 10,
+            "width": 1,
+            "height": 3
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "unique-monster",
+          "x": 96,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 93
+          },
+          "battleEvent": {
+            "enemyId": 17,
+            "once": true,
+            "clear": false
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 48,
+          "y": 32,
+          "parameters": [],
+          "itemId": 73
+        }
+      ],
+      "exits": [
+        {
+          "x": 6,
+          "y": 12,
+          "targetStageId": 10,
+          "targetX": 9,
+          "targetY": 1,
+          "direction": "front"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "旅人の港と商人街",
+      "width": 28,
+      "height": 26,
+      "spawn": {
+        "x": 208,
+        "y": 368
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "grass",
+            "x": 1,
+            "y": 1,
+            "width": 22,
+            "height": 24
+          },
+          {
+            "tile": "sea",
+            "x": 23,
+            "y": 0,
+            "width": 5,
+            "height": 25
+          },
+          {
+            "tile": "brick",
+            "x": 13,
+            "y": 1,
+            "width": 1,
+            "height": 25
+          },
+          {
+            "tile": "brick",
+            "x": 4,
+            "y": 7,
+            "width": 16,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 4,
+            "y": 14,
+            "width": 16,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 4,
+            "y": 21,
+            "width": 19,
+            "height": 1
+          },
+          {
+            "tile": "bridge",
+            "x": 23,
+            "y": 21,
+            "width": 5,
+            "height": 1
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "blacksmith-building",
+          "x": 48,
+          "y": 32,
+          "parameters": []
+        },
+        {
+          "kind": "blacksmith",
+          "x": 64,
+          "y": 96,
+          "parameters": []
+        },
+        {
+          "kind": "teleport-shrine",
+          "x": 272,
+          "y": 32,
+          "parameters": []
+        },
+        {
+          "kind": "shrine-keeper",
+          "x": 288,
+          "y": 96,
+          "parameters": []
+        },
+        {
+          "kind": "casino-building",
+          "x": 48,
+          "y": 144,
+          "parameters": []
+        },
+        {
+          "kind": "casino-dealer",
+          "x": 64,
+          "y": 208,
+          "parameters": []
+        },
+        {
+          "kind": "observatory",
+          "x": 272,
+          "y": 144,
+          "parameters": []
+        },
+        {
+          "kind": "fortune-teller",
+          "x": 288,
+          "y": 208,
+          "parameters": []
+        },
+        {
+          "kind": "monster-corral",
+          "x": 48,
+          "y": 256,
+          "parameters": []
+        },
+        {
+          "kind": "corral-keeper",
+          "x": 64,
+          "y": 320,
+          "parameters": []
+        },
+        {
+          "kind": "port-building",
+          "x": 272,
+          "y": 256,
+          "parameters": []
+        },
+        {
+          "kind": "captain",
+          "x": 288,
+          "y": 320,
+          "parameters": []
+        },
+        {
+          "kind": "ship",
+          "x": 384,
+          "y": 256,
+          "parameters": []
+        },
+        {
+          "kind": "well-entrance",
+          "x": 144,
+          "y": 320,
+          "parameters": []
+        },
+        {
+          "kind": "house-slate",
+          "x": 144,
+          "y": 144,
+          "parameters": []
+        },
+        {
+          "kind": "signpost",
+          "x": 224,
+          "y": 368,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 100
+          }
+        }
+      ],
+      "exits": [
+        {
+          "x": 13,
+          "y": 25,
+          "targetStageId": 1,
+          "targetX": 27,
+          "targetY": 12,
+          "direction": "left"
+        },
+        {
+          "x": 10,
+          "y": 23,
+          "targetStageId": 13,
+          "targetX": 8,
+          "targetY": 14,
+          "direction": "back"
+        },
+        {
+          "x": 24,
+          "y": 21,
+          "targetStageId": 14,
+          "targetX": 9,
+          "targetY": 18,
+          "direction": "back"
+        },
+        {
+          "x": 10,
+          "y": 14,
+          "targetStageId": 15,
+          "targetX": 5,
+          "targetY": 8,
+          "direction": "back"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "地下水路と闇市",
+      "width": 17,
+      "height": 17,
+      "spawn": {
+        "x": 128,
+        "y": 208
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "cave-wall",
+        "rectangles": [
+          {
+            "tile": "cave-floor",
+            "x": 1,
+            "y": 1,
+            "width": 15,
+            "height": 15
+          },
+          {
+            "tile": "sea",
+            "x": 1,
+            "y": 7,
+            "width": 15,
+            "height": 1
+          },
+          {
+            "tile": "bridge",
+            "x": 8,
+            "y": 7,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "cave-wall",
+            "x": 1,
+            "y": 4,
+            "width": 15,
+            "height": 1
+          },
+          {
+            "tile": "cave-floor",
+            "x": 8,
+            "y": 4,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "empty",
+            "x": 0,
+            "y": 16,
+            "width": 17,
+            "height": 1
+          },
+          {
+            "tile": "cave-floor",
+            "x": 8,
+            "y": 16,
+            "width": 1,
+            "height": 1
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "black-market-dealer",
+          "x": 80,
+          "y": 160,
+          "parameters": []
+        },
+        {
+          "kind": "iron-gate",
+          "x": 128,
+          "y": 48,
+          "parameters": []
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 160,
+          "y": 16,
+          "parameters": [],
+          "itemId": 68
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 128,
+          "y": 16,
+          "parameters": [],
+          "itemId": 41
+        },
+        {
+          "kind": "signpost",
+          "x": 160,
+          "y": 208,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 101
+          }
+        }
+      ],
+      "exits": [
+        {
+          "x": 8,
+          "y": 16,
+          "targetStageId": 12,
+          "targetX": 10,
+          "targetY": 23,
+          "direction": "front"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "沈没神殿",
+      "width": 19,
+      "height": 21,
+      "spawn": {
+        "x": 144,
+        "y": 272
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "sea",
+        "rectangles": [
+          {
+            "tile": "sand",
+            "x": 1,
+            "y": 2,
+            "width": 17,
+            "height": 17
+          },
+          {
+            "tile": "ruins-floor",
+            "x": 3,
+            "y": 3,
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tile": "wall-top",
+            "x": 3,
+            "y": 8,
+            "width": 13,
+            "height": 1
+          },
+          {
+            "tile": "ruins-floor",
+            "x": 9,
+            "y": 8,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "tile": "bridge",
+            "x": 9,
+            "y": 18,
+            "width": 1,
+            "height": 2
+          },
+          {
+            "tile": "empty",
+            "x": 0,
+            "y": 20,
+            "width": 19,
+            "height": 1
+          },
+          {
+            "tile": "bridge",
+            "x": 9,
+            "y": 20,
+            "width": 1,
+            "height": 1
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "captain",
+          "x": 192,
+          "y": 272,
+          "parameters": []
+        },
+        {
+          "kind": "iron-gate",
+          "x": 144,
+          "y": 112,
+          "parameters": []
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 224,
+          "y": 96,
+          "parameters": [],
+          "itemId": 67
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 96,
+          "y": 64,
+          "parameters": [],
+          "itemId": 37
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 192,
+          "y": 64,
+          "parameters": [],
+          "itemId": 41
+        },
+        {
+          "kind": "signpost",
+          "x": 160,
+          "y": 256,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 102
+          }
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 48,
+          "y": 176,
+          "parameters": []
+        }
+      ],
+      "exits": [
+        {
+          "x": 9,
+          "y": 20,
+          "targetStageId": 12,
+          "targetX": 18,
+          "targetY": 22,
+          "direction": "front"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "enemyId": 7,
+        "rate": 6,
+        "enemies": [
+          {
+            "enemyId": 7,
+            "weight": 60
+          },
+          {
+            "enemyId": 6,
+            "weight": 35
+          },
+          {
+            "enemyId": 10,
+            "weight": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "name": "古い民家の地下蔵",
+      "width": 11,
+      "height": 11,
+      "spawn": {
+        "x": 80,
+        "y": 112
+      },
+      "spawnAnchor": "frame",
+      "residentAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "wall-top",
+        "rectangles": [
+          {
+            "tile": "brick",
+            "x": 1,
+            "y": 1,
+            "width": 9,
+            "height": 9
+          },
+          {
+            "tile": "empty",
+            "x": 0,
+            "y": 10,
+            "width": 11,
+            "height": 1
+          },
+          {
+            "tile": "brick",
+            "x": 5,
+            "y": 10,
+            "width": 1,
+            "height": 1
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "treasure-chest",
+          "x": 48,
+          "y": 48,
+          "parameters": [],
+          "itemId": 37
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 112,
+          "y": 48,
+          "parameters": [],
+          "itemId": 41
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 80,
+          "y": 32,
+          "parameters": [],
+          "itemId": 74
+        },
+        {
+          "kind": "signpost",
+          "x": 96,
+          "y": 112,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 103
+          }
+        }
+      ],
+      "exits": [
+        {
+          "x": 5,
+          "y": 10,
+          "targetStageId": 12,
+          "targetX": 10,
+          "targetY": 14,
           "direction": "front"
         }
       ]

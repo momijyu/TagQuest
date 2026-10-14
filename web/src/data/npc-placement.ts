@@ -1,5 +1,5 @@
 export const residentKinds = ['traveler', 'resident', 'elder'] as const;
-export const npcKinds = ['king', 'weapon-merchant', 'armor-merchant', 'item-merchant', ...residentKinds, 'cave-witch', 'forest-fairy', 'demon-lord', 'demon-guard', 'innkeeper'] as const;
+export const npcKinds = ['king', 'weapon-merchant', 'armor-merchant', 'item-merchant', ...residentKinds, 'cave-witch', 'forest-fairy', 'demon-lord', 'demon-guard', 'innkeeper', 'guild-master', 'sister', 'alchemist', 'unique-monster', 'blacksmith', 'shrine-keeper', 'casino-dealer', 'black-market-dealer', 'fortune-teller', 'captain', 'corral-keeper'] as const;
 export const npcPlacement = { width: 16, height: 32 } as const;
 
 export function isNpc(kind: string): boolean {

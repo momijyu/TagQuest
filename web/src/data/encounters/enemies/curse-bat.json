@@ -1,0 +1,54 @@
+{
+  "id": 19,
+  "name": "カースバット",
+  "characterId": "curse-bat",
+  "battleImage": "curse-bat",
+  "background": "forest",
+  "family": "undead",
+  "stats": {
+    "hp": 120,
+    "attack": 25,
+    "defense": 10,
+    "magic": 20
+  },
+  "reward": {
+    "gold": 40,
+    "experience": 80,
+    "items": [
+      {
+        "itemId": 34,
+        "quantity": 1
+      }
+    ]
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "attack",
+        "text": "カースバットの攻撃！",
+        "power": 0.6,
+        "inflictPoison": true,
+        "hits": 2
+      },
+      {
+        "type": "magic-attack",
+        "text": "カースバットは魔力を放った！",
+        "power": 1.2
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "attack",
+        "text": "カースバットの攻撃！",
+        "power": 0.6,
+        "inflictPoison": true,
+        "hits": 2
+      },
+      {
+        "type": "magic-attack",
+        "text": "カースバットは魔力を放った！",
+        "power": 1.2
+      }
+    ]
+  }
+}

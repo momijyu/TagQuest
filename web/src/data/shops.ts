@@ -8,7 +8,7 @@ export function parseShopCatalog(value: unknown): readonly ShopDefinition[] {
   const seen = new Set<string>();
   return value.map(entry => {
     const data = record(entry), merchant = label(data.merchant);
-    if (!['weapon-merchant', 'armor-merchant', 'item-merchant'].includes(merchant) || seen.has(merchant)) throw new Error('お店の店員が不明か重複しています。');
+    if (!['weapon-merchant', 'armor-merchant', 'item-merchant', 'alchemist', 'black-market-dealer'].includes(merchant) || seen.has(merchant)) throw new Error('お店の店員が不明か重複しています。');
     seen.add(merchant);
     if (!Array.isArray(data.items)) throw new Error('商品をIDの配列で設定してください。');
     const items = data.items.map(id => whole(id, 0, 255));

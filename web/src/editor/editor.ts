@@ -1,3 +1,4 @@
+import { facilityServices } from '../data/facilities';
 import { base64url, defaultPublicBase, nfcBudget, nfcTagPresets } from '../codec/nfc-url';
 import { validateWorld } from './validation';
 import './editor.css';
@@ -23,8 +24,8 @@ import { canonicalTile } from '../data/walls';
 import { exitDirections } from '../data/stage-exits';
 import { canStand } from '../game/walking';
 import worldSource from '../../../compiler/maps/world.json';
-import { appendAdventureSample } from './adventure';
-import { appendAdventurePreset } from './adventure-presets';
+import { appendWorldSample } from './adventure';
+import { appendAdventurePreset, createAdventurePreset } from './adventure-presets';
 import { enemyCatalog, parseEncounter } from '../data/encounters/settings';
 
 const STORAGE_KEY = 'tagquest.world-editor.v1';
@@ -35,7 +36,7 @@ type Tool = 'pan' | 'select' | 'brush' | 'rectangle' | 'place' | 'erase' | 'spaw
 type Category = 'floor' | 'object' | 'npc' | 'effect';
 const categories: Record<Category, readonly string[]> = {
   floor: catalog.tiles.filter(name => canonicalTile(name) === name),
-  object: ['castle', 'weapon-shop', 'armor-shop', 'item-shop', 'house-red', 'house-slate', 'well', 'throne', 'pillar', 'demon-throne', 'demon-pillar', 'treasure-chest', 'tree', 'world-mountain',
+  object: ['blacksmith-building', 'teleport-shrine', 'casino-building', 'observatory', 'port-building', 'monster-corral', 'ship', 'iron-gate', 'well-entrance', 'inn-building', 'tavern', 'church', 'witch-hut', 'bounty-board', 'castle', 'weapon-shop', 'armor-shop', 'item-shop', 'house-red', 'house-slate', 'well', 'throne', 'pillar', 'demon-throne', 'demon-pillar', 'treasure-chest', 'tree', 'world-mountain',
     'world-town', 'world-forest-entrance', 'world-cave', 'world-demon-castle', 'world-ruins', 'signpost', 'cave-crystal', 'stone-tablet'],
   npc: npcKinds,
   effect: ['loot', 'moat-outer-bank', 'moat-inner-bank', 'world-forest'],
@@ -496,7 +497,7 @@ export function startEditor(root: HTMLElement, characters: PlayCharacters & { pl
     get<HTMLButtonElement>('remove-stage').disabled = history.world.stages.length === 1;
     get<HTMLButtonElement>('undo').disabled = !history.canUndo;
     get<HTMLButtonElement>('redo').disabled = !history.canRedo;
-    get('entities').innerHTML = s.entities.map((e, i) => `<button class="btn btn-soft ${i === selection ? 'btn-primary' : ''}" data-entity="${i}" aria-pressed="${i === selection}">${labels[e.kind]}${isNpc(e.kind) && !e.dialogue && !e.battleEvent && !e.kind.endsWith('-merchant') ? '（会話未設定）' : ''}<small>${entityFrame(e).x}, ${entityFrame(e).y}</small></button>`).join('') || '<p class="editor-empty">配置なし</p>';
+    get('entities').innerHTML = s.entities.map((e, i) => `<button class="btn btn-soft ${i === selection ? 'btn-primary' : ''}" data-entity="${i}" aria-pressed="${i === selection}">${labels[e.kind]}${isNpc(e.kind) && !e.dialogue && !e.battleEvent && !e.kind.endsWith('-merchant') && !['innkeeper', 'guild-master', 'sister', 'alchemist'].includes(e.kind) && !facilityServices.some(kind => kind === e.kind) ? '（会話未設定）' : ''}<small>${entityFrame(e).x}, ${entityFrame(e).y}</small></button>`).join('') || '<p class="editor-empty">配置なし</p>';
     get('entities').querySelectorAll<HTMLButtonElement>('[data-entity]').forEach(button => button.addEventListener('click', () => {
       selection = Number(button.dataset.entity); playerSelected = false; setTool('select'); refresh();
     }));
@@ -745,7 +746,7 @@ export function startEditor(root: HTMLElement, characters: PlayCharacters & { pl
   }
   get('add-adventure-sample').addEventListener('click', () => mutate(() => {
     discardEmptyPlaceholder();
-    active = appendAdventureSample(history.world);
+    active = appendWorldSample(history.world, createAdventurePreset('normal'), 2);
     selection = -1; exitSelection = -1; playerSelected = false;
   }));
   for (const size of ['large', 'small'] as const) get(`add-${size}-sample`).addEventListener('click', () => mutate(() => {

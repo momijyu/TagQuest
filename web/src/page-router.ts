@@ -5,7 +5,7 @@ type Stop = () => void;
 export interface PageServices {
   loadGallery(): Promise<(isActive: () => boolean) => Promise<Stop>>;
   loadEditor(): Promise<(root: HTMLElement) => Stop>;
-  loadGame(): Promise<(root: HTMLElement, first: SceneData, scenes: readonly SceneData[], isActive: () => boolean) => Stop>;
+  loadGame(): Promise<(root: HTMLElement, first: SceneData, scenes: readonly SceneData[], isActive: () => boolean) => Stop | Promise<Stop>>;
 }
 
 /** Delay each page's assets and initialization until that page is actually requested. */
@@ -31,7 +31,9 @@ export function startPageRouter(pages: { gallery: HTMLElement; editor: HTMLEleme
         pages.status.textContent = '読み込み中…'; pages.status.hidden = false;
         const start = await services.loadGame();
         if (!current()) return;
-        stopGame = start(screen, first, scenes, () => !disposed && !pages.game.hidden);
+        const stop = await start(screen, first, scenes, () => current() && !pages.game.hidden);
+        if (!current()) { stop(); return; }
+        stopGame = stop;
       } else if (mode === 'editor' && !stopEditor) {
         pages.status.textContent = '読み込み中…'; pages.status.hidden = false;
         const start = await services.loadEditor();

@@ -178,3 +178,37 @@
   .battle-number { animation: battle-number-fade 900ms forwards; }
 }
 @keyframes battle-number-fade { 0%, 80% { opacity: 1; } 100% { opacity: 0; } }
+
+.play-danger { position:absolute; z-index:1; top:38px; left:8px; max-width:calc(100% - 184px); padding:4px 8px; border-radius:4px; background:#352027ed; color:#ffe0a0; font-size:12px; line-height:1.35; overflow-wrap:anywhere; pointer-events:none; }
+.play-danger[hidden] { display:none; }
+
+.world-map-frame { position:relative; width:min(100%,420px); margin:12px auto; }
+.world-map-frame canvas { display:block; width:100%; height:auto; image-rendering:pixelated; }
+.world-map-pin { position:absolute; width:12px; height:12px; border:2px solid white; border-radius:50%; background:#e8444b; transform:translate(-50%,-50%); animation:map-pin-blink 1s steps(2,end) infinite; box-shadow:0 0 0 2px #721d25; }
+.world-map-pin[hidden] { display:none; }
+@keyframes map-pin-blink { 50% { opacity:.35; } }
+@media (prefers-reduced-motion:reduce) { .world-map-pin { animation:none; } }
+
+.play-recruit { position:absolute; z-index:6; inset:auto 8px 8px; padding:16px; background:#101820f5; color:#faf3de; }
+.play-recruit[hidden] { display:none; }
+
+.play-inventory-window[data-page="map"] .player-stats, .play-inventory-window[data-page="map"] .resource-meter { display:none; }
+@media (max-width:600px) { .player-menu-tabs:has([data-player-tab="map"]) { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+
+.casino-racers { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+.casino-racers > div { display:grid; justify-items:center; gap:6px; }
+.casino-racers canvas { width:64px; height:64px; image-rendering:pixelated; }
+.casino-card { display:block; width:140px; padding:20px 8px; margin:12px auto; border:3px double #967a43; border-radius:8px; background:#eee8d4; color:#202531; text-align:center; }
+@media (max-width:600px) { .casino-racers { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+
+
+[data-player-feedback][data-purified="true"] {
+  animation: purification-prayer 900ms ease-out;
+}
+@keyframes purification-prayer {
+  0% { background: #fff4ba; color: #39422d; box-shadow: 0 0 24px #fff2b8; }
+  100% { background: transparent; box-shadow: 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-player-feedback][data-purified="true"] { animation: none; }
+}

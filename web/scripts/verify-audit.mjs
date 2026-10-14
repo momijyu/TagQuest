@@ -174,8 +174,8 @@ try {
   attack.attack();assert.deepEqual(attack.feedback,{id:1,target:'enemy',amount:24});assert.equal(attack.enemyHp,96);assert.equal(attack.phase,'player-action');
   const physical = modules.battle.createBattle(demon,{player:sealed,equipment:royal.equipment});
   physical.useSkill(0);assert.equal(physical.enemyHp,82);
-  const magic = modules.battle.createBattle(demon,{player:sealed,equipment:royal.equipment});
-  magic.useSkill(1);assert.equal(magic.enemyHp,44);
+  const magic = modules.battle.createBattle(demon,{player:sealed,equipment:royal.equipment,random:()=>.5});
+  magic.useSkill(1);assert.equal(magic.enemyHp,85);
   assert.equal(royal.battleDefinition(enemyCatalog[1]).stats.attack,328);
   assert.equal(royal.battleDefinition({...demon,royalEquipmentPlayerAttackMultiplier:0.1}).stats.attack,58);
   assert.equal(royal.battleDefinition({...demon,royalEquipmentPlayerAttackMultiplier:1}).stats.attack,328);

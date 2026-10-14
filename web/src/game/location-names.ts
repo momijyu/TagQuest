@@ -1,4 +1,5 @@
 import type { SceneData } from '../codec/scenes';
+import { bountyCatalog } from '../data/bounties';
 import catalog from '../data/scene-catalog.json';
 import { dialogueTemplates } from '../data/interactions';
 
@@ -32,4 +33,15 @@ export function inferLocationName(scene: SceneData): string {
   if (tiles.has('world-mountain') || tiles.has('world-forest') || tiles.has('sea')) return 'フィールド';
   if (tiles.has('grass')) return '草原';
   return '冒険の地';
+}
+
+export function sceneRecommendation(scene: SceneData): {min:number;max:number}|null {
+  const bounty=bountyCatalog.find(b=>scene.entities.some(e=>e.battleEvent?.enemyId===b.enemyId));
+  if(bounty) return {min:bounty.recommendedLevel,max:bounty.recommendedLevel};
+  const tiles=new Set(Array.from(scene.tiles,id=>catalog.tiles[id]));
+  if(tiles.has('bog-ground')) return {min:15,max:22};
+  if(tiles.has('ice-ground')) return {min:25,max:35};
+  if(tiles.has('ember-ground')) return {min:35,max:45};
+  if(scene.encounter?.enabled && scene.encounter.enemies?.every(e=>e.enemyId===1 || e.enemyId===2)) return {min:1,max:5};
+  return null;
 }

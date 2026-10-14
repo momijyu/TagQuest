@@ -1,0 +1,26 @@
+[
+  {
+    "enemyId": 15,
+    "name": "百眼の猛毒母 クイーン・アラクネ",
+    "location": "蜘蛛の毒巣",
+    "recommendedLevel": 18,
+    "bonus": 200,
+    "title": "毒巣を払う者"
+  },
+  {
+    "enemyId": 16,
+    "name": "白銀の魔狼王 フェンリル",
+    "location": "氷狼の洞穴",
+    "recommendedLevel": 28,
+    "bonus": 400,
+    "title": "霊峰の狩人"
+  },
+  {
+    "enemyId": 17,
+    "name": "灼熱の飛竜 ヴォルケクス",
+    "location": "紅蓮の竜穴",
+    "recommendedLevel": 38,
+    "bonus": 750,
+    "title": "紅蓮の竜殺し"
+  }
+]

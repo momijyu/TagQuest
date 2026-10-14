@@ -10,7 +10,7 @@ import type { EncounterEvent, WorldGameOptions } from './world';
 import { mountBattleView } from './battle-view';
 import { mountPlayerMenus } from './player-menu';
 import { updateResourceBar } from './resource-bars';
-import { inferLocationName } from './location-names';
+import { sceneRecommendation, inferLocationName } from './location-names';
 import type { EnemyIllustrations } from '../data/encounters/enemy-illustrations';
 
 export interface PlayCharacters {
@@ -28,8 +28,8 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
   root.innerHTML = `<div class="play-console" data-play-console>
   <p class="play-objective" data-play-objective role="status" hidden><strong>次の目的</strong><span data-play-objective-text></span></p>
   <div class="play-screen" data-play-screen>
-  <span class="play-stage" data-play-stage></span>
-  <p class="play-save-warning" data-play-save-warning role="status" hidden></p>
+  <span class="play-stage" data-play-stage></span><span class="play-danger" data-play-danger hidden></span>
+  <p class="play-save-warning" data-play-save-warning role="status" hidden></p><button class="btn btn-sm" data-play-reload hidden>再読み込みして続ける</button>
   <div class="play-status"><div class="resource-meter"><span data-field-hp></span><progress class="resource-bar" data-field-hp-bar></progress></div>
     <div class="resource-meter"><span data-field-mp></span><progress class="resource-bar resource-mp" data-field-mp-bar></progress></div><span data-play-status></span></div>
   <div class="play-viewport" data-play-viewport>
@@ -55,6 +55,7 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
           <button class="btn btn-sm" data-play-close-items>とじる</button>
         </div>
       </details>
+      <button class="btn btn-sm btn-soft" data-play-return-portal hidden>ゲートへ戻る</button>
       <button class="btn btn-sm btn-soft" data-play-reset>最初から</button>
     </div>
     <span class="play-touch-hint">画面をスワイプして移動。そのまま押さえると歩き続けます。</span>
@@ -63,6 +64,7 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
   </div>
   <section class="play-battle" data-play-battle aria-label="戦闘" hidden></section>
   <div class="play-shop-window game-window" data-play-shop role="dialog" aria-label="お店" hidden></div>
+  <div class="play-recruit game-window" data-play-recruit role="dialog" aria-label="魔物を仲間にする" hidden><p data-play-recruit-text></p><button class="btn" data-play-recruit-yes>仲間にする</button><button class="btn" data-play-recruit-no>見送る</button></div>
   <div class="play-encounter" data-play-encounter role="status" aria-label="敵と遭遇。戦闘へ移行中" hidden>
     <span class="encounter-flash" data-encounter-flash aria-hidden="true"></span>
     <span class="encounter-shutter encounter-shutter-top" data-encounter-top aria-hidden="true"></span>
@@ -89,13 +91,13 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
   let transition: { elapsed: number; previousTime?: number; reduced: boolean } | undefined;
   const held = new Map<string, Direction>();
   let swipe: { id: number; x: number; y: number } | undefined;
-  const active = () => Boolean(game && !document.hidden && isActive());
+  const active = () => Boolean(game && !game.saveConflict && !document.hidden && isActive());
   const battle = mountBattleView(battleElement, characters.king, () => active() && !transition, outcome => {
     if (!active()) return;
     game!.finishEncounter(outcome); clearInput(); draw(performance.now()); resize(); canvas.focus({ preventScroll: true });
   }, { inventory: () => game?.inventory ?? [], gold: () => game?.status.gold ?? 0, illustrations: characters.enemyIllustrations });
   const menus = mountPlayerMenus(root.querySelector<HTMLElement>('[data-play-inventory-window]')!, root.querySelector<HTMLElement>('[data-play-shop]')!,
-    () => game, active, () => { clearInput(); if (game && (canvas.width !== game.scene.width * 64 || canvas.height !== game.scene.height * 64)) resize(); draw(performance.now()); if (!game?.shop && !inventory.open) canvas.focus({ preventScroll: true }); }, closeItems);
+    () => game, active, () => { clearInput(); if (game && (canvas.width !== game.scene.width * 64 || canvas.height !== game.scene.height * 64)) resize(); draw(performance.now()); follow(); if (!game?.shop && !inventory.open) canvas.focus({ preventScroll: true }); }, closeItems, () => battle.playHealingSound());
   function clearInput(): void {
     const id = swipe?.id; swipe = undefined;
     held.clear(); nextStep = 0;
@@ -137,7 +139,7 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
     context.clearRect(0, 0, scene.width * 16, scene.height * 16);
     const entities = game.visibleEntities;
     const playerSprite = game.status.appearance === 'king' ? characters.kings[game.direction] : characters.players[game.direction];
-    drawCompiledScene(context, { ...scene, entities, spawn: game.position }, { king: characters.king, player: playerSprite }, { openedChests: game.openedChests });
+    drawCompiledScene(context, { ...scene, entities, spawn: game.position }, { king: characters.king, player: playerSprite }, { openedChests: game.openedChests, ...(game.returnPortal?.stageId === scene.id ? {returnPortal:game.returnPortal} : {}) });
     previousLoot = Math.floor(time / 160) % 8;
     for (const entity of entities) if (entity.kind === 'loot') {
       drawSprite(context, lootSparkleFrames[(previousLoot + entity.parameters[0]) % 8], entity.x, entity.y);
@@ -155,6 +157,10 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
       }
     }
     const message = encounter ? null : game.message;
+    const recruitPanel = root.querySelector<HTMLElement>('[data-play-recruit]')!;
+    recruitPanel.hidden = !game.pendingRecruit || Boolean(message || encounter || game.shop);
+    root.querySelector<HTMLElement>('[data-play-recruit-text]')!.textContent = game.pendingRecruit ? `${game.pendingRecruit.name}が起き上がって、仲間になりたそうに見ている！` : '';
+    if (!recruitPanel.hidden) clearInput();
     if (message || encounter || game.shop) inventory.open = false;
     if (encounter) clearInput();
     const battleReady = Boolean(encounter && (!transition || transition.elapsed >= (transition.reduced ? 160 : 440)));
@@ -171,14 +177,17 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
     }
     setText('[data-play-speaker]', message?.speaker ?? '');
     setText('[data-play-stage]', locationNames.has(scene.id) ? stageName?.(scene.id) ?? locationNames.get(scene.id)! : inferLocationName(scene));
+    const recommendation = sceneRecommendation(scene), danger = root.querySelector<HTMLElement>('[data-play-danger]')!;
+    danger.hidden = !recommendation; danger.textContent = recommendation ? `推奨Lv ${recommendation.min === recommendation.max ? `${recommendation.min}以上` : `${recommendation.min}〜${recommendation.max}`}${game.status.level < recommendation.min ? '　危険：レベル不足' : ''}` : '';
     const objective = game.story?.objective ?? '周りを探索し、人々に話を聞こう。';
     root.querySelector<HTMLElement>('[data-play-objective]')!.hidden = battleReady || !objective;
     setText('[data-play-objective-text]', objective ?? '');
     const clearNotice = root.querySelector<HTMLElement>('[data-play-clear]')!;
     clearNotice.hidden = !game.cleared;
     clearNotice.textContent = game.trueCleared ? 'TRUE CLEAR！ 古代の虚無神を打ち倒し、世界の真の覇者となった！' : '第1部クリア！ 玉座の奥の裂け目から、虚無の回廊へ進めます。自由に冒険を続けられます。';
+    root.querySelector<HTMLElement>('[data-play-return-portal]')!.hidden = battleReady || inventory.open || Boolean(game.message || game.shop) || !game.canReturnAtTownEntrance;
     const status = game.status;
-    setText('[data-play-status]', `Lv ${status.level}　${status.gold}G　${status.nextLevelExperience === null ? '最高レベル' : `次まで ${status.nextLevelExperience - status.experience}EXP`}${status.poisoned ? '　毒' : ''}`);
+    setText('[data-play-status]', `Lv ${status.level}　${status.gold}G　${status.nextLevelExperience === null ? '最高レベル' : `次まで ${status.nextLevelExperience - status.experience}EXP`}${status.poisoned ? '　毒' : ''}${game.mistSteps ? `　霧 ${game.mistSteps}歩` : ''}`);
     setText('[data-field-hp]', `HP ${status.hp} / ${status.maxHp}`);
     setText('[data-field-mp]', `MP ${status.mp} / ${status.maxMp}`);
     updateResourceBar(root.querySelector<HTMLProgressElement>('[data-field-hp-bar]')!, status.hp, status.maxHp, `${status.name}のHP`);
@@ -188,8 +197,9 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
     root.querySelector<HTMLElement>('[data-play-cancel-battle]')!.hidden = message?.battleEntityIndex === undefined;
     game.save();
     const saveWarning = root.querySelector<HTMLElement>('[data-play-save-warning]')!;
-    saveWarning.hidden = !/できません|読み込めなかった/.test(game.saveStatus);
+    saveWarning.hidden = !/できません|読み込めなかった|別の画面/.test(game.saveStatus);
     saveWarning.textContent = saveWarning.hidden ? '' : game.saveStatus;
+    root.querySelector<HTMLElement>('[data-play-reload]')!.hidden = !game.saveConflict;
     menus.sync();
   }
   function follow(): void {
@@ -255,6 +265,9 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
       event.preventDefault(); clearInput(); draw(); canvas.focus({ preventScroll: true }); return;
     }
     if (event.key === 'Escape' && inventory.open) { event.preventDefault(); closeItems(); return; }
+    if (game!.pendingRecruit && !game!.message && !game!.encounter) {
+      event.preventDefault(); if (!event.repeat) { if (event.key === 'Escape') chooseRecruit(false); else if (['Enter','e','E',' '].includes(event.key)) chooseRecruit(true); } return;
+    }
     if (game!.shop || inventory.open) { clearInput(); menus.keydown(event); return; }
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
     if (['e', 'Enter', ' '].includes(key)) {
@@ -285,6 +298,10 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
   function focusout(event: FocusEvent): void {
     if (!root.contains(event.relatedTarget as Node | null)) clearInput();
   }
+  function chooseRecruit(accept: boolean): void { if(!active()) return; const result=game!.recruitMonster(accept); if(result.ok) { draw(performance.now()); canvas.focus({preventScroll:true}); } }
+  root.querySelector('[data-play-recruit-yes]')!.addEventListener('click',()=>chooseRecruit(true));
+  root.querySelector('[data-play-recruit-no]')!.addEventListener('click',()=>chooseRecruit(false));
+  root.querySelector('[data-play-return-portal]')!.addEventListener('click',()=>{if(active()){const result=game!.returnToPortal();if(result.ok){clearInput();resize();draw(performance.now());canvas.focus({preventScroll:true});}}});
   root.addEventListener('keydown', keydown);
   root.addEventListener('focusout', focusout);
   window.addEventListener('keydown', windowKeydown);
@@ -327,6 +344,12 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
     // キーボード・支援技術からのボタン操作。
     button.addEventListener('click', event => { if (event.detail === 0) move(button.dataset.direction as Direction, performance.now()); });
   });
+  root.querySelector('[data-play-reload]')!.addEventListener('click', () => { if (game?.saveConflict) window.location.reload(); });
+  const savedElsewhere = (event: StorageEvent) => {
+    if (event.key !== null && event.key !== 'tagquest.play-save.v1' || !game?.saveConflict) return;
+    clearInput(); draw(performance.now());
+  };
+  window.addEventListener('storage', savedElsewhere);
   root.querySelector('[data-play-reset]')!.addEventListener('click', () => {
     if (!game || !active() || !window.confirm('レベル・お金・所持品・装備・進行をリセットして、最初から始めます。よろしいですか？')) return;
     clearTransition(); seenEncounter = null; menus.reset();
@@ -365,6 +388,7 @@ export function mountPlayView(root: HTMLElement, characters: PlayCharacters, isA
     },
     stop,
     dispose(): void {
+      window.removeEventListener('storage', savedElsewhere);
       stop(); battle.dispose();
       root.removeEventListener('keydown', keydown);
       root.removeEventListener('focusout', focusout);

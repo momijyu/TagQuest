@@ -1,0 +1,14 @@
+{
+  "compiler/maps/adventure-small.json": "68e8aa01ff8a01488a4435d7662303a79e4858a46ea1000a92ae8cd5acacd8de",
+  "art/adventure-small/README.md": "e3ede6d8f56405d21b657e378289043dcccab088c6d5ea338fe1e2507f25882a",
+  "art/adventure-small/castle.png": "68d90f844e0719e24e0ec7eabde596f29703385311e5a626fb6507ee621ba703",
+  "art/adventure-small/cave.png": "024051dc98a62f5c1cfc0d2d68a80fbdd94bf76630f02bf3afc3f6a2c037b2f1",
+  "art/adventure-small/demon-castle.png": "9525b97aeac689b7515a8e4794049b8f7f11a9f25ca440761d3bc348bb809d75",
+  "art/adventure-small/forest.png": "36a61d544be08a934a529ed32e6a678dd16725046e0acc06b46231f5c44b6b55",
+  "art/adventure-small/town.png": "1698c1b5deee495202f1271df00ca4d664c7c1866fc61730c2a6ffe642485e24",
+  "art/adventure-small/world.bin": "183209444663027a9a3e0308fac0513ada6a0cfa1775f7dcacd8db08cba2950c",
+  "art/adventure-small/world.json": "bfcd6247e0134dcfcb34284fe832306020ee876886cdd350f8fa6c98f5221c00",
+  "art/adventure-small/world.png": "f069c6b34a2e2beef7e3c105b92d17fd84400e1c91be3d36beec0ac0eb4a5a7c",
+  "art/adventure-small/world.report.json": "cc8cff1364e4467bf5bde2f78c47c4891fc013c8e9dd601b62c20be1cb48c4cc",
+  "art/adventure-small/world.url.txt": "c1668fea8596a415ab0f79c04c15db43d45f1ddbde271dee5523cc5cd68c15aa"
+}

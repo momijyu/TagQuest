@@ -4,5 +4,15 @@
   "armor-shop": 24,
   "item-shop": 24,
   "house-red": 16,
-  "house-slate": 16
+  "house-slate": 16,
+  "inn-building": 16,
+  "tavern": 16,
+  "church": 16,
+  "witch-hut": 16,
+  "blacksmith-building": 16,
+  "teleport-shrine": 16,
+  "casino-building": 16,
+  "observatory": 16,
+  "port-building": 16,
+  "monster-corral": 16
 }

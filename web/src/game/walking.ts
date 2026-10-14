@@ -1,3 +1,4 @@
+import { facilityServices, facilityGreetings } from '../data/facilities';
 import type { SceneData } from '../codec/scenes';
 import catalog from '../data/scene-catalog.json';
 import { playerCollisionFrame } from '../data/player-placement';
@@ -10,7 +11,7 @@ import { isWorldLocation } from '../data/objects/world-locations';
 
 export type Direction = 'front' | 'back' | 'left' | 'right';
 export interface Position { readonly x: number; readonly y: number }
-const walkableTiles = new Set(['void-rift', 'marble', 'carpet', 'grass', 'dirt', 'brick', 'bridge', 'forest-ground', 'sand', 'cave-floor', 'demon-floor', 'demon-carpet', 'world-forest', 'meadow-flowers', 'ruins-floor']);
+const walkableTiles = new Set(['bog-ground', 'ice-ground', 'ember-ground', 'void-rift', 'marble', 'carpet', 'grass', 'dirt', 'brick', 'bridge', 'forest-ground', 'sand', 'cave-floor', 'demon-floor', 'demon-carpet', 'world-forest', 'meadow-flowers', 'ruins-floor']);
 type Rectangle = Position & { readonly width: number; readonly height: number };
 export interface GameMessage { readonly speaker: string; readonly text: string; readonly dialogue?: Dialogue; readonly shopKind?: string; readonly battleEntityIndex?: number }
 const overlaps = (a: Rectangle, b: Rectangle) => a.x < b.x + b.width && a.x + a.width > b.x
@@ -45,7 +46,7 @@ export function interactionTarget(scene: SceneData, position: Position, directio
       const throne = entity.kind === 'throne' || entity.kind === 'demon-throne';
       if (throne && (direction !== 'back' || playerCollisionFrame(position).y < frame.y + frame.height)) continue;
       if (removed.has(index) || entity.kind === 'loot' && collected.has(index)
-        || !(isNpc(entity.kind) && (entity.dialogue || entity.battleEvent || (entity.kind.endsWith('-merchant') || entity.kind === 'innkeeper')) || entity.kind === 'loot' && entity.itemId !== undefined
+        || !(isNpc(entity.kind) && (entity.dialogue || entity.battleEvent || (entity.kind.endsWith('-merchant') || (['innkeeper','guild-master','sister','alchemist','bounty-board'].includes(entity.kind) || facilityServices.some(kind => kind === entity.kind)))) || entity.kind === 'loot' && entity.itemId !== undefined
           || object)) continue;
       // 店員は同じ売り場のカウンター越しに、下側から2マスまで話せる。
       const shop = direction === 'back' && entity.kind.endsWith('-merchant') ? scene.entities.find(candidate => {
@@ -150,10 +151,10 @@ export function createWalkingGame(source: SceneData, entry?: { position: Positio
         return;
       }
       if (chest) opened.add(index);
-      if (entity.dialogue || entity.battleEvent || (entity.kind.endsWith('-merchant') || entity.kind === 'innkeeper')) messages.push({ speaker: dialogueSpeaker(entity.dialogue, npcNames[entity.kind] ?? ''), text: entity.dialogue ? dialogueText(entity.dialogue) : entity.battleEvent ? '戦いが始まる！' : 'いらっしゃい！',
+      if (entity.dialogue || entity.battleEvent || (entity.kind.endsWith('-merchant') || (['innkeeper','guild-master','sister','alchemist','bounty-board'].includes(entity.kind) || facilityServices.some(kind => kind === entity.kind)))) messages.push({ speaker: dialogueSpeaker(entity.dialogue, npcNames[entity.kind] ?? ''), text: entity.dialogue ? dialogueText(entity.dialogue) : entity.battleEvent ? '戦いが始まる！' : entity.kind==='bounty-board' ? inspectionText(entity.kind) : facilityGreetings[entity.kind] ?? 'いらっしゃい！',
         ...(entity.dialogue ? { dialogue: entity.dialogue } : {}),
         ...(entity.battleEvent ? { battleEntityIndex: index } : {}),
-        ...((entity.kind.endsWith('-merchant') || entity.kind === 'innkeeper') ? { shopKind: entity.kind } : {}) });
+        ...((entity.kind.endsWith('-merchant') || (['innkeeper','guild-master','sister','alchemist','bounty-board'].includes(entity.kind) || facilityServices.some(kind => kind === entity.kind))) ? { shopKind: entity.kind } : {}) });
       else if (entity.itemId === undefined || collected.has(index)) {
         if (object) messages.push({ speaker: '', text: inspectionText(entity.kind) });
       }

@@ -1,0 +1,64 @@
+{
+  "id": 17,
+  "name": "灼熱の飛竜 ヴォルケクス",
+  "characterId": "volkex",
+  "battleImage": "volkex",
+  "background": "cave",
+  "family": "dragon",
+  "stats": {
+    "hp": 1150,
+    "attack": 62,
+    "defense": 28,
+    "magic": 45
+  },
+  "canEscape": false,
+  "reward": {
+    "gold": 1500,
+    "experience": 600,
+    "items": [
+      {
+        "itemId": 33,
+        "quantity": 1
+      }
+    ]
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "magic-attack",
+        "text": "ヴォルケクスの火炎ブレス！",
+        "power": 1.4
+      },
+      {
+        "type": "attack",
+        "text": "ヴォルケクスのテイルウィップ！",
+        "power": 1.2
+      },
+      {
+        "type": "boost-attack",
+        "text": "ヴォルケクスは威嚇して翼を広げた！",
+        "power": 1.2,
+        "turns": 1
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "magic-attack",
+        "text": "ヴォルケクスの火炎ブレス！",
+        "power": 1.4
+      },
+      {
+        "type": "attack",
+        "text": "ヴォルケクスのテイルウィップ！",
+        "power": 1.2
+      },
+      {
+        "type": "boost-attack",
+        "text": "ヴォルケクスは威嚇して翼を広げた！",
+        "power": 1.2,
+        "turns": 1
+      }
+    ]
+  },
+  "boss": true
+}

@@ -15,144 +15,172 @@
     "id": 1,
     "name": "火の玉",
     "kind": "spell",
-    "description": "敵を魔法で攻撃（基礎12）。魔力で威力が上がる",
+    "description": "小さな火の粉を放ち、敵の足元をパチパチと焦がす初級の火炎魔法。",
     "mpCost": 3,
     "learnLevel": 1,
     "effect": {
       "type": "magic-damage",
-      "amount": 12
+      "amount": 12,
+      "magicScale": 0.4
     }
   },
   {
     "id": 2,
     "name": "癒し",
     "kind": "spell",
-    "description": "自分のHPを回復（基礎20）。魔力で威力が上がる",
+    "description": "やさしい祈りの光が傷口をそっと包み込み、痛みを和らげる初級の回復魔法。",
     "mpCost": 3,
     "learnLevel": 1,
     "effect": {
       "type": "heal-hp",
-      "amount": 20
+      "amount": 21,
+      "magicScale": 0.3,
+      "amountRange": {
+        "min": 18,
+        "max": 24
+      }
     }
   },
   {
     "id": 3,
     "name": "氷の矢",
     "kind": "spell",
-    "description": "敵を魔法で攻撃（基礎18）。魔力で威力が上がる",
+    "description": "鋭く尖った冷気の矢を撃ち放ち、敵の急所を射抜く氷結魔法。",
     "mpCost": 4,
     "learnLevel": 3,
     "effect": {
       "type": "magic-damage",
-      "amount": 18
+      "amount": 18,
+      "magicScale": 0.4
     }
   },
   {
     "id": 4,
     "name": "大きな癒し",
     "kind": "spell",
-    "description": "自分のHPを回復（基礎50）。魔力で威力が上がる",
+    "description": "あたたかな光が全身を巡り、大きな傷口をも速やかにふさぐ中級の回復魔法。",
     "mpCost": 6,
-    "learnLevel": 5,
+    "learnLevel": 7,
     "effect": {
       "type": "heal-hp",
-      "amount": 50
+      "amount": 50,
+      "magicScale": 0.6,
+      "amountRange": {
+        "min": 45,
+        "max": 55
+      }
     }
   },
   {
     "id": 5,
     "name": "雷撃",
     "kind": "spell",
-    "description": "敵を魔法で攻撃（基礎36）。魔力で威力が上がる",
+    "description": "頭上の暗雲から閃光を呼び寄せ、激しい雷を叩き落とす雷撃魔法。",
     "mpCost": 7,
     "learnLevel": 8,
     "effect": {
       "type": "magic-damage",
-      "amount": 36
+      "amount": 36,
+      "magicScale": 0.7
     }
   },
   {
     "id": 6,
     "name": "火炎",
     "kind": "spell",
-    "description": "敵を魔法で攻撃（基礎60）。魔力で威力が上がる",
+    "description": "渦巻く紅蓮の業火が敵を包み込み、骨まで焼き尽くす上級の火炎魔法。",
     "mpCost": 10,
     "learnLevel": 12,
     "effect": {
       "type": "magic-damage",
-      "amount": 60
+      "amount": 60,
+      "magicScale": 0.7
     }
   },
   {
     "id": 7,
     "name": "深い癒し",
     "kind": "spell",
-    "description": "自分のHPを回復（基礎120）。魔力で威力が上がる",
+    "description": "清らかな聖なる祝福の光が傷を深くまで癒し、活力を取り戻す上級の回復魔法。",
     "mpCost": 12,
-    "learnLevel": 16,
+    "learnLevel": 18,
     "effect": {
       "type": "heal-hp",
-      "amount": 120
+      "amount": 110,
+      "magicScale": 1.0,
+      "amountRange": {
+        "min": 100,
+        "max": 120
+      }
     }
   },
   {
     "id": 8,
     "name": "氷嵐",
     "kind": "spell",
-    "description": "敵を魔法で攻撃（基礎110）。魔力で威力が上がる",
+    "description": "猛烈な吹雪と無数の氷刃が舞い狂い、敵を白銀に凍てつかせる大魔法。",
     "mpCost": 16,
     "learnLevel": 24,
     "effect": {
       "type": "magic-damage",
-      "amount": 110
+      "amount": 110,
+      "magicScale": 1
     }
   },
   {
     "id": 9,
     "name": "雷鳴",
     "kind": "spell",
-    "description": "敵を魔法で攻撃（基礎170）。魔力で威力が上がる",
+    "description": "天と地を揺るがす轟雷が炸裂し、あらゆるものを撃ち砕く極大魔法。",
     "mpCost": 22,
     "learnLevel": 32,
     "effect": {
       "type": "magic-damage",
-      "amount": 170
+      "amount": 170,
+      "magicScale": 1.2
     }
   },
   {
     "id": 10,
     "name": "命の光",
     "kind": "spell",
-    "description": "自分のHPを回復（基礎250）。魔力で威力が上がる",
+    "description": "溢れんばかりの生命の輝きが満ち、致命の重傷さえもたちまち癒やす奇跡の秘術。",
     "mpCost": 20,
-    "learnLevel": 40,
+    "learnLevel": 35,
     "effect": {
       "type": "heal-hp",
-      "amount": 250
+      "amount": 240,
+      "magicScale": 1.4,
+      "amountRange": {
+        "min": 220,
+        "max": 260
+      }
     }
   },
   {
     "id": 11,
     "name": "星落とし",
     "kind": "spell",
-    "description": "敵を魔法で攻撃（基礎300）。魔力で威力が上がる",
+    "description": "夜空の星屑を束ねて隕石のごとく地上へ降り注がせる、伝説の禁断古代魔法。",
     "mpCost": 36,
     "learnLevel": 60,
     "effect": {
       "type": "magic-damage",
-      "amount": 300
+      "amount": 300,
+      "magicScale": 2
     }
   },
   {
     "id": 12,
     "name": "奇跡の癒し",
     "kind": "spell",
-    "description": "自分のHPを回復（基礎600）。魔力で威力が上がる",
+    "description": "まばゆい奇跡の光が全身を包み、傷と疲労を完全に洗い流す究極の癒し。",
     "mpCost": 32,
     "learnLevel": 80,
     "effect": {
       "type": "heal-hp",
-      "amount": 600
+      "amount": 600,
+      "magicScale": 2
     }
   },
   {
@@ -161,7 +189,7 @@
     "kind": "technique",
     "description": "攻撃力の2倍で攻撃",
     "mpCost": 5,
-    "learnLevel": 6,
+    "learnLevel": 8,
     "effect": {
       "type": "physical-damage",
       "power": 2
@@ -201,6 +229,95 @@
     "effect": {
       "type": "physical-damage",
       "power": 4
+    }
+  },
+  {
+    "id": 17,
+    "name": "ゲート",
+    "kind": "spell",
+    "description": "今いる場所に光の魔方陣を刻む。街の入口からいつでもこの場所へ瞬時に戻ることができる。",
+    "mpCost": 5,
+    "learnLevel": 10,
+    "effect": {
+      "type": "return-mark"
+    }
+  },
+  {
+    "id": 18,
+    "name": "エスケープ",
+    "kind": "spell",
+    "description": "つむじ風を身にまとい、暗き迷宮や洞窟の入口へと一瞬で舞い戻る。",
+    "mpCost": 4,
+    "learnLevel": 6,
+    "effect": {
+      "type": "dungeon-escape"
+    }
+  },
+  {
+    "id": 19,
+    "name": "ステルス",
+    "kind": "spell",
+    "description": "聖なる霧で気配を覆い隠し、弱い魔物との遭遇を40歩の間完全に防ぎ止める。",
+    "mpCost": 6,
+    "learnLevel": 10,
+    "effect": {
+      "type": "no-encounters",
+      "steps": 40
+    }
+  },
+  {
+    "id": 20,
+    "name": "サンダー",
+    "kind": "spell",
+    "description": "天を裂く青白き稲妻。敵の硬い外殻や装甲を一切無視して直撃する。",
+    "mpCost": 9,
+    "learnLevel": 16,
+    "effect": {
+      "type": "magic-damage",
+      "amount": 35,
+      "magicScale": 1.1,
+      "ignoreDefense": true
+    }
+  },
+  {
+    "id": 21,
+    "name": "ドレイン",
+    "kind": "spell",
+    "description": "暗き魔力で敵の生命力を吸い取り、与えた痛みの半分を我が身の力に変える。",
+    "mpCost": 8,
+    "learnLevel": 12,
+    "effect": {
+      "type": "magic-damage",
+      "amount": 28,
+      "magicScale": 0.7,
+      "drainFraction": 0.5
+    }
+  },
+  {
+    "id": 22,
+    "name": "フロスト",
+    "kind": "spell",
+    "description": "極寒の冷気で敵の芯まで凍てつかせ、次なる動きを封じ込める。",
+    "mpCost": 12,
+    "learnLevel": 22,
+    "effect": {
+      "type": "magic-damage",
+      "amount": 45,
+      "magicScale": 1,
+      "freeze": true
+    }
+  },
+  {
+    "id": 23,
+    "name": "マナバリア",
+    "kind": "spell",
+    "description": "魔力の盾を張り巡らせ、敵から受ける魔法攻撃の威力を半減する。",
+    "mpCost": 10,
+    "learnLevel": 15,
+    "effect": {
+      "type": "magic-barrier",
+      "turns": 3,
+      "reduction": 0.5
     }
   }
 ]

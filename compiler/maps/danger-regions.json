@@ -1,0 +1,610 @@
+{
+  "stages": [
+    {
+      "id": 0,
+      "name": "霧深き腐海・毒の湿原",
+      "width": 19,
+      "height": 17,
+      "spawn": {
+        "x": 144,
+        "y": 224
+      },
+      "spawnAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "bog-ground",
+            "x": 1,
+            "y": 1,
+            "width": 17,
+            "height": 15
+          },
+          {
+            "tile": "cave-wall",
+            "x": 1,
+            "y": 1,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "cave-wall",
+            "x": 17,
+            "y": 1,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "dirt",
+            "x": 9,
+            "y": 0,
+            "width": 1,
+            "height": 17
+          },
+          {
+            "tile": "water",
+            "x": 12,
+            "y": 6,
+            "width": 4,
+            "height": 4
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "signpost",
+          "x": 160,
+          "y": 224,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 88
+          }
+        },
+        {
+          "kind": "witch-hut",
+          "x": 48,
+          "y": 48,
+          "parameters": []
+        },
+        {
+          "kind": "alchemist",
+          "x": 64,
+          "y": 112,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 99
+          }
+        }
+      ],
+      "exits": [
+        {
+          "x": 9,
+          "y": 16,
+          "targetStageId": -1,
+          "targetX": 5,
+          "targetY": 11,
+          "direction": "front"
+        },
+        {
+          "x": 9,
+          "y": 0,
+          "targetStageId": 1,
+          "targetX": 6,
+          "targetY": 10,
+          "direction": "back"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "rate": 6,
+        "enemyId": 18,
+        "enemies": [
+          {
+            "enemyId": 18,
+            "weight": 60
+          },
+          {
+            "enemyId": 19,
+            "weight": 40
+          }
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "name": "蜘蛛の毒巣",
+      "width": 13,
+      "height": 13,
+      "spawn": {
+        "x": 96,
+        "y": 144
+      },
+      "spawnAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "cave-wall",
+            "x": 1,
+            "y": 1,
+            "width": 11,
+            "height": 11
+          },
+          {
+            "tile": "bog-ground",
+            "x": 2,
+            "y": 2,
+            "width": 9,
+            "height": 10
+          },
+          {
+            "tile": "dirt",
+            "x": 6,
+            "y": 10,
+            "width": 1,
+            "height": 3
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "unique-monster",
+          "x": 96,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 89
+          },
+          "battleEvent": {
+            "enemyId": 15,
+            "once": true,
+            "clear": false
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 144,
+          "y": 32,
+          "parameters": [],
+          "itemId": 70
+        }
+      ],
+      "exits": [
+        {
+          "x": 6,
+          "y": 12,
+          "targetStageId": 0,
+          "targetX": 9,
+          "targetY": 1,
+          "direction": "front"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "凍てつく霊峰・氷狼の谷",
+      "width": 19,
+      "height": 17,
+      "spawn": {
+        "x": 144,
+        "y": 224
+      },
+      "spawnAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "ice-ground",
+            "x": 1,
+            "y": 1,
+            "width": 17,
+            "height": 15
+          },
+          {
+            "tile": "cave-wall",
+            "x": 1,
+            "y": 1,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "cave-wall",
+            "x": 17,
+            "y": 1,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "dirt",
+            "x": 9,
+            "y": 0,
+            "width": 1,
+            "height": 17
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "signpost",
+          "x": 160,
+          "y": 224,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 90
+          }
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 48,
+          "y": 64,
+          "parameters": []
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 224,
+          "y": 64,
+          "parameters": []
+        },
+        {
+          "kind": "cave-crystal",
+          "x": 64,
+          "y": 176,
+          "parameters": []
+        }
+      ],
+      "exits": [
+        {
+          "x": 9,
+          "y": 16,
+          "targetStageId": -1,
+          "targetX": 10,
+          "targetY": 11,
+          "direction": "front"
+        },
+        {
+          "x": 9,
+          "y": 0,
+          "targetStageId": 3,
+          "targetX": 6,
+          "targetY": 10,
+          "direction": "back"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "rate": 6,
+        "enemyId": 20,
+        "enemies": [
+          {
+            "enemyId": 20,
+            "weight": 60
+          },
+          {
+            "enemyId": 21,
+            "weight": 40
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "name": "氷狼の洞穴",
+      "width": 13,
+      "height": 13,
+      "spawn": {
+        "x": 96,
+        "y": 144
+      },
+      "spawnAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "cave-wall",
+            "x": 1,
+            "y": 1,
+            "width": 11,
+            "height": 11
+          },
+          {
+            "tile": "ice-ground",
+            "x": 2,
+            "y": 2,
+            "width": 9,
+            "height": 10
+          },
+          {
+            "tile": "dirt",
+            "x": 6,
+            "y": 10,
+            "width": 1,
+            "height": 3
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "unique-monster",
+          "x": 96,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 91
+          },
+          "battleEvent": {
+            "enemyId": 16,
+            "once": true,
+            "clear": false
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 144,
+          "y": 32,
+          "parameters": [],
+          "itemId": 69
+        }
+      ],
+      "exits": [
+        {
+          "x": 6,
+          "y": 12,
+          "targetStageId": 2,
+          "targetX": 9,
+          "targetY": 1,
+          "direction": "front"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "灼熱の古戦場・竜の巣",
+      "width": 19,
+      "height": 17,
+      "spawn": {
+        "x": 144,
+        "y": 224
+      },
+      "spawnAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "ember-ground",
+            "x": 1,
+            "y": 1,
+            "width": 17,
+            "height": 15
+          },
+          {
+            "tile": "cave-wall",
+            "x": 1,
+            "y": 1,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "cave-wall",
+            "x": 17,
+            "y": 1,
+            "width": 1,
+            "height": 15
+          },
+          {
+            "tile": "dirt",
+            "x": 9,
+            "y": 0,
+            "width": 1,
+            "height": 17
+          },
+          {
+            "tile": "water",
+            "x": 3,
+            "y": 4,
+            "width": 4,
+            "height": 4
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "signpost",
+          "x": 160,
+          "y": 224,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 92
+          }
+        },
+        {
+          "kind": "world-mountain",
+          "x": 208,
+          "y": 64,
+          "parameters": []
+        },
+        {
+          "kind": "world-mountain",
+          "x": 208,
+          "y": 80,
+          "parameters": []
+        },
+        {
+          "kind": "world-mountain",
+          "x": 208,
+          "y": 96,
+          "parameters": []
+        }
+      ],
+      "exits": [
+        {
+          "x": 9,
+          "y": 16,
+          "targetStageId": -1,
+          "targetX": 15,
+          "targetY": 18,
+          "direction": "front"
+        },
+        {
+          "x": 9,
+          "y": 0,
+          "targetStageId": 5,
+          "targetX": 6,
+          "targetY": 10,
+          "direction": "back"
+        }
+      ],
+      "encounter": {
+        "enabled": true,
+        "rate": 6,
+        "enemyId": 22,
+        "enemies": [
+          {
+            "enemyId": 22,
+            "weight": 60
+          },
+          {
+            "enemyId": 23,
+            "weight": 40
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "name": "紅蓮の竜穴",
+      "width": 13,
+      "height": 13,
+      "spawn": {
+        "x": 96,
+        "y": 144
+      },
+      "spawnAnchor": "frame",
+      "npcAnchor": "frame",
+      "buildingAnchor": "frame",
+      "floor": {
+        "default": "empty",
+        "rectangles": [
+          {
+            "tile": "cave-wall",
+            "x": 1,
+            "y": 1,
+            "width": 11,
+            "height": 11
+          },
+          {
+            "tile": "ember-ground",
+            "x": 2,
+            "y": 2,
+            "width": 9,
+            "height": 10
+          },
+          {
+            "tile": "dirt",
+            "x": 6,
+            "y": 10,
+            "width": 1,
+            "height": 3
+          }
+        ]
+      },
+      "entities": [
+        {
+          "kind": "unique-monster",
+          "x": 96,
+          "y": 48,
+          "parameters": [],
+          "dialogue": {
+            "type": "template",
+            "id": 93
+          },
+          "battleEvent": {
+            "enemyId": 17,
+            "once": true,
+            "clear": false
+          }
+        },
+        {
+          "kind": "treasure-chest",
+          "x": 48,
+          "y": 32,
+          "parameters": [],
+          "itemId": 73
+        }
+      ],
+      "exits": [
+        {
+          "x": 6,
+          "y": 12,
+          "targetStageId": 4,
+          "targetX": 9,
+          "targetY": 1,
+          "direction": "front"
+        }
+      ]
+    }
+  ],
+  "templateIds": {
+    "region": [
+      88,
+      90,
+      92
+    ],
+    "nest": [
+      89,
+      91,
+      93
+    ],
+    "warning": [
+      94,
+      95,
+      96
+    ],
+    "guild": 97,
+    "church": 98,
+    "alchemy": 99
+  },
+  "entryCoordinates": [
+    {
+      "x": 5,
+      "y": 10
+    },
+    {
+      "x": 10,
+      "y": 10
+    },
+    {
+      "x": 15,
+      "y": 17
+    }
+  ],
+  "warningCoordinates": [
+    {
+      "x": 4,
+      "y": 10
+    },
+    {
+      "x": 9,
+      "y": 12
+    },
+    {
+      "x": 14,
+      "y": 19
+    }
+  ]
+}

@@ -37,6 +37,8 @@ export interface EditableScene {
 }
 export interface World { format: 'tagquest-world-editor-v1'; stages: EditableScene[] }
 export const labels: Record<string, string> = {
+  'blacksmith-building':'鍛冶屋', 'teleport-shrine':'旅の祠', 'casino-building':'遊技場', observatory:'占いの館', 'port-building':'港の詰所', 'monster-corral':'モンスター牧場', ship:'帆船', 'iron-gate':'鉄格子', 'well-entrance':'地下水路の井戸', blacksmith:'鍛冶屋の主人', 'shrine-keeper':'祠の番人', 'casino-dealer':'遊技場の係', 'black-market-dealer':'闇市の盗賊', 'fortune-teller':'占い師', captain:'船長', 'corral-keeper':'牧場の主人',
+  'inn-building':'宿屋', tavern:'酒場・ギルド', church:'教会', 'witch-hut':'魔女の工房', 'bounty-board':'賞金首掲示板', 'guild-master':'ギルドマスター', sister:'シスター', alchemist:'調合の魔女', 'unique-monster':'巣窟の主', 'bog-ground':'毒の湿原の地面', 'ice-ground':'氷の地面', 'ember-ground':'火山の地面',
   castle: '城の外観', town: '街', world: 'フィールド', forest: '森', cave: '洞窟', 'demon-castle': '魔王城',
   marble: '大理石', carpet: '赤いカーペット', 'wall-top': '城の壁', 'wall-left': '左の壁',
   'wall-right': '右の壁', 'wall-top-left': '左上の壁', 'wall-top-right': '右上の壁',

@@ -106,5 +106,179 @@
       "quantity": 1
     },
     "gold": 10
+  },
+  {
+    "id": 6,
+    "ingredients": [
+      {
+        "itemId": 34,
+        "quantity": 3
+      }
+    ],
+    "result": {
+      "itemId": 28,
+      "quantity": 1
+    },
+    "gold": 40
+  },
+  {
+    "id": 7,
+    "ingredients": [
+      {
+        "itemId": 35,
+        "quantity": 3
+      }
+    ],
+    "result": {
+      "itemId": 29,
+      "quantity": 1
+    },
+    "gold": 50
+  },
+  {
+    "id": 8,
+    "ingredients": [
+      {
+        "itemId": 36,
+        "quantity": 2
+      },
+      {
+        "itemId": 18,
+        "quantity": 2
+      }
+    ],
+    "result": {
+      "itemId": 37,
+      "quantity": 1
+    },
+    "gold": 30
+  },
+  {
+    "id": 9,
+    "ingredients": [
+      {
+        "itemId": 34,
+        "quantity": 2
+      },
+      {
+        "itemId": 35,
+        "quantity": 2
+      },
+      {
+        "itemId": 36,
+        "quantity": 2
+      }
+    ],
+    "result": {
+      "itemId": 38,
+      "quantity": 1
+    },
+    "gold": 60
+  },
+  {
+    "id": 10,
+    "ingredients": [
+      {
+        "itemId": 44,
+        "quantity": 1
+      },
+      {
+        "itemId": 18,
+        "quantity": 6
+      },
+      {
+        "itemId": 14,
+        "quantity": 3
+      }
+    ],
+    "result": {
+      "itemId": 46,
+      "quantity": 1
+    },
+    "gold": 300
+  },
+  {
+    "id": 11,
+    "ingredients": [
+      {
+        "itemId": 36,
+        "quantity": 6
+      },
+      {
+        "itemId": 17,
+        "quantity": 4
+      }
+    ],
+    "result": {
+      "itemId": 52,
+      "quantity": 1
+    },
+    "gold": 600
+  },
+  {
+    "id": 12,
+    "ingredients": [
+      {
+        "itemId": 53,
+        "quantity": 1
+      },
+      {
+        "itemId": 36,
+        "quantity": 10
+      },
+      {
+        "itemId": 35,
+        "quantity": 4
+      }
+    ],
+    "result": {
+      "itemId": 56,
+      "quantity": 1
+    },
+    "gold": 1000
+  },
+  {
+    "id": 13,
+    "ingredients": [
+      {
+        "itemId": 18,
+        "quantity": 5
+      },
+      {
+        "itemId": 14,
+        "quantity": 4
+      },
+      {
+        "itemId": 35,
+        "quantity": 3
+      }
+    ],
+    "result": {
+      "itemId": 61,
+      "quantity": 1
+    },
+    "gold": 400
+  },
+  {
+    "id": 14,
+    "ingredients": [
+      {
+        "itemId": 35,
+        "quantity": 5
+      },
+      {
+        "itemId": 18,
+        "quantity": 6
+      },
+      {
+        "itemId": 34,
+        "quantity": 3
+      }
+    ],
+    "result": {
+      "itemId": 72,
+      "quantity": 1
+    },
+    "gold": 200
   }
 ]

@@ -14,5 +14,19 @@
   "treasure-chest",
   "signpost",
   "cave-crystal",
-  "stone-tablet"
+  "stone-tablet",
+  "inn-building",
+  "tavern",
+  "church",
+  "witch-hut",
+  "bounty-board",
+  "blacksmith-building",
+  "teleport-shrine",
+  "casino-building",
+  "observatory",
+  "port-building",
+  "monster-corral",
+  "ship",
+  "iron-gate",
+  "well-entrance"
 ]

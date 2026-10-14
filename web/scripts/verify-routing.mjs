@@ -123,7 +123,7 @@ try {
     const verifyItemList = () => {
       const groups = elements.get('#item-catalog').children;
       assert.deepEqual(groups.map(group => group.children[0].textContent), ['回復・治療', '武器', '防具', '装飾品', '素材']);
-      assert.deepEqual(groups.map(group => group.children[1].children.length), [7, 6, 9, 3, 6]);
+      assert.deepEqual(groups.map(group => group.children[1].children.length), [14, 16, 22, 14, 10]);
       for (const group of groups) assert.equal(group.children[0].children[0].textContent, `${group.children[1].children.length}種類`);
       const displayed = groups.flatMap(group => group.children[1].children.map(row => [row.children[0].textContent, row.children[1].textContent]));
       assert.deepEqual(displayed.sort(), catalog.map(item => [item.name, item.description]).sort(), 'every current item and its effect/material use appears exactly once');
@@ -134,7 +134,7 @@ try {
       const groups = elements.get('#enemy-catalog').children;
       assert.equal(groups.length, 3);
       assert.deepEqual(groups.map(group => group.children[0].textContent), ['草原・森の魔物', '洞窟の魔物', 'ボス・強敵']);
-      assert.deepEqual(groups.map(group => group.children[1].children.length), [3, 4, 7]);
+      assert.deepEqual(groups.map(group => group.children[1].children.length), [3, 4, 16]);
       assert.deepEqual(groups.map(group => group.dataset.category), ['forest', 'cave', 'boss']);
       for (const group of groups) { assert.equal(group.className, 'enemy-category'); assert.equal(group.children[0].children[0].textContent, `${group.children[1].children.length}種類`); }
       const cards = groups.flatMap(group => group.children[1].children);
@@ -142,7 +142,7 @@ try {
       assert.deepEqual(cards.map(card => Number(card.dataset.enemyId)).sort((a,b)=>a-b), enemies.map(enemy=>enemy.id).sort((a,b)=>a-b), 'all enemies, including the king and dimension creatures, appear once');
       assert.deepEqual(groups[0].children[1].children.map(card=>Number(card.dataset.enemyId)), [1,2,3]);
       assert.deepEqual(groups[1].children[1].children.map(card=>Number(card.dataset.enemyId)), [5,6,7,10]);
-      assert.deepEqual(groups[2].children[1].children.map(card=>Number(card.dataset.enemyId)), [0,8,4,11,12,13,14]);
+      assert.deepEqual(groups[2].children[1].children.map(card=>Number(card.dataset.enemyId)), [0,8,4,11,12,13,14,15,16,17,18,19,20,21,22,23]);
       for (const card of cards) {
         const enemy = enemies.find(enemy=>enemy.id===Number(card.dataset.enemyId));
         assert.equal(card.children[1].children[0].textContent, enemy.name);

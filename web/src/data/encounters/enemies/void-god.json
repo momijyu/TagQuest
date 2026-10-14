@@ -58,5 +58,6 @@
     ]
   },
   "actionsPerTurn": 2,
-  "victoryMessage": "古代の虚無神を打ち倒し、世界の真の覇者となった！"
+  "victoryMessage": "古代の虚無神を打ち倒し、世界の真の覇者となった！",
+  "boss": true
 }

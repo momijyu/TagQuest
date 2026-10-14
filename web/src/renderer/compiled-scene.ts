@@ -1,3 +1,5 @@
+import { returnRune } from '../data/effects/return-rune';
+import { facilityBuildings, ship, ironGate } from '../data/objects/ultimate-facilities';
 import { worldTerrainTiles } from '../data/tiles/world-terrain';
 import { explorationTiles } from '../data/tiles/exploration';
 import { caveCrystal, signpost, stoneTablet } from '../data/objects/exploration';
@@ -35,6 +37,9 @@ import { well } from '../data/objects/well';
 import { townHouses } from '../data/objects/town-houses';
 import { townNpcs } from '../data/characters/town-npcs';
 import { forestCaveNpcs } from '../data/characters/forest-cave-npcs';
+import { serviceBuildings, bountyBoard } from '../data/objects/service-buildings';
+import { dangerGrounds } from '../data/tiles/danger-grounds';
+import { enemyPixelSprites } from '../data/encounters/enemy-pixels';
 import { voidGod } from '../data/characters/void-god';
 import { demonLord } from '../data/characters/demon-lord';
 import { demonGuard } from '../data/characters/demon-guard';
@@ -51,14 +56,16 @@ const rift = { size: 16, palette: ['#271f47', '#7056b8', '#bba0f7', '#ebdcff'], 
   const distance = ((x - 7.5) / 5) ** 2 + ((y - 7.5) / 7) ** 2;
   return distance > 1 ? '0' : distance > 0.7 ? '3' : distance > 0.4 ? '1' : '0';
 }).join('')) };
-const tiles = { 'void-rift': rift,
+const tiles = { ...dangerGrounds, 'void-rift': rift,
   marble: castleFloor, carpet: castleCarpet, 'wall-top': castleWall,
   'wall-left': castleWallLeft, 'wall-right': castleWallRight,
   'wall-top-left': castleWallTopLeft, 'wall-top-right': castleWallTopRight,
   grass: townGrass, dirt: townDirt, brick: townBrick, water: castleMoat, bridge: castleBridge,
   empty: emptyTile, 'forest-ground': forestGround, sea: worldSea, sand: worldSand, 'cave-floor': caveFloor, 'cave-wall': caveWall, ...demonCastleTiles, ...worldTerrainTiles, ...explorationTiles,
 };
-const sprites = {
+const uniqueSprites = Object.fromEntries([[15,'queen-arachne'],[16,'fenrir'],[17,'volkex']].map(([id,name])=>{ const sprite=enemyPixelSprites[String(name)]; return [id,{...sprite,width:32,height:32,pixels:Array.from({length:32},(_,y)=>Array.from({length:32},(_,x)=>sprite.pixels[Math.floor(y*sprite.height/32)][x*2]).join(''))}]; }));
+const sisterSprite = { ...townNpcs.resident.sprite, palette: townNpcs.resident.sprite.palette.map((color,index)=>index===5?'#4b6789':index===6?'#e0e3dc':index===7?'#485263':index===8?'#7a8698':color) };
+const sprites = { ...facilityBuildings, ship, 'iron-gate': ironGate, 'well-entrance': well, blacksmith: townNpcs.traveler.sprite, 'shrine-keeper': sisterSprite, 'casino-dealer': townNpcs.traveler.sprite, 'black-market-dealer': townNpcs.traveler.sprite, 'fortune-teller': forestCaveNpcs['cave-witch'].sprite, captain: townNpcs.elder.sprite, 'corral-keeper': townNpcs.resident.sprite, ...serviceBuildings, 'bounty-board': bountyBoard, 'guild-master': townNpcs.elder.sprite, sister:sisterSprite, alchemist:forestCaveNpcs['cave-witch'].sprite, 'unique-monster':uniqueSprites[15],
   pillar, 'demon-pillar': demonPillar, castle: castleExterior, well, tree, signpost, 'cave-crystal': caveCrystal, 'stone-tablet': stoneTablet,
   'world-mountain': worldMountain, 'world-forest': worldForest,
   ...worldLocations,
@@ -119,7 +126,7 @@ export function entityFrame(entity: PlacedEntity): { x: number; y: number; width
 
 /** 民家は下側4×2マス、お店は下側中央4×4マス。屋根や奥壁の後ろは通れる。 */
 export function entityCollisionFrame(entity: PlacedEntity): { x: number; y: number; width: number; height: number } {
-  if (entity.kind === 'house-red' || entity.kind === 'house-slate' || entity.kind in shops) {
+  if (entity.kind === 'house-red' || entity.kind === 'house-slate' || entity.kind in serviceBuildings || entity.kind in facilityBuildings || entity.kind in shops) {
     const drawing = entityDrawingFrame(entity);
     const width = 64, height = entity.kind in shops ? 64 : 32;
     return { x: drawing.x + (drawing.width - width) / 2, y: drawing.y + drawing.height - height, width, height };
@@ -196,7 +203,7 @@ export function drawCompiledScene(
   context: CanvasRenderingContext2D,
   scene: SceneData,
   characters?: { readonly king: ImageSprite; readonly player: ImageSprite },
-  options: { readonly openedChests?: ReadonlySet<PlacedEntity> } = {},
+  options: { readonly returnPortal?: {readonly x:number;readonly y:number}; readonly openedChests?: ReadonlySet<PlacedEntity> } = {},
 ): void {
   drawTerrain(context, scene);
   for (const entity of scene.entities) if (entity.kind.startsWith('moat-')) drawBank(context, entity);
@@ -227,7 +234,7 @@ export function drawCompiledScene(
     if (kind in sprites) {
       const position = entityDrawingFrame(entity);
       const sprite = kind === 'treasure-chest' && options.openedChests?.has(entity)
-        ? openTreasureChest : kind === 'demon-lord' && entity.battleEvent?.enemyId === 11 ? voidGod : sprites[kind as keyof typeof sprites];
+        ? openTreasureChest : kind === 'unique-monster' ? uniqueSprites[entity.battleEvent?.enemyId ?? 15] ?? uniqueSprites[15] : kind === 'demon-lord' && entity.battleEvent?.enemyId === 11 ? voidGod : sprites[kind as keyof typeof sprites];
       drawSprite(context, sprite, position.x, position.y);
     }
     else if (kind in shops) {
@@ -240,6 +247,7 @@ export function drawCompiledScene(
       drawImageSprite(context, characters.king, position.x, position.y, 32 / characters.king.height);
     }
   }
+  if (options.returnPortal) drawSprite(context,returnRune,options.returnPortal.x,options.returnPortal.y+16);
   for (const entity of scene.entities) if (!hasDepth(entity)) drawEntity(entity);
   // 建物・木・NPC・宝箱を足元の奥行きで並べ、主人公の前後に分けて描く。
   // 同じ奥行きでは主人公を手前にする。

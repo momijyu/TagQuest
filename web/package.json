@@ -45,7 +45,17 @@
     "export:font": "python3 scripts/export-font.py",
     "verify:gameplay": "node scripts/verify-gameplay.mjs",
     "verify:magic": "node scripts/verify-magic.mjs",
-    "verify:postgame": "node scripts/verify-postgame.mjs"
+    "verify:postgame": "node scripts/verify-postgame.mjs",
+    "verify:expansion": "node scripts/verify-expansion.mjs",
+    "export:expanded": "node scripts/export-adventure.mjs --expanded",
+    "verify:ultimate": "node scripts/verify-ultimate.mjs",
+    "verify:spells": "node scripts/verify-spells.mjs",
+    "verify:equipment": "node scripts/verify-equipment.mjs",
+    "verify:balance": "node scripts/verify-balance.mjs",
+    "verify:leveling-gear": "node scripts/verify-leveling-gear.mjs",
+    "verify:curses": "node scripts/verify-curses.mjs",
+    "verify:save-recovery": "node scripts/verify-save-recovery.mjs",
+    "verify:saved-session": "node scripts/verify-saved-session.mjs"
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.3.3",

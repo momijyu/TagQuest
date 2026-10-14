@@ -8,10 +8,11 @@ const root = fileURLToPath(new URL('../..', import.meta.url)), out = mkdtempSync
 try {
   await build({ configFile: false, logLevel: 'silent', build: { lib: { entry: Object.fromEntries([
     ['state', 'game/player-state'], ['world', 'game/world'], ['config', 'data/encounters/combat-config'],
-    ['items', 'data/items'], ['recipes', 'data/exchanges'], ['shops', 'data/shops'],
+    ['progression', 'data/progression'], ['items', 'data/items'], ['recipes', 'data/exchanges'], ['shops', 'data/shops'],
   ].map(([name, file]) => [name, join(root, `web/src/${file}.ts`)])), formats: ['es'], fileName: (_, name) => `${name}.mjs` }, outDir: out } });
   const read = name => import(pathToFileURL(join(out, `${name}.mjs`)).href);
   const { createPlayerState } = await read('state'), { createWorldGame } = await read('world');
+  const { progressionConfig } = await read('progression');
   const { playerConfig } = await read('config'), { findItem } = await read('items');
   const { exchangeRecipes, parseExchangeRecipes } = await read('recipes'), { shopCatalog, parseShopCatalog } = await read('shops');
   const snapshot = state => ({ inventory: state.inventory, gold: state.gold, discovered: state.discoveredItems,
@@ -43,15 +44,22 @@ try {
     const before = snapshot(state); assert.equal(state.exchange(recipe.id).ok, false); assert.deepEqual(snapshot(state), before);
     const item = findItem(recipe.result.itemId);
     if (item.equipment) {
+      state.gainExperience(progressionConfig.levelThresholds[(item.equipment.requiredLevel ?? 1) - 1]);
+      const grown = state.baseStats;
       assert.equal(state.equip(item.id).ok, true);
-      assert.equal(state.definition.stats.attack, playerConfig.stats.attack + item.equipment.attack);
-      assert.equal(state.definition.stats.defense, playerConfig.stats.defense + item.equipment.defense);
-      assert.equal(state.definition.maxMp, playerConfig.maxMp + item.equipment.mp);
+      assert.equal(state.definition.stats.attack, grown.attack + item.equipment.attack);
+      assert.equal(state.definition.stats.defense, Math.max(0, grown.defense + item.equipment.defense));
+      assert.equal(state.definition.maxMp, grown.mp + item.equipment.mp);
     } else {
       state.setVitals({ hp: 1, mp: 0, poisoned: true });
       assert.equal(state.useItem(item.id).ok, true);
       if (item.effect.type === 'cure-poison') assert.equal(state.vitals.poisoned, false);
-      else assert.equal(state.vitals.hp, playerConfig.stats.hp);
+      else if (item.effect.type === 'heal-hp') assert.equal(state.vitals.hp, playerConfig.stats.hp);
+      else if (item.effect.type === 'heal-mp') assert.equal(state.vitals.mp, playerConfig.maxMp);
+      else {
+        const stat = item.effect.type === 'boost-hp' ? 'hp' : 'attack';
+        assert.equal(state.baseStats[stat], playerConfig.stats[stat] + item.effect.amount);
+      }
       assert.ok(state.discoveredItems.includes(item.id));
     }
   }
@@ -72,7 +80,7 @@ try {
   upgrade.unequip('weapon'); assert.equal(upgrade.exchange(4).ok, true); assert.equal(count(upgrade, 23), 2);
   before = snapshot(upgrade); assert.equal(upgrade.exchange(255).ok, false); assert.deepEqual(snapshot(upgrade), before);
   // Actual merchant interaction gates transactions and syncs field-picked materials.
-  for (const merchant of shopCatalog) {
+  for (const merchant of shopCatalog.filter(shop => shop.recipes?.length)) {
     const recipe = exchangeRecipes.find(recipe => recipe.id === merchant.recipes[0]);
     const scene = { id: 0, width: 5, height: 5, spawn: { x: 16, y: 32 }, tiles: new Uint8Array(25).fill(7),
       entities: [{ kind: merchant.merchant, x: 16, y: 16, parameters: [] }] };
@@ -100,5 +108,5 @@ try {
   fieldGame.move('back'); fieldGame.interact(); while (fieldGame.message) fieldGame.interact();
   assert.equal(fieldGame.exchange(0).ok, true); assert.equal(count(fieldGame, 13), 0);
   fieldGame.closeShop(); fieldGame.move('right'); assert.equal(count(fieldGame, 13), 0, 'walking inventory sync cannot credit spent loot again');
-  console.log('Exchanges: all six material recipes, consumable/equipment effects, shop gating, atomic shortages/fees/capacity, equipped-copy protection, collection and reset passed.');
+  console.log('Exchanges: all material recipes, consumable/equipment effects, shop gating, atomic shortages/fees/capacity, equipped-copy protection, collection and reset passed.');
 } finally { rmSync(out, { recursive: true, force: true }); }

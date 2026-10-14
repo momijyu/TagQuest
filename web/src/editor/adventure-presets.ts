@@ -1,3 +1,5 @@
+import { addFacilityDistrict } from './facility-presets';
+import { expandAdventure } from './world-expansion';
 import largeSource from '../../../compiler/maps/adventure-large.json';
 import smallSource from '../../../compiler/maps/adventure-small.json';
 import { createAdventureWorld, appendWorldSample } from './adventure';
@@ -11,8 +13,8 @@ export const adventurePresets = [
   { id: 'small', name: '小さな世界', entryStageId: 0 },
 ] as const;
 export function createAdventurePreset(size: AdventureSize): World {
-  if (size === 'normal') return createAdventureWorld();
-  if (size === 'large') return parseWorld(largeSource);
+  if (size === 'normal') return addFacilityDistrict(expandAdventure(createAdventureWorld()));
+  if (size === 'large') return addFacilityDistrict(expandAdventure(parseWorld(largeSource), 1.5));
   if (size === 'small') return parseWorld(smallSource);
   throw new Error('冒険のサイズが不明です。');
 }

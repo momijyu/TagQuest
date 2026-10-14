@@ -56,5 +56,6 @@
     ]
   },
   "canEscape": false,
-  "canEscapeBeforeAttacked": true
+  "canEscapeBeforeAttacked": true,
+  "boss": true
 }

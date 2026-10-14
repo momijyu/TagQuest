@@ -1,0 +1,50 @@
+{
+  "id": 23,
+  "name": "マグマジェル",
+  "characterId": "magma-gel",
+  "battleImage": "magma-gel",
+  "background": "cave",
+  "family": "slime",
+  "stats": {
+    "hp": 280,
+    "attack": 42,
+    "defense": 32,
+    "magic": 32
+  },
+  "reward": {
+    "gold": 80,
+    "experience": 160,
+    "items": [
+      {
+        "itemId": 36,
+        "quantity": 1
+      }
+    ]
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "attack",
+        "text": "マグマジェルの攻撃！",
+        "power": 1
+      },
+      {
+        "type": "magic-attack",
+        "text": "マグマジェルは魔力を放った！",
+        "power": 1.2
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "attack",
+        "text": "マグマジェルの攻撃！",
+        "power": 1
+      },
+      {
+        "type": "magic-attack",
+        "text": "マグマジェルは魔力を放った！",
+        "power": 1.2
+      }
+    ]
+  }
+}

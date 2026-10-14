@@ -20,8 +20,8 @@ try {
   const { drawCompiledScene } = await import(pathToFileURL(join(temporary, 'renderer.mjs')));
   const { dimensionScene } = await import(pathToFileURL(join(temporary, 'postgame.mjs')));
   const requested = process.argv[2] ?? 'normal';
-  if (!['normal', 'large', 'small', '--all'].includes(requested)) throw new Error('Specify normal, large, small or --all');
-  for (const size of requested === '--all' ? ['normal', 'large', 'small'] : [requested]) {
+  if (!['normal', 'large', 'small', '--all', '--expanded'].includes(requested)) throw new Error('Specify normal, large, small or --all');
+  for (const size of requested === '--all' ? ['normal', 'large', 'small'] : requested === '--expanded' ? ['normal', 'large'] : [requested]) {
     const output = join(root, size === 'normal' ? 'art/adventure' : `art/adventure-${size}`); mkdirSync(output, { recursive: true });
     const source = join(output, 'world.json');
     const world = createAdventurePreset(size);
@@ -55,7 +55,9 @@ try {
           context.fillStyle = sprite.palette[parseInt(code, 36)]; context.fillRect(entity.x + x, entity.y + y, 1, 1);
         }));
       }
-      const file = ['castle', 'town', 'world', 'forest', 'cave', 'demon-castle', 'north-world', 'north-town', 'deep-forest', 'crystal-cave', 'east-world', 'ruins', 'north-castle', 'seaside-town', 'fairy-garden', 'frontier-world', 'frontier-forest', 'forgotten-fort'][stage.id];
+      const expansionNames = {'旅人の港と商人街':'traveler-port','地下水路と闇市':'black-market','沈没神殿':'sunken-temple','古い民家の地下蔵':'locked-house','霧深き腐海・毒の湿原':'poison-marsh','蜘蛛の毒巣':'arachne-nest','凍てつく霊峰・氷狼の谷':'frost-peak','氷狼の洞穴':'fenrir-nest','灼熱の古戦場・竜の巣':'burning-battlefield','紅蓮の竜穴':'volkex-nest'};
+      const stageName=world.stages.find(stage=>stage.id===id)?.name;
+      const file = expansionNames[stageName] ?? ['castle', 'town', 'world', 'forest', 'cave', 'demon-castle', 'north-world', 'north-town', 'deep-forest', 'crystal-cave', 'east-world', 'ruins', 'north-castle', 'seaside-town', 'fairy-garden', 'frontier-world', 'frontier-forest', 'forgotten-fort'][stage.id];
       if (id === 255) { const realmOutput = join(root, 'art/postgame'); mkdirSync(realmOutput, { recursive: true }); png(join(realmOutput, 'void-realm.png'), width, height, rgba); }
       else png(join(output, `${file}.png`), width, height, rgba);
     }

@@ -40,5 +40,6 @@
       }
     ]
   },
-  "canEscape": false
+  "canEscape": false,
+  "boss": true
 }

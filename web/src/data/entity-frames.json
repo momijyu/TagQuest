@@ -214,5 +214,155 @@
     "y": 0,
     "width": 16,
     "height": 32
+  },
+  "inn-building": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 64
+  },
+  "tavern": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 64
+  },
+  "church": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 64
+  },
+  "witch-hut": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 64
+  },
+  "bounty-board": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 32
+  },
+  "guild-master": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "sister": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "alchemist": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "unique-monster": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "blacksmith-building": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 64
+  },
+  "teleport-shrine": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 64
+  },
+  "casino-building": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 64
+  },
+  "observatory": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 64
+  },
+  "port-building": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 64
+  },
+  "monster-corral": {
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 64
+  },
+  "ship": {
+    "x": 0,
+    "y": 0,
+    "width": 64,
+    "height": 64
+  },
+  "iron-gate": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "well-entrance": {
+    "x": 0,
+    "y": -8,
+    "width": 32,
+    "height": 48
+  },
+  "blacksmith": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "shrine-keeper": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "casino-dealer": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "black-market-dealer": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "fortune-teller": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "captain": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
+  },
+  "corral-keeper": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 32
   }
 }

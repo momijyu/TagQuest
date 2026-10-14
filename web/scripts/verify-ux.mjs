@@ -85,14 +85,14 @@ try {
   victorious.attack(); victorious.advance(); assert.equal(victorious.phase, 'victory'); assert.equal(victorious.playerHp, 40);
 
   const state = createPlayerState();
-  assert.equal(state.useFieldSkill(2).ok, false); assert.equal(state.vitals.mp, 10);
+  assert.equal(state.useFieldSkill(2, () => .5).ok, false); assert.equal(state.vitals.mp, 10);
   state.setVitals({ hp: 10, mp: 10, poisoned: true });
   for (const id of [255, 0, 1]) assert.equal(state.useFieldSkill(id).ok, false);
   assert.deepEqual(state.vitals, { hp: 10, mp: 10, poisoned: true });
-  assert.equal(state.useFieldSkill(2).ok, true); assert.deepEqual(state.vitals, { hp: 38, mp: 7, poisoned: true });
-  assert.equal(state.useFieldSkill(2).ok, true); assert.deepEqual(state.vitals, { hp: 40, mp: 4, poisoned: true });
-  assert.equal(state.useFieldSkill(2).ok, false); assert.equal(state.vitals.mp, 4);
-  state.setVitals({ hp: 20, mp: 2, poisoned: false }); assert.equal(state.useFieldSkill(2).ok, false);
+  assert.equal(state.useFieldSkill(2, () => .5).ok, true); assert.deepEqual(state.vitals, { hp: 34, mp: 7, poisoned: true });
+  assert.equal(state.useFieldSkill(2, () => .5).ok, true); assert.deepEqual(state.vitals, { hp: 40, mp: 4, poisoned: true });
+  assert.equal(state.useFieldSkill(2, () => .5).ok, false); assert.equal(state.vitals.mp, 4);
+  state.setVitals({ hp: 20, mp: 2, poisoned: false }); assert.equal(state.useFieldSkill(2, () => .5).ok, false);
   assert.deepEqual(state.vitals, { hp: 20, mp: 2, poisoned: false });
   const unlearned = createPlayerState({ ...playerConfig, skills: [] }); unlearned.setVitals({ hp: 20, mp: 10, poisoned: false });
   assert.equal(unlearned.useFieldSkill(2).ok, false); assert.equal(unlearned.vitals.mp, 10);

@@ -17,7 +17,8 @@ try {
   const module = name => import(pathToFileURL(join(out, `${name}.mjs`)));
   const { createPlayerState } = await module('state');
   const { createWorldGame } = await module('world');
-  const { createBattle } = await module('battle');
+  const { createBattle: createBattleBase } = await module('battle');
+  const createBattle = (enemy, options = {}) => createBattleBase(enemy, { random: () => .5, ...options });
   const { playerConfig, enemyCatalog, parsePlayerDefinition, parseReward } = await module('config');
   const { progressionConfig, parseProgression, maximumExperience, levelForExperience } = await module('progression');
   const { skillCatalog, findSkill, parseSkillCatalog } = await module('skills');
@@ -55,29 +56,34 @@ try {
     const novice = createPlayerState({ ...playerConfig, initialExperience: progressionConfig.levelThresholds[level - 1] - 1 });
     const locked = createBattle(enemyCatalog[1], { player: novice.definition });
     assert.equal(locked.useSkill(skill.id).ok, false); assert.equal(locked.playerMp, novice.vitals.mp); assert.equal(locked.phase, 'commands');
-    assert.deepEqual(novice.gainExperience(1).learnedSkills, [skill.id]);
+    assert.deepEqual(novice.gainExperience(1).learnedSkills, skillCatalog.filter(entry => entry.learnLevel === level).map(entry => entry.id));
     const caster = createPlayerState({ ...playerConfig, initialExperience: progressionConfig.levelThresholds[level - 1] });
     const definition = caster.definition;
     const battle = createBattle({ ...enemyCatalog[1], stats: { ...enemyCatalog[1].stats, hp: 9999 } }, { player: definition, playerHp: 1 });
+    if (['return-mark','dungeon-escape','no-encounters'].includes(skill.effect.type)) {
+      assert.equal(battle.useSkill(skill.id).ok, false); assert.equal(battle.phase,'commands'); assert.equal(battle.playerMp,definition.maxMp); continue;
+    }
     assert.equal(battle.useSkill(skill.id).ok, true);
     assert.equal(battle.playerMp, definition.maxMp - skill.mpCost);
     assert.equal(battle.phase, 'player-action');
     if (skill.effect.type === 'magic-damage') {
-      assert.equal(battle.enemyHp, 9999 - Math.max(1, skill.effect.amount + Math.floor(definition.stats.magic * 1.0) - battle.enemy.stats.defense));
-      assert.equal(caster.useFieldSkill(skill.id).ok, false);
+      assert.equal(battle.enemyHp, 9999 - Math.max(1, skill.effect.amount + Math.floor(definition.stats.magic * skill.effect.magicScale) - (skill.effect.ignoreDefense ? 0 : battle.enemy.stats.defense)));
+      assert.equal(caster.useFieldSkill(skill.id, () => .5).ok, false);
     } else if (skill.effect.type === 'physical-damage') {
       assert.equal(battle.enemyHp, 9999 - Math.max(1, Math.floor(definition.stats.attack * skill.effect.power) - battle.enemy.stats.defense));
       assert.equal(battle.playerHp, 1);
-      assert.equal(caster.useFieldSkill(skill.id).ok, false, 'physical techniques are battle-only');
+      assert.equal(caster.useFieldSkill(skill.id, () => .5).ok, false, 'physical techniques are battle-only');
+    } else if (skill.effect.type === 'magic-barrier') {
+      assert.equal(battle.barrierTurns,3); assert.equal(battle.playerHp,1);
     } else {
-      assert.equal(battle.playerHp, Math.min(definition.stats.hp, 1 + skill.effect.amount + Math.floor(definition.stats.magic * 0.8)));
-      assert.equal(caster.useFieldSkill(skill.id).ok, false, 'full HP does not consume MP');
+      assert.equal(battle.playerHp, Math.min(definition.stats.hp, 1 + skill.effect.amount + Math.floor(definition.stats.magic * skill.effect.magicScale)));
+      assert.equal(caster.useFieldSkill(skill.id, () => .5).ok, false, 'full HP does not consume MP');
       caster.setVitals({ hp: 1, mp: skill.mpCost - 1, poisoned: false });
       const insufficient = caster.vitals;
-      assert.equal(caster.useFieldSkill(skill.id).ok, false); assert.deepEqual(caster.vitals, insufficient);
+      assert.equal(caster.useFieldSkill(skill.id, () => .5).ok, false); assert.deepEqual(caster.vitals, insufficient);
       caster.setVitals({ hp: 1, mp: definition.maxMp, poisoned: false });
-      assert.equal(caster.useFieldSkill(skill.id).ok, true);
-      assert.deepEqual(caster.vitals, { hp: Math.min(definition.stats.hp, 1 + skill.effect.amount + Math.floor(definition.stats.magic * 0.8)), mp: definition.maxMp - skill.mpCost, poisoned: false });
+      assert.equal(caster.useFieldSkill(skill.id, () => .5).ok, true);
+      assert.deepEqual(caster.vitals, { hp: Math.min(definition.stats.hp, 1 + skill.effect.amount + Math.floor(definition.stats.magic * skill.effect.magicScale)), mp: definition.maxMp - skill.mpCost, poisoned: false });
     }
     const dry = createBattle(enemyCatalog[1], { player: definition, playerHp: 1, playerMp: skill.mpCost - 1 });
     assert.equal(dry.useSkill(skill.id).ok, false); assert.equal(dry.playerMp, skill.mpCost - 1); assert.equal(dry.phase, 'commands');
@@ -128,7 +134,7 @@ try {
   } finally { skill.learnLevel = oldLearn; gear.requiredLevel = oldRequired; }
   // Real, unmodified defaults announce new magic after each early milestone.
   assert.deepEqual(createPlayerState().definition.skills, [0, 1, 2]);
-  for (const [level, skillId, name] of [[3, 3, '氷の矢'], [5, 4, '大きな癒し'], [8, 5, '雷撃'], [6, 13, '連撃'], [18, 14, '渾身斬り'], [36, 15, '疾風連斬'], [50, 16, '天破斬']]) {
+  for (const [level, skillId, name] of [[3, 3, '氷の矢'], [7, 4, '大きな癒し'], [8, 5, '雷撃'], [8, 13, '連撃'], [18, 14, '渾身斬り'], [36, 15, '疾風連斬'], [50, 16, '天破斬']]) {
     const threshold = progressionConfig.levelThresholds[level - 1];
     const scene = { id: 0, width: 5, height: 5, spawn: { x: 16, y: 32 }, tiles: new Uint8Array(25).fill(7), entities: [], encounter: { enabled: true, rate: 100, enemyId: 1 } };
     const enemy = { ...enemyCatalog.find(entry => entry.id === 1), stats: { hp: 1, attack: 0, defense: 0 }, reward: { gold: 0, experience: 1, items: [] } };

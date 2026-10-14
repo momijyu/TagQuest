@@ -45,10 +45,10 @@ export async function startGallery(characters: PlayCharacters, kingSprites: Awai
     const adventureMaterialList = document.querySelector<HTMLElement>('#adventure-materials');
     if (adventureMaterialList) for (const { name, sprite } of Object.values(adventureMaterials)) {
       const figure = document.createElement('figure'), canvas = document.createElement('canvas');
-      canvas.width = 32; canvas.height = 32;
+      canvas.width = Math.max(32,sprite.width); canvas.height = Math.max(32,sprite.height);
       canvas.setAttribute('aria-label', `${name}のドット絵`);
       const context = canvas.getContext('2d');
-      if (context) drawSprite(context, sprite, (32 - sprite.width) / 2, 32 - sprite.height);
+      if (context) drawSprite(context, sprite, (canvas.width - sprite.width) / 2, canvas.height - sprite.height);
       const caption = document.createElement('figcaption'); caption.textContent = name;
       figure.append(canvas, caption); adventureMaterialList.append(figure);
     }

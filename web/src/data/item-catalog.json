@@ -332,8 +332,8 @@
   },
   {
     "id": 28,
-    "name": "ちからの種",
-    "description": "基礎攻撃力を永久に＋1",
+    "name": "力の果実",
+    "description": "使うと攻撃力の基礎値が永久に+1上がる不思議な果実。",
     "price": 300,
     "sellPrice": 150,
     "effect": {
@@ -343,8 +343,8 @@
   },
   {
     "id": 29,
-    "name": "いのちの木の実",
-    "description": "基礎最大HPを永久に＋5",
+    "name": "生命の果実",
+    "description": "使うと最大HPの基礎値が永久に+5上がる生命力あふれる果実。",
     "price": 300,
     "sellPrice": 150,
     "effect": {
@@ -365,6 +365,608 @@
       "attack": 30,
       "defense": 30,
       "magic": 30
+    }
+  },
+  {
+    "id": 31,
+    "name": "アラクネのマント",
+    "description": "防御力＋8・毒完全無効",
+    "price": 1800,
+    "sellPrice": 600,
+    "equipment": {
+      "slot": "accessory",
+      "attack": 0,
+      "defense": 8,
+      "poisonImmune": true
+    }
+  },
+  {
+    "id": 32,
+    "name": "白銀の牙剣",
+    "description": "攻撃力＋28・物理攻撃時15%で敵の行動を止める",
+    "price": 2800,
+    "sellPrice": 1000,
+    "equipment": {
+      "slot": "weapon",
+      "attack": 28,
+      "defense": 0,
+      "stunChance": 0.15
+    }
+  },
+  {
+    "id": 33,
+    "name": "ドラゴンスレイヤー",
+    "description": "攻撃力＋45・竜系への物理威力2倍",
+    "price": 4500,
+    "sellPrice": 1600,
+    "equipment": {
+      "slot": "weapon",
+      "attack": 45,
+      "defense": 0,
+      "dragonMultiplier": 2
+    }
+  },
+  {
+    "id": 34,
+    "name": "毒腺のしずく",
+    "description": "湿原の魔物の素材。工房で力の果実へ調合できる",
+    "price": 30,
+    "sellPrice": 15
+  },
+  {
+    "id": 35,
+    "name": "霜の結晶",
+    "description": "霊峰の魔物の素材。工房で生命の果実へ調合できる",
+    "price": 50,
+    "sellPrice": 25
+  },
+  {
+    "id": 36,
+    "name": "竜の火鱗",
+    "description": "火山の魔物の素材。工房で高位の霊薬へ調合できる",
+    "price": 80,
+    "sellPrice": 40
+  },
+  {
+    "id": 37,
+    "name": "賢者の霊薬",
+    "description": "MPを60回復",
+    "price": 250,
+    "sellPrice": 100,
+    "effect": {
+      "type": "heal-mp",
+      "amount": 60
+    }
+  },
+  {
+    "id": 38,
+    "name": "命の霊薬",
+    "description": "HPを200回復",
+    "price": 400,
+    "sellPrice": 150,
+    "effect": {
+      "type": "heal-hp",
+      "amount": 200
+    }
+  },
+  {
+    "id": 39,
+    "name": "メタル砕きの剣",
+    "description": "攻撃力＋18・メタル系への物理攻撃は防御を無視",
+    "price": 2000,
+    "sellPrice": 500,
+    "equipment": {
+      "slot": "weapon",
+      "attack": 18,
+      "defense": 0,
+      "metalPiercing": true
+    }
+  },
+  {
+    "id": 40,
+    "name": "幸運の指輪",
+    "description": "会心率＋15%（会心は物理威力2倍）",
+    "price": 1200,
+    "sellPrice": 300,
+    "equipment": {
+      "slot": "accessory",
+      "attack": 0,
+      "defense": 2,
+      "criticalChance": 0.15
+    }
+  },
+  {
+    "id": 41,
+    "name": "経験値の書",
+    "description": "使うと500EXPを獲得",
+    "price": 800,
+    "sellPrice": 0,
+    "effect": {
+      "type": "gain-experience",
+      "amount": 500
+    },
+    "sellable": false
+  },
+  {
+    "id": 42,
+    "name": "盗賊の合鍵",
+    "description": "古い民家と鉄格子を開ける。使ってもなくならない",
+    "price": 500,
+    "sellPrice": 0
+  },
+  {
+    "id": 43,
+    "name": "鋼の剣",
+    "description": "鍛え抜かれた鋼鉄の直剣。確かな切れ味と耐久性を持つ。",
+    "price": 350,
+    "sellPrice": 175,
+    "equipment": {
+      "slot": "weapon",
+      "attack": 16,
+      "defense": 0,
+      "requiredLevel": 8
+    }
+  },
+  {
+    "id": 44,
+    "name": "魔導士の杖",
+    "description": "魔導の刻印が施された杖。魔力を高め、呪文の消費MPを1軽減する。",
+    "price": 450,
+    "sellPrice": 225,
+    "equipment": {
+      "slot": "weapon",
+      "attack": 4,
+      "defense": 0,
+      "requiredLevel": 10,
+      "magic": 24,
+      "mp": 20,
+      "mpCostReduction": 1
+    }
+  },
+  {
+    "id": 45,
+    "name": "ミスリルソード",
+    "description": "青白く輝く神聖な銀の剣。軽やかで鋭く、会心の一撃が出やすい。",
+    "price": 1200,
+    "sellPrice": 600,
+    "equipment": {
+      "slot": "weapon",
+      "attack": 30,
+      "defense": 0,
+      "requiredLevel": 18,
+      "criticalChance": 0.08
+    }
+  },
+  {
+    "id": 46,
+    "name": "月影の賢者杖",
+    "description": "澄んだ月光を宿す賢者の杖。強大な魔力を宿し、消費MPを2軽減する。",
+    "price": 1600,
+    "sellPrice": 800,
+    "equipment": {
+      "slot": "weapon",
+      "attack": 8,
+      "defense": 0,
+      "requiredLevel": 22,
+      "magic": 48,
+      "mp": 40,
+      "mpCostReduction": 2
+    }
+  },
+  {
+    "id": 47,
+    "name": "火炎の波刃剣",
+    "description": "刀身に灼熱の炎をまとった波刃剣。物理と魔法の両方を強化する。",
+    "price": 2800,
+    "sellPrice": 1400,
+    "equipment": {
+      "slot": "weapon",
+      "attack": 42,
+      "defense": 0,
+      "requiredLevel": 28,
+      "magic": 16
+    }
+  },
+  {
+    "id": 48,
+    "name": "天魔の破邪剣",
+    "description": "古の聖騎士が愛用した退魔の白銀剣。悪しき魔物を打ち砕く。",
+    "price": 5000,
+    "sellPrice": 2500,
+    "equipment": {
+      "slot": "weapon",
+      "attack": 60,
+      "defense": 10,
+      "requiredLevel": 38
+    }
+  },
+  {
+    "id": 49,
+    "name": "鉄の盾",
+    "description": "頑丈な鉄板で作られた実戦用の盾。打撃をしっかり防ぐ。",
+    "price": 180,
+    "sellPrice": 90,
+    "equipment": {
+      "slot": "shield",
+      "attack": 0,
+      "defense": 5,
+      "requiredLevel": 6
+    }
+  },
+  {
+    "id": 50,
+    "name": "鋼鉄の大盾",
+    "description": "全身を覆う重厚な大型盾。圧倒的な安心感を与える。",
+    "price": 500,
+    "sellPrice": 250,
+    "equipment": {
+      "slot": "shield",
+      "attack": 0,
+      "defense": 12,
+      "requiredLevel": 14,
+      "hp": 15
+    }
+  },
+  {
+    "id": 51,
+    "name": "ルーンバックラー",
+    "description": "魔方陣が刻まれた魔導丸盾。攻撃を防ぎつつ詠唱魔力を底上げする。",
+    "price": 850,
+    "sellPrice": 425,
+    "equipment": {
+      "slot": "shield",
+      "attack": 0,
+      "defense": 8,
+      "requiredLevel": 18,
+      "magic": 12,
+      "mp": 15
+    }
+  },
+  {
+    "id": 52,
+    "name": "ドラゴンシールド",
+    "description": "火竜の赤鱗を重ね合わせた堅牢な盾。炎の息吹さえも受け止める。",
+    "price": 2500,
+    "sellPrice": 1250,
+    "equipment": {
+      "slot": "shield",
+      "attack": 0,
+      "defense": 24,
+      "requiredLevel": 32,
+      "hp": 30
+    }
+  },
+  {
+    "id": 53,
+    "name": "鉄の胸当て",
+    "description": "胸部を強固に保護する鍛造の鉄鎧。",
+    "price": 220,
+    "sellPrice": 110,
+    "equipment": {
+      "slot": "armor",
+      "attack": 0,
+      "defense": 10,
+      "requiredLevel": 6
+    }
+  },
+  {
+    "id": 54,
+    "name": "シルバーメイル",
+    "description": "白銀で編まれた美しい鎖帷子。刃を通さない頑強さを持つ。",
+    "price": 750,
+    "sellPrice": 375,
+    "equipment": {
+      "slot": "armor",
+      "attack": 0,
+      "defense": 18,
+      "requiredLevel": 16,
+      "hp": 20
+    }
+  },
+  {
+    "id": 55,
+    "name": "星屑の魔導ローブ",
+    "description": "星の光を織り込んだローブ。防御に加え魔力を大幅強化し、消費MPを1軽減する。",
+    "price": 1100,
+    "sellPrice": 550,
+    "equipment": {
+      "slot": "armor",
+      "attack": 0,
+      "defense": 12,
+      "requiredLevel": 20,
+      "magic": 28,
+      "mp": 35,
+      "mpCostReduction": 1
+    }
+  },
+  {
+    "id": 56,
+    "name": "ドラゴンアーマー",
+    "description": "火竜のウロコで鍛え上げられた猛将の鎧。圧倒的な防御力と闘志をもたらす。",
+    "price": 3800,
+    "sellPrice": 1900,
+    "equipment": {
+      "slot": "armor",
+      "attack": 8,
+      "defense": 36,
+      "requiredLevel": 34,
+      "hp": 50
+    }
+  },
+  {
+    "id": 57,
+    "name": "シルバーヘルム",
+    "description": "白銀の輝きを放つ騎士の兜。頭部を致命傷から防護する。",
+    "price": 600,
+    "sellPrice": 300,
+    "equipment": {
+      "slot": "head",
+      "attack": 0,
+      "defense": 10,
+      "requiredLevel": 16
+    }
+  },
+  {
+    "id": 58,
+    "name": "賢者のサークレット",
+    "description": "額に輝く魔石を埋め込んだ金冠。思考を研ぎ澄まし魔力を高める。",
+    "price": 900,
+    "sellPrice": 450,
+    "equipment": {
+      "slot": "head",
+      "attack": 0,
+      "defense": 5,
+      "requiredLevel": 20,
+      "magic": 18,
+      "mp": 25
+    }
+  },
+  {
+    "id": 59,
+    "name": "ドラゴンスカル",
+    "description": "竜の頭骨を模した恐るべき兜。装備者の闘争本能を覚醒させる。",
+    "price": 2200,
+    "sellPrice": 1100,
+    "equipment": {
+      "slot": "head",
+      "attack": 5,
+      "defense": 16,
+      "requiredLevel": 32,
+      "hp": 20
+    }
+  },
+  {
+    "id": 60,
+    "name": "疾風のブーツ",
+    "description": "風の精霊が宿る靴。身のこなしが軽やかになり、敵の攻撃を受け流す。",
+    "price": 800,
+    "sellPrice": 400,
+    "equipment": {
+      "slot": "accessory",
+      "attack": 0,
+      "defense": 3,
+      "requiredLevel": 12,
+      "hp": 10,
+      "evasionChance": 0.08
+    }
+  },
+  {
+    "id": 61,
+    "name": "賢者のアミュレット",
+    "description": "大魔導士の魂が宿る首飾り。呪文の消費MPを1軽減する。",
+    "price": 1500,
+    "sellPrice": 750,
+    "equipment": {
+      "slot": "accessory",
+      "attack": 0,
+      "defense": 0,
+      "requiredLevel": 22,
+      "magic": 15,
+      "mp": 25,
+      "mpCostReduction": 1
+    }
+  },
+  {
+    "id": 62,
+    "name": "バーサーカーリング",
+    "description": "狂戦士の呪いが込められた指輪。防御を削り、凄まじい破壊力と会心を放つ。",
+    "price": 2000,
+    "sellPrice": 1000,
+    "equipment": {
+      "slot": "accessory",
+      "attack": 18,
+      "defense": -6,
+      "requiredLevel": 28,
+      "criticalChance": 0.1
+    }
+  },
+  {
+    "id": 63,
+    "name": "火薬玉",
+    "price": 80,
+    "sellPrice": 40,
+    "description": "敵に40の火炎ダメージ。防御を無視する戦闘用の火薬玉。",
+    "effect": {
+      "type": "battle-damage",
+      "amount": 40
+    }
+  },
+  {
+    "id": 64,
+    "name": "目つぶしの砂",
+    "price": 60,
+    "sellPrice": 30,
+    "description": "3敵ターンの間、敵の物理攻撃が半分の確率で外れる。",
+    "effect": {
+      "type": "battle-blind",
+      "turns": 3,
+      "missChance": 0.5
+    }
+  },
+  {
+    "id": 65,
+    "name": "煙幕の粉",
+    "price": 50,
+    "sellPrice": 25,
+    "description": "通常戦闘から確実に逃げる。ボスや逃走を封じる呪いには効かない。",
+    "effect": {
+      "type": "battle-escape"
+    }
+  },
+  {
+    "id": 66,
+    "name": "剛力の秘薬",
+    "price": 150,
+    "sellPrice": 75,
+    "description": "次の3ターン、物理攻撃力を1.3倍にする。",
+    "effect": {
+      "type": "battle-buff",
+      "turns": 3,
+      "power": 1.3
+    }
+  },
+  {
+    "id": 67,
+    "name": "血塗られた大剣",
+    "price": 0,
+    "sellPrice": 0,
+    "description": "古戦場の底から掘り出された漆黒の大剣。身に余る圧倒的な剛力を授けるという。",
+    "equipment": {
+      "slot": "weapon",
+      "attack": 70,
+      "defense": 0,
+      "requiredLevel": 20,
+      "selfDamageFraction": 0.08,
+      "cursed": true,
+      "curseType": "self-damage"
+    }
+  },
+  {
+    "id": 68,
+    "name": "重罪人の枷鎧",
+    "price": 0,
+    "sellPrice": 0,
+    "description": "鉄壁の厚みを誇る重厚な鎧。あらゆる衝撃を無力化する圧倒的な守りをもたらす。",
+    "equipment": {
+      "slot": "armor",
+      "attack": 0,
+      "defense": 45,
+      "requiredLevel": 24,
+      "hp": 80,
+      "cannotEscape": true,
+      "cursed": true,
+      "curseType": "no-escape"
+    }
+  },
+  {
+    "id": 69,
+    "name": "誘魔の髑髏輪",
+    "price": 0,
+    "sellPrice": 0,
+    "description": "妖しい紫の光を放つ髑髏の指輪。強大な魔力と急速な成長をもたらす秘宝。",
+    "equipment": {
+      "slot": "accessory",
+      "attack": 0,
+      "defense": 0,
+      "requiredLevel": 18,
+      "magic": 35,
+      "encounterMultiplier": 2,
+      "cursed": true,
+      "curseType": "high-encounter",
+      "experienceRate": 1.2
+    }
+  },
+  {
+    "id": 70,
+    "name": "怨念の兜",
+    "price": 0,
+    "sellPrice": 0,
+    "description": "古代の戦王が被っていた金冠。全能力を極限まで引き上げる神秘の力が宿る。",
+    "equipment": {
+      "slot": "head",
+      "attack": 14,
+      "defense": 14,
+      "requiredLevel": 22,
+      "magic": 14,
+      "curseDamage": 6,
+      "cursed": true,
+      "curseType": "slip-damage"
+    }
+  },
+  {
+    "id": 71,
+    "name": "祝福の靴",
+    "description": "大いなる祝福が込められた革靴。歩くだけで自然と経験が身につく。",
+    "price": 0,
+    "sellPrice": 0,
+    "equipment": {
+      "slot": "accessory",
+      "attack": 0,
+      "defense": 0,
+      "requiredLevel": 1,
+      "walkExperience": 2,
+      "experienceMultiplier": 1.5,
+      "roundExperienceUp": true
+    }
+  },
+  {
+    "id": 72,
+    "name": "天恵のブローチ",
+    "description": "大自然の恵みを宿すブローチ。歩くたびに生気と魔力が湧き上がる。",
+    "price": 0,
+    "sellPrice": 0,
+    "equipment": {
+      "slot": "accessory",
+      "attack": 0,
+      "defense": 0,
+      "requiredLevel": 1,
+      "walkRegen": {
+        "steps": 3,
+        "hp": 2,
+        "mp": 1
+      }
+    }
+  },
+  {
+    "id": 73,
+    "name": "会心の手袋",
+    "description": "獲物の急所を的確に捉える手袋。会心の一撃が極めて出やすくなる。",
+    "price": 0,
+    "sellPrice": 0,
+    "equipment": {
+      "slot": "accessory",
+      "attack": 0,
+      "defense": 0,
+      "requiredLevel": 1,
+      "criticalChance": 0.3
+    }
+  },
+  {
+    "id": 74,
+    "name": "聖者のロザリオ",
+    "description": "聖なる祈りが込められたロザリオ。魔物を退けるたびに魔力が清められ満ちる。",
+    "price": 0,
+    "sellPrice": 0,
+    "equipment": {
+      "slot": "accessory",
+      "attack": 0,
+      "defense": 0,
+      "requiredLevel": 1,
+      "victoryMpRecovery": 10
+    }
+  },
+  {
+    "id": 75,
+    "name": "黄金の指輪",
+    "description": "黄金の輝きを放つ豪奢な指輪。倒した魔物が多くの金貨を落とすようになる。",
+    "price": 5000,
+    "sellPrice": 500,
+    "equipment": {
+      "slot": "accessory",
+      "attack": 0,
+      "defense": 0,
+      "requiredLevel": 1,
+      "goldMultiplier": 2
     }
   }
 ]

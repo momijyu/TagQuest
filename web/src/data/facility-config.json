@@ -1,0 +1,78 @@
+{
+  "coinGoldRate": 1,
+  "raceBet": 10,
+  "racePayout": 30,
+  "cardBet": 5,
+  "cardPayout": 7,
+  "recruitChance": 0.05,
+  "recruitableEnemies": [
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    10,
+    12,
+    13,
+    14,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ],
+  "casinoPrizes": [
+    {
+      "itemId": 39,
+      "coins": 500
+    },
+    {
+      "itemId": 40,
+      "coins": 300
+    },
+    {
+      "itemId": 41,
+      "coins": 800
+    },
+    {
+      "itemId": 71,
+      "coins": 800
+    },
+    {
+      "itemId": 72,
+      "coins": 600
+    },
+    {
+      "itemId": 75,
+      "coins": 1000
+    }
+  ],
+  "enhancements": [
+    {
+      "level": 1,
+      "gold": 100,
+      "ingredients": [
+        {
+          "itemId": 17,
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "gold": 250,
+      "ingredients": [
+        {
+          "itemId": 17,
+          "quantity": 3
+        },
+        {
+          "itemId": 18,
+          "quantity": 2
+        }
+      ]
+    }
+  ]
+}

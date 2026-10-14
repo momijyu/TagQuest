@@ -1725,7 +1725,7 @@
       "encounter": {
         "enabled": true,
         "enemyId": 1,
-        "rate": 6,
+        "rate": 9.0,
         "enemies": [
           {
             "enemyId": 1,
@@ -1933,7 +1933,7 @@
       "encounter": {
         "enabled": true,
         "enemyId": 5,
-        "rate": 8,
+        "rate": 12.0,
         "enemies": [
           {
             "enemyId": 5,
@@ -3009,7 +3009,7 @@
       "encounter": {
         "enabled": true,
         "enemyId": 1,
-        "rate": 6,
+        "rate": 9.0,
         "enemies": [
           {
             "enemyId": 1,
@@ -3393,7 +3393,7 @@
       "encounter": {
         "enabled": true,
         "enemyId": 5,
-        "rate": 8,
+        "rate": 12.0,
         "enemies": [
           {
             "enemyId": 5,
@@ -5016,7 +5016,7 @@
       "encounter": {
         "enabled": true,
         "enemyId": 1,
-        "rate": 6,
+        "rate": 9.0,
         "enemies": [
           {
             "enemyId": 1,

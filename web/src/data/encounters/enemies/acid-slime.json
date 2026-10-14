@@ -1,0 +1,52 @@
+{
+  "id": 18,
+  "name": "アシッドスライム",
+  "characterId": "acid-slime",
+  "battleImage": "acid-slime",
+  "background": "forest",
+  "family": "slime",
+  "stats": {
+    "hp": 130,
+    "attack": 22,
+    "defense": 9,
+    "magic": 16
+  },
+  "reward": {
+    "gold": 35,
+    "experience": 70,
+    "items": [
+      {
+        "itemId": 34,
+        "quantity": 1
+      }
+    ]
+  },
+  "patterns": {
+    "beforeAttacked": [
+      {
+        "type": "attack",
+        "text": "アシッドスライムの攻撃！",
+        "power": 1,
+        "inflictPoison": true
+      },
+      {
+        "type": "magic-attack",
+        "text": "アシッドスライムは魔力を放った！",
+        "power": 1.2
+      }
+    ],
+    "afterAttacked": [
+      {
+        "type": "attack",
+        "text": "アシッドスライムの攻撃！",
+        "power": 1,
+        "inflictPoison": true
+      },
+      {
+        "type": "magic-attack",
+        "text": "アシッドスライムは魔力を放った！",
+        "power": 1.2
+      }
+    ]
+  }
+}

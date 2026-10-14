@@ -1,15 +1,15 @@
 {
   "format": "TQ v15 experimental",
-  "binary_bytes": 2417,
-  "base64url_chars": 3223,
+  "binary_bytes": 3112,
+  "base64url_chars": 4150,
   "base_url": "https://tag-quest-kappa.vercel.app/",
-  "final_url_bytes": 3259,
+  "final_url_bytes": 4186,
   "binary_target_bytes": 300,
-  "remaining_to_binary_target_bytes": -2117,
+  "remaining_to_binary_target_bytes": -2812,
   "includes_ndef_overhead": true,
-  "ndef_tlv_bytes": 3264,
+  "ndef_tlv_bytes": 4191,
   "ntag215_ndef_capacity_bytes": 496,
-  "remaining_ntag215_bytes": -2768,
+  "remaining_ntag215_bytes": -3695,
   "stages": [
     {
       "id": 0,
@@ -43,21 +43,21 @@
       "height": 21,
       "floor_bytes": {
         "RAW": 305,
-        "RLE": 94,
-        "RECT": 59
+        "RLE": 95,
+        "RECT": 62
       },
       "selected_codec": "RECT",
       "header_bytes": 9,
-      "entity_count": 21,
-      "entity_bytes": 69,
-      "interaction_bytes": 48,
-      "exit_bytes": 8,
+      "entity_count": 25,
+      "entity_bytes": 81,
+      "interaction_bytes": 57,
+      "exit_bytes": 12,
       "encounter_bytes": 2,
-      "stage_bytes": 195,
+      "stage_bytes": 223,
       "tile_counts": {
-        "grass": 425,
+        "grass": 423,
         "dirt": 8,
-        "brick": 124,
+        "brick": 126,
         "water": 23,
         "bridge": 1,
         "empty": 28
@@ -75,12 +75,12 @@
       },
       "selected_codec": "RLE",
       "header_bytes": 9,
-      "entity_count": 4,
-      "entity_bytes": 8,
-      "interaction_bytes": 6,
-      "exit_bytes": 15,
-      "encounter_bytes": 2,
-      "stage_bytes": 196,
+      "entity_count": 10,
+      "entity_bytes": 20,
+      "interaction_bytes": 15,
+      "exit_bytes": 25,
+      "encounter_bytes": 8,
+      "stage_bytes": 233,
       "tile_counts": {
         "grass": 108,
         "dirt": 6,
@@ -485,11 +485,266 @@
         "empty": 24,
         "ruins-floor": 503
       }
+    },
+    {
+      "id": 18,
+      "name": "霧深き腐海・毒の湿原",
+      "width": 19,
+      "height": 17,
+      "floor_bytes": {
+        "RAW": 168,
+        "RLE": 109,
+        "RECT": 23
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 3,
+      "entity_bytes": 6,
+      "interaction_bytes": 9,
+      "exit_bytes": 8,
+      "encounter_bytes": 8,
+      "stage_bytes": 63,
+      "tile_counts": {
+        "dirt": 17,
+        "water": 16,
+        "empty": 66,
+        "cave-wall": 30,
+        "bog-ground": 194
+      }
+    },
+    {
+      "id": 19,
+      "name": "蜘蛛の毒巣",
+      "width": 13,
+      "height": 13,
+      "floor_bytes": {
+        "RAW": 90,
+        "RLE": 54,
+        "RECT": 16
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 2,
+      "entity_bytes": 4,
+      "interaction_bytes": 9,
+      "exit_bytes": 5,
+      "encounter_bytes": 5,
+      "stage_bytes": 48,
+      "tile_counts": {
+        "dirt": 3,
+        "empty": 47,
+        "cave-wall": 31,
+        "bog-ground": 88
+      }
+    },
+    {
+      "id": 20,
+      "name": "凍てつく霊峰・氷狼の谷",
+      "width": 19,
+      "height": 17,
+      "floor_bytes": {
+        "RAW": 167,
+        "RLE": 100,
+        "RECT": 19
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 4,
+      "entity_bytes": 8,
+      "interaction_bytes": 6,
+      "exit_bytes": 8,
+      "encounter_bytes": 8,
+      "stage_bytes": 58,
+      "tile_counts": {
+        "dirt": 17,
+        "empty": 66,
+        "cave-wall": 30,
+        "ice-ground": 210
+      }
+    },
+    {
+      "id": 21,
+      "name": "氷狼の洞穴",
+      "width": 13,
+      "height": 13,
+      "floor_bytes": {
+        "RAW": 90,
+        "RLE": 54,
+        "RECT": 16
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 2,
+      "entity_bytes": 4,
+      "interaction_bytes": 9,
+      "exit_bytes": 5,
+      "encounter_bytes": 5,
+      "stage_bytes": 48,
+      "tile_counts": {
+        "dirt": 3,
+        "empty": 47,
+        "cave-wall": 31,
+        "ice-ground": 88
+      }
+    },
+    {
+      "id": 22,
+      "name": "灼熱の古戦場・竜の巣",
+      "width": 19,
+      "height": 17,
+      "floor_bytes": {
+        "RAW": 168,
+        "RLE": 109,
+        "RECT": 23
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 4,
+      "entity_bytes": 8,
+      "interaction_bytes": 6,
+      "exit_bytes": 8,
+      "encounter_bytes": 8,
+      "stage_bytes": 62,
+      "tile_counts": {
+        "dirt": 17,
+        "water": 16,
+        "empty": 66,
+        "cave-wall": 30,
+        "ember-ground": 194
+      }
+    },
+    {
+      "id": 23,
+      "name": "紅蓮の竜穴",
+      "width": 13,
+      "height": 13,
+      "floor_bytes": {
+        "RAW": 90,
+        "RLE": 54,
+        "RECT": 16
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 2,
+      "entity_bytes": 4,
+      "interaction_bytes": 9,
+      "exit_bytes": 5,
+      "encounter_bytes": 5,
+      "stage_bytes": 48,
+      "tile_counts": {
+        "dirt": 3,
+        "empty": 47,
+        "cave-wall": 31,
+        "ember-ground": 88
+      }
+    },
+    {
+      "id": 24,
+      "name": "旅人の港と商人街",
+      "width": 28,
+      "height": 26,
+      "floor_bytes": {
+        "RAW": 364,
+        "RLE": 126,
+        "RECT": 23
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 16,
+      "entity_bytes": 48,
+      "interaction_bytes": 6,
+      "exit_bytes": 15,
+      "encounter_bytes": 2,
+      "stage_bytes": 103,
+      "tile_counts": {
+        "grass": 456,
+        "brick": 73,
+        "bridge": 5,
+        "empty": 74,
+        "sea": 120
+      }
+    },
+    {
+      "id": 25,
+      "name": "地下水路と闇市",
+      "width": 17,
+      "height": 17,
+      "floor_bytes": {
+        "RAW": 151,
+        "RLE": 43,
+        "RECT": 29
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 5,
+      "entity_bytes": 10,
+      "interaction_bytes": 12,
+      "exit_bytes": 5,
+      "encounter_bytes": 2,
+      "stage_bytes": 67,
+      "tile_counts": {
+        "bridge": 1,
+        "empty": 16,
+        "sea": 14,
+        "cave-floor": 197,
+        "cave-wall": 61
+      }
+    },
+    {
+      "id": 26,
+      "name": "沈没神殿",
+      "width": 19,
+      "height": 21,
+      "floor_bytes": {
+        "RAW": 207,
+        "RLE": 82,
+        "RECT": 30
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 7,
+      "entity_bytes": 14,
+      "interaction_bytes": 15,
+      "exit_bytes": 5,
+      "encounter_bytes": 10,
+      "stage_bytes": 83,
+      "tile_counts": {
+        "wall-top": 12,
+        "bridge": 3,
+        "empty": 18,
+        "sea": 90,
+        "sand": 119,
+        "ruins-floor": 157
+      }
+    },
+    {
+      "id": 27,
+      "name": "古い民家の地下蔵",
+      "width": 11,
+      "height": 11,
+      "floor_bytes": {
+        "RAW": 61,
+        "RLE": 22,
+        "RECT": 11
+      },
+      "selected_codec": "RECT",
+      "header_bytes": 9,
+      "entity_count": 4,
+      "entity_bytes": 8,
+      "interaction_bytes": 15,
+      "exit_bytes": 5,
+      "encounter_bytes": 2,
+      "stage_bytes": 50,
+      "tile_counts": {
+        "wall-top": 29,
+        "brick": 82,
+        "empty": 10
+      }
     }
   ],
   "binary_bytes_by_floor_codec": {
-    "RAW": 7130,
-    "RLE": 3764,
-    "RECT": 2497
+    "RAW": 9172,
+    "RLE": 5004,
+    "RECT": 3192
   }
 }

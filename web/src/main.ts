@@ -1,5 +1,6 @@
 import './style.css';
 import { startPageRouter } from './page-router';
+import { startSavedSession } from './game/saved-session';
 
 async function createCharacters() {
   const [{ loadPlayerSprites }, { loadKingSprites }] = await Promise.all([import('./data/characters/player'), import('./data/characters/king')]);
@@ -24,13 +25,18 @@ const router = startPageRouter({ gallery, editor, game, status }, {
   },
   async loadGame() {
     const [{ mountPlayView }, { characters }] = await Promise.all([import('./game/play-view'), loadCharacters()]);
-    return (root, first, scenes, active) => {
+    return (root, first, scenes, active) => startSavedSession(saving => {
       const view = mountPlayView(root, characters, active);
       let storage: Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
       try { storage = window.localStorage; } catch { storage = { getItem: () => null, setItem: () => { throw new Error('保存を利用できません。'); }, removeItem: () => {} }; }
-      try { view.start(first, true, scenes, { storage }); } catch (error) { view.dispose(); throw error; }
+      try { view.start(first, true, scenes, saving ? { storage } : {}); } catch (error) { view.dispose(); throw error; }
+      if (!saving) {
+        const notice = document.createElement('p'); notice.className = 'alert'; notice.setAttribute('role', 'status');
+        notice.textContent = 'この環境では自動保存を利用できません。進行はこの画面を閉じると失われます。保存済みの冒険は変更しません。';
+        root.prepend(notice);
+      }
       return () => view.dispose();
-    };
+    }, active, navigator.locks);
   },
 });
 import.meta.hot?.dispose(() => { router.dispose(); game.remove(); status.remove(); });

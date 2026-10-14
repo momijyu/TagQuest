@@ -12,7 +12,8 @@ try {
     ['config', 'data/encounters/combat-config'], ['items', 'data/items'], ['progression', 'data/progression'],
   ].map(([name, file]) => [name, join(root, `web/src/${file}.ts`)])), formats: ['es'], fileName: (_, name) => `${name}.mjs` }, outDir: out } });
   const read = name => import(pathToFileURL(join(out, `${name}.mjs`)).href);
-  const { createPlayerState } = await read('player'), { createWorldGame } = await read('world'), { createBattle } = await read('battle');
+  const { createPlayerState } = await read('player'), { createWorldGame } = await read('world'), { createBattle: createBattleBase } = await read('battle');
+  const createBattle = (enemy, options = {}) => createBattleBase(enemy, { random: () => .5, ...options });
   const { playerConfig, enemyCatalog, parsePlayerDefinition, parseEnemyDefinitions } = await read('config');
   const { findItem, parseItemCatalog } = await read('items'), { progressionConfig, parseProgression } = await read('progression');
   assert.equal(playerConfig.stats.magic, 10); assert.equal(progressionConfig.growthPerLevel.magic, 2);
@@ -46,14 +47,14 @@ try {
     const battle = createBattle({ ...enemy, stats: { ...enemy.stats, defense } }, { player: caster(attack, magic) });
     assert.equal(battle.useSkill(skill).ok, true); return battle.feedback.amount;
   }
-  assert.equal(damage(1, 20), 28); assert.equal(damage(9999, 20), 28, 'physical attack does not raise spell damage');
-  assert.equal(damage(20, 0), 8); assert.equal(damage(20, 25), 33); assert.equal(damage(20, 0, 1, 9999), 1);
+  assert.equal(damage(1, 20), 16); assert.equal(damage(9999, 20), 16, 'physical attack does not raise spell damage');
+  assert.equal(damage(20, 0), 8); assert.equal(damage(20, 25), 18); assert.equal(damage(20, 0, 1, 9999), 1);
   assert.equal(damage(20, 0, 0), 26); assert.equal(damage(20, 9999, 0), 26, 'magic does not raise physical technique damage');
   for (const attack of [1, 9999]) {
     const definition = caster(attack, 7), battle = createBattle(enemy, { player: definition, playerHp: 1 });
-    assert.equal(battle.useSkill(2).ok, true); assert.equal(battle.playerHp, 26); // 1 + 20 + floor(7*.8)
+    assert.equal(battle.useSkill(2).ok, true); assert.equal(battle.playerHp, 24); // 1 + 21 + floor(7*.3)
     const field = createPlayerState(definition); field.setVitals({ hp: 1, mp: 100, poisoned: true });
-    assert.equal(field.useFieldSkill(2).ok, true); assert.equal(field.vitals.hp, 26); assert.equal(field.vitals.mp, 97); assert.equal(field.vitals.poisoned, true);
+    assert.equal(field.useFieldSkill(2, () => .5).ok, true); assert.equal(field.vitals.hp, 24); assert.equal(field.vitals.mp, 97); assert.equal(field.vitals.poisoned, true);
   }
   const sword = createPlayerState(), staff = createPlayerState();
   sword.addItem(4, 1); sword.equip(4); staff.addItem(24, 1); staff.equip(24);

@@ -1,3 +1,4 @@
+import { dangerBossPixels } from './danger-enemy-pixels';
 import type { PixelSprite } from '../objects/types';
 
 import { pixelCanvas } from '../characters/pixel-canvas';
@@ -136,6 +137,14 @@ function forestWolf(): PixelSprite {
 /** 原案のイラストはassets/enemiesに保持。ゲームではこちらのドットを使う。 */
 export const enemyPixelSprites: Readonly<Record<string, PixelSprite>> = {
   ...caveEnemyPixels,
+  ...dangerBossPixels,
+  fenrir: { ...forestWolf(), palette: ['#252735','#596777','#93a8b3','#dbe7e5','#edf3f0','#c4d5d9','#8b9cab','#526d85','#7d96ad','#b7ccda','#e0eded','#80bcd1','#e9dd91','#4b536a','#939cb7','#ded6e1'] },
+  'frost-wolf': { ...forestWolf(), palette: ['#283342','#476779','#6a8d9d','#a9c6d1','#dce9ea','#90b2c5','#527788','#d6e5e4','#6d91a5','#c3d9df','#eff5ec','#7892a7','#edcc7b','#53667b','#839bac','#cbdce1'] },
+  'acid-slime': { ...leafGel(), palette: ['#273933','#31594c','#47776b','#76a27b','#a6c08b','#dae3b1','#a7d57b','#303f39','#7bac83','#7a65a8','#574371','#c1a2d3'] },
+  'curse-bat': { ...caveEnemyPixels['cave-bat'], palette: ['#261e30','#493353','#71527e','#ad85ae','#e6bdd9','#526f56','#97ba72','#daf5a1'] },
+  'ice-golem': { ...caveEnemyPixels['rock-hermit'], palette: ['#293c50','#4b6e89','#6997b3','#a1c3d4','#d9e8ed','#7398b2','#9fc9dc','#597c9d','#bed5e1','#edf4f2'] },
+  'fire-drake': { ...dangerBossPixels.volkex, palette: ['#292a27','#3e4f3b','#526e45','#769552','#b3ac65','#e0c379','#65703b','#93914c','#c8b773','#efdaa4','#404854','#737988','#bac2cc','#e5ead9','#675a54','#ab8062'] },
+  'magma-gel': { ...leafGel(), palette: ['#352429','#703032','#a64935','#d17040','#e99e52','#facf89','#ffeda8','#423136','#904d41','#a8644f','#5e3732','#d8a67c'] },
   'leaf-gel': leafGel(),
   'ghost-mushroom': ghostMushroom(),
   'forest-wolf': forestWolf(),

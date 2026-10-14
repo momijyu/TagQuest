@@ -53,13 +53,13 @@
 
 ## 物語・会話の編集
 
-`dialogue-templates.json` は既存IDを保持した88件の配列です。ID 46〜59は見本の「消えた灯火」の会話、60〜69は巨大版の集落・花園・道しるべ・水晶・遺跡の会話です。`name` はエディタの名前、`text` は通常本文、任意の `speaker` は表示する話者、`afterClear` はクリア後の本文、`storyRole` は物語の会話履歴を識別する役割です。本文に改行を入れられます。自由文を指定したNPCはその本文のまま表示します。
+`dialogue-templates.json` は既存IDを保持した100件の配列です。ID 46〜59は見本の「消えた灯火」の会話、60〜69は巨大版の集落・花園・道しるべ・水晶・遺跡の会話です。`name` はエディタの名前、`text` は通常本文、任意の `speaker` は表示する話者、`afterClear` はクリア後の本文、`storyRole` は物語の会話履歴を識別する役割です。本文に改行を入れられます。自由文を指定したNPCはその本文のまま表示します。
 
 `adventure-story.json` の `title`・`chapters[].roles` と `objective`・`finalObjective`・`clearedObjective`・`ending` を変更できます。ロードした世界に役割がそろう章だけを使い、会話を聞くと「つよさ」の次の目的を更新します。会話履歴はURL起動では保存・復元し、初期化ボタンで消去し、会話を通行・戦闘の条件にはしません。物語用テンプレートのない独自ワールドには見本の目的・結末を表示しません。
 
 北の王の `storyRole: "north-king"` は、南の王様撃破時の消失対象から除外する識別も兼ねます。見本では北の王に戦闘イベント・ランダム遭遇を設定しません。敗北の減額率は `encounters/player-config.json` の `defeatGoldLossPercent`（50＝半減、0＝無損失、100＝全額損失）で変更し、所持品・経験値は維持します。
 
-探索素材は `tiles/exploration.ts`（花の草地・遺跡の石畳）と `objects/exploration.ts`（道しるべ・洞窟の水晶・古い石碑）にピクセル配列で保持します。`objects/world-locations.ts` に全体マップ用の遺跡アイコンを登録し、`scene-catalog.json`・`entity-frames.json`・エディタ・歩行・描画・調査に同じIDを使います。現在は床30 ID・配置37 ID、既存の順番を変えず末尾へ追加します。
+探索素材は `tiles/exploration.ts`（花の草地・遺跡の石畳）と `objects/exploration.ts`（道しるべ・洞窟の水晶・古い石碑）にピクセル配列で保持します。`objects/world-locations.ts` に全体マップ用の遺跡アイコンを登録し、`scene-catalog.json`・`entity-frames.json`・エディタ・歩行・描画・調査に同じIDを使います。現在は床33 ID・配置47 ID、既存の順番を変えず末尾へ追加します。
 
 ## 保存・宿泊・裏ボス
 
@@ -70,3 +70,15 @@
 魔力は主人公stats.magicと成長growthPerLevel.magic、装備equipment.magicを合算して算出します。物理攻撃とは独立し、魔法・回復に使用します。初期魔力10／毎Lv+2、上限9999。旧セーブは経験値と装備IDから魔力を再計算します。
 
 第2部「虚無の回廊」の出現表は `game/postgame.ts`、通常敵ID12〜14の能力・報酬は `encounters/enemies/void-shade.json`・`rift-wolf.json`・`abyss-sentinel.json`。虚無神ID11はHP1200・actionsPerTurn:2。星屑のオーブの新しい補正はHP100・MP50・攻撃30・防御30・魔力30です。`game/clear-record.ts` が世界別のクリア／撃破フラグを読み、紹介画面のタイトルへ真のクリアの証を表示します。
+
+## 建物・危険地域・賞金首
+
+建物ドットは `objects/service-buildings.ts`、危険地域の床は `tiles/danger-grounds.ts`。床・配置IDはカタログ末尾へ追加し、旧IDを維持しています。配置枠は建物2×4マス、絵は4×4、当たり判定は下側4×2。サービスNPCは横1マス・足元1×1、木と同じ前後関係です。
+
+`bounty-catalog.json` は主15〜17の生息地・推奨Lv・追加賞金・称号の正本。敵の撃破賞金は各敵JSON、報告賞金は `bonus`。報告状態は世界別、称号は主人公共通で自動保存します。小型版には新しい配置を追加しません。`compiler/maps/danger-regions.json` と `editor/world-expansion.ts` から通常・巨大版へ固定配置を組み立てます。
+
+## 地図と追加施設
+
+施設の料金・配当・仲間候補・レシピは `facility-config.json`。建物6種と船・鉄格子のコードドットは `objects/ultimate-facilities.ts`、地下水路は古井戸 `well-entrance` と固定マップで表します。NPC7種・物体9種を末尾へ追加し、配置IDは0〜62の63種類、床は33種類を維持します。テンプレートは105件。新しい名前の推定にはID100〜104を使い、街の道しるべ104にはlocationNameを付けず、街全体を港と誤認させません。
+
+アイテム39〜42はメタル砕きの剣・幸運の指輪・経験値の書・盗賊の合鍵。`equipment.metalPiercing` と `equipment.criticalChance` を解釈し、はぐれクリスタルをfamily:metalへ分類します。強化値・コイン・仲間は主人公の保存へ追加し、古い保存は空値で移行します。小型版のステージ・ファイルは変更しません。

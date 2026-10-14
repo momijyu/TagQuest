@@ -29,7 +29,10 @@
     "world-forest",
     "meadow-flowers",
     "ruins-floor",
-    "void-rift"
+    "void-rift",
+    "bog-ground",
+    "ice-ground",
+    "ember-ground"
   ],
   "entities": [
     {
@@ -182,6 +185,106 @@
     },
     {
       "name": "innkeeper",
+      "parameters": 0
+    },
+    {
+      "name": "inn-building",
+      "parameters": 0
+    },
+    {
+      "name": "tavern",
+      "parameters": 0
+    },
+    {
+      "name": "church",
+      "parameters": 0
+    },
+    {
+      "name": "witch-hut",
+      "parameters": 0
+    },
+    {
+      "name": "bounty-board",
+      "parameters": 0
+    },
+    {
+      "name": "guild-master",
+      "parameters": 0
+    },
+    {
+      "name": "sister",
+      "parameters": 0
+    },
+    {
+      "name": "alchemist",
+      "parameters": 0
+    },
+    {
+      "name": "unique-monster",
+      "parameters": 0
+    },
+    {
+      "name": "blacksmith-building",
+      "parameters": 0
+    },
+    {
+      "name": "teleport-shrine",
+      "parameters": 0
+    },
+    {
+      "name": "casino-building",
+      "parameters": 0
+    },
+    {
+      "name": "observatory",
+      "parameters": 0
+    },
+    {
+      "name": "port-building",
+      "parameters": 0
+    },
+    {
+      "name": "monster-corral",
+      "parameters": 0
+    },
+    {
+      "name": "ship",
+      "parameters": 0
+    },
+    {
+      "name": "iron-gate",
+      "parameters": 0
+    },
+    {
+      "name": "well-entrance",
+      "parameters": 0
+    },
+    {
+      "name": "blacksmith",
+      "parameters": 0
+    },
+    {
+      "name": "shrine-keeper",
+      "parameters": 0
+    },
+    {
+      "name": "casino-dealer",
+      "parameters": 0
+    },
+    {
+      "name": "black-market-dealer",
+      "parameters": 0
+    },
+    {
+      "name": "fortune-teller",
+      "parameters": 0
+    },
+    {
+      "name": "captain",
+      "parameters": 0
+    },
+    {
+      "name": "corral-keeper",
       "parameters": 0
     }
   ]
